@@ -2,7 +2,7 @@
 
 Welcome to the **sheCodes Semester Long Project (SLP) 2025 — Full Stack** track. This repo is our single source of truth for planning, code, docs, and CI as we build a demo‑ready web app for **Demo Day (Nov 16, 2025)**.
 
-> **Lead:** Areesha Imtiaz
+> **Lead:** Areesha Imtiaz  
 > **Team Member(s):**  
 > **Org/Repo (suggested):** `CPP-SheCodes-SLP-2025-26/fullstack`
 
