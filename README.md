@@ -1,10 +1,10 @@
-# SLP 2025 — Full Stack Team
+# SLP 2025-26 — Full Stack Team
 
-Welcome to the **sheCodes Student Led Project (SLP) 2025 — Full Stack** track. This repo is our single source of truth for planning, code, docs, and CI as we build a demo‑ready web app for **Demo Day (Nov 16, 2025)**.
+Welcome to the **sheCodes Semester Long Project (SLP) 2025 — Full Stack** track. This repo is our single source of truth for planning, code, docs, and CI as we build a demo‑ready web app for **Demo Day (Nov 16, 2025)**.
 
 > **Lead:** Areesha Imtiaz
-> **Org/Repo (suggested):** `cpp-shecodes-slp-2025/slp-2025-fullstack`
-> **Timezone:** America/Los\_Angeles (PST/PDT)
+> **Team Member(s):**  
+> **Org/Repo (suggested):** `CPP-SheCodes-SLP-2025-26/fullstack`
 
 ---
 
