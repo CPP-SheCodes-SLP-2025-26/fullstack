@@ -71,3 +71,17 @@ cp .env.example .env
 
 # Run the application locally
 npm run dev
+
+```   
+
+---
+## 📂 Project Structure  
+```bash
+/.github        → workflows, issue/pr templates  
+/docs           → schedule, check-ins, demo prep  
+/src            → app code (frontend + backend)  
+.env.example    → sample environment variables
+```
+
+---   
+
