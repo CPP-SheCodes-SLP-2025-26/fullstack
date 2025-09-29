@@ -1,217 +1,69 @@
-# SLP 2025-26 — Full Stack Team
-
-Welcome to the **sheCodes Semester Long Project (SLP) 2025 — Full Stack** track. This repo is our single source of truth for planning, code, docs, and CI as we build a demo‑ready web app for **Demo Day (Nov 16, 2025)**.
-
-> **Lead:** Areesha Imtiaz  
-> **Team Member(s):**  
-> **Org/Repo (suggested):** `CPP-SheCodes-SLP-2025-26/fullstack`
-
----
-
-## Table of Contents
-
-* [Key Dates](#key-dates)
-* [Project Vision](#project-vision)
-* [Tech Stack](#tech-stack)
-* [Getting Started](#getting-started)
-* [Project Structure](#project-structure)
-* [Environments & Secrets](#environments--secrets)
-* [How We Work](#how-we-work)
-* [Milestones](#milestones)
-* [Weekly Check‑Ins](#weekly-check-ins)
-* [Issue Labels](#issue-labels)
-* [Code of Conduct](#code-of-conduct)
-* [Contributing](#contributing)
-* [Security](#security)
-* [Demo Day Deliverables](#demo-day-deliverables)
-* [Acknowledgements](#acknowledgements)
-* [License](#license)
-
----
-
-## Key Dates
-
-* **Sept 1, 2025** — Grace period ends & **Lead Confirmation form due**
-* **Sept 19, 2025** — Teams announced (Kick‑off social)
-* **Sept 20, 2025** — Formal email to start SLP
-* **Nov 16, 2025 (Sun)** — **Demo Day** (target 10:00–3:00 @ BSC Ursa Minor, TBA)
-
-> See `/docs/schedule.md` for a suggested week‑by‑week rhythm.
-
----
-
-## Project Vision
-
-Build a modern full‑stack web application that solves a real problem for students or the community, showcasing solid engineering practices (issues‑first workflow, code review, CI, docs). We’ll scope for a clear MVP and iterate toward Demo Day polish.
-
-### Objectives
-
-* MVP shipped by mid‑October
-* Accessible, responsive UI
-* Clear README + one‑click setup where possible
-* Reliable CI and basic tests
-
----
-
-## Tech Stack
-
-> We’ll finalize in Week 1. Suggested defaults below; adjust as needed.
-
-**Frontend**: React + Vite *(or Next.js)*
-**Backend**: Node.js + Express *(or Fastify)*
-**Database**: SQLite for local dev → PostgreSQL for prod (Railway/Supabase)
-**CI**: GitHub Actions (lint, build, test)
-**Package Manager**: npm (or pnpm/yarn)
-
----
-
-## Getting Started
-
-### Prerequisites
-
-* Node.js 20+ (LTS recommended)
-* Git, GitHub account
-
-### Setup
-
-```bash
-# 1) Clone the repo
+🏠 Student Housing App — sheCodes SLP 2025-26
+This repository contains our project for the sheCodes Semester Long Project (SLP) 2025-26, Full Stack Track.
+Our goal is to design and implement a Student Housing Companion Web Application that helps roommates coordinate daily responsibilities and manage shared living more effectively.
+Core Features
+🧹 Chore Tracker — assign, rotate, and complete household tasks
+💸 Bill Splitter — track shared expenses and balances
+📅 Shared Calendar — manage events and reminders
+🌟 Stretch Features: shared grocery list, guest tracker, and notifications
+📍 Demo Day: Sunday, November 16th, 2025 @ BSC Ursa Minor (10:00 AM – 2:00 PM)
+👩‍💻 Team
+Lead: Areesha Imtiaz
+Members:
+Gloriele Mendoza
+Roshan Karimi
+Sarah Huynh
+Natalie Mamikonyan
+Ayla Santos
+🚀 Tech Stack (to be finalized in Week 1)
+Frontend: React + Tailwind CSS (Next.js under consideration)
+Backend: Node.js + Express (Django also under consideration)
+Database: PostgreSQL or MySQL (hosted via Supabase/Railway)
+Authentication: Clerk or Supabase Auth
+Deployment: Vercel (frontend), Render/Railway (backend)
+📆 Project Timeline
+Sept 26: Check-in #1 — Project selected, roles assigned
+Oct 10: Check-in #2 — Midpoint; project should be ~50% complete
+Oct 16: Midpoint milestone (Chores feature working end-to-end)
+Oct 24: Progress milestone (Chores + Bills functional)
+Oct 30: Check-in #3 — Evaluate scope; scale down if needed
+Nov 6: Demo guidelines released
+Nov 7: Check-in #4 — Wrap-up; prepare for presentations
+Nov 10: Final wrap-up checkpoint; demo prep begins
+Nov 13: Final project submission
+Nov 16: Demo Day 🎉
+🛠️ Getting Started
+Prerequisites
+Node.js 20+
+Git + GitHub account
+Setup
+# Clone the repository
 git clone https://github.com/CPP-SheCodes-SLP-2025-26/fullstack.git
 cd fullstack
 
-# 2) Environment variables
-cp .env.example .env
-# then edit .env with local values
-
-# 3) Install deps (update once framework is chosen)
+# Install dependencies
 npm install
 
-# 4) Run locally
+# Copy environment variables
+cp .env.example .env
+
+# Run the application locally
 npm run dev
-
-# 5) Tests & lint (wire these after scaffold)
-npm test
-npm run lint
-```
-
----
-
-## Project Structure
-
-```
-/.github
-  ├─ ISSUE_TEMPLATE/
-  │   └─ check-in.md
-  ├─ pull_request_template.md
-  └─ workflows/
-      └─ ci.yml
-/docs
-  ├─ schedule.md
-  ├─ team-roster.md
-  ├─ discord-setup.md
-  └─ demo-day.md
-/src
-  └─ ... (your app code)
-.env.example
-CODE_OF_CONDUCT.md
-CONTRIBUTING.md
-SECURITY.md
-LICENSE
-README.md
-```
-
----
-
-## Environments & Secrets
-
-* Copy `.env.example` → `.env` for local development (do **not** commit `.env`).
-* For production, use platform secrets (e.g., Railway/Supabase/Render dashboards) and GitHub **Actions secrets** for CI.
-
-**Common keys** (adjust to your stack):
-
-```
-PORT=3000
-DATABASE_URL=postgres://user:pass@host:5432/db
-JWT_SECRET=changeme
-```
-
----
-
-## How We Work
-
-* **Issues‑first**: every task has an Issue with acceptance criteria.
-* **Small PRs**: focused scope, clear titles, link the Issue.
-* **Reviews**: at least one approval; squash & merge when green.
-* **CI required**: builds, tests, and linters must pass.
-* **Docs**: update README and `/docs` as things change.
-
-> See `CONTRIBUTING.md` for details.
-
----
-
-## Milestones
-
-* **M1 — Scope & Skeleton (Sep 28)**: choose stack, create scaffolds, CI green
-* **M2 — Core Features (Oct 19)**: MVP usable end‑to‑end
-* **M3 — Freeze & Bug Bash (Nov 3)**: feature freeze, testing, fixes
-* **M4 — Demo Polish (Nov 10)**: UX polish, content, demo script
-
-Track progress in Issues & Milestones. Optional: GitHub Projects board.
-
----
-
-## Weekly Check‑Ins
-
-* Open a weekly **Check‑In** Issue using `.github/ISSUE_TEMPLATE/check-in.md`.
-* Everyone comments async on accomplishments, next steps, blockers.
-* Leads summarize action items and assign tasks.
-
----
-
-## Issue Labels
-
-`feat`, `bug`, `design`, `docs`, `check-in`, `good first issue`, `help wanted`, `blocked`
-
-> Add more as needed for your workflow.
-
----
-
-## Code of Conduct
-
-We uphold an inclusive, respectful environment. See **`CODE_OF_CONDUCT.md`** and Discord server rules. Report issues to the Lead privately; escalate to the sheCodes Executive Board when appropriate.
-
----
-
-## Contributing
-
-Please read **`CONTRIBUTING.md`** for workflow, coding standards, and commit message style. In brief: create an Issue → branch → PR → review → squash & merge.
-
----
-
-## Security
-
-Do **not** open public Issues for vulnerabilities. Report privately as described in **`SECURITY.md`**.
-
----
-
-## Demo Day Deliverables
-
-* Working demo/prototype
-* 5–7 minute presentation (video backup recommended)
-* README with setup instructions
-* Screenshots and/or short demo video
-* One‑pager: problem, solution, tech, impact (see `/docs/demo-day.md`)
-
-> Rehearse timing and roles; prefer a stable live demo or a reliable recorded fallback.
-
----
-
-## Acknowledgements
-
-Thanks to **sheCodes (ACM‑W at Cal Poly Pomona)**, mentors, and contributors supporting an inclusive learning community.
-
----
-
-## License
-
-**MIT** — see `LICENSE`.
+📂 Project Structure
+/.github        → workflows, issue/pr templates  
+/docs           → schedule, check-ins, demo prep  
+/src            → app code (frontend + backend)  
+.env.example    → sample environment variables
+🤝 Team Workflow
+Weekly Sunday meetings for syncs and progress reviews
+Issues-first workflow → each task tracked via GitHub issues
+Pull requests require review before merging
+Documentation (README and /docs) updated regularly
+🎤 Demo Deliverables
+Functional prototype deployed online
+5–7 minute live or pre-recorded demo with slides
+Screenshots and/or demo video backup
+README with setup instructions
+Presentation slides with rehearsed flow
+📜 License
+MIT License — see LICENSE for details.
