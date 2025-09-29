@@ -2,40 +2,28 @@
 # 🗓️ Project Schedule — Student Housing App (sheCodes SLP 2025–26)
 
 This file is the single source of truth for our timeline, weekly goals, and assignments.
-- **Team meetings:** Every **Sunday @ 8:00 PM** (on Zoom).
+- **Team meetings:** Every **Sunday @ 8:00 PM PST** (on Zoom).
 - **Demo Day:** **Sun, Nov 16, 2025** — 10:00 AM–2:00 PM @ BSC Ursa Minor (in person).
 
 ---
 
 ## Key Program Dates (from SLP)
 
-- **Check-In #1:** Fri, **Sept 26** — Project decided & roles assigned  
-- **Check-In #2:** Fri, **Oct 10** — Midpoint; ~50% done  
-- **Check-In #3:** Thu, **Oct 30** — Progress; scale down if needed  
-- **Check-In #4:** Fri, **Nov 7** — Wrap up & prepare for presentations  
-- **Demo Day Guidelines:** Thu, **Nov 6**  
-- **Project Submission:** Thu, **Nov 13**  
-- **Demo Day:** Sun, **Nov 16** — 10:00 AM–2:00 PM
+- **Check-In #1:** Fri, **Sept 26, 2025** — Project decided & roles assigned  
+- **Check-In #2:** Fri, **Oct 10, 2025** — Midpoint; ~50% done  
+- **Check-In #3:** Thu, **Oct 30, 2025** — Progress; scale down if needed  
+- **Check-In #4:** Fri, **Nov 7, 2025** — Wrap up & prepare for presentations  
+- **Demo Day Guidelines:** Thu, **Nov 6, 2025**  
+- **Project Submission:** Thu, **Nov 13, 2025**  
+- **Demo Day:** Sun, **Nov 16, 2025** — 10:00 AM–2:00 PM
 
 ---
 
-## Team & Roles (working titles)
-- **Lead:** Areesha Imtiaz  
-- **Members:** Gloriele Mendoza, Roshan Karimi, Sarah Huynh, Natalie Mamikonyan, Ayla Santos, **Member 7 (TBD)**
-
-> We work in **feature squads** so everyone touches **frontend + backend**:
-> - **Chores Squad** (2 ppl)  
-> - **Bills Squad** (2 ppl)  
-> - **Calendar Squad** (2 ppl)  
-> - **Support/QA/Infra** (1 person, rotates weekly)
-
----
-
-## Week-by-Week Plan (Strict)
+## Week-by-Week Plan  
 
 ### Week 1 — Setup & Foundations
-**Dates:** Sun **Sept 29** → Sun **Oct 6**  
-**Sunday Meeting (Sept 29):** Kickoff; finalize tech stack (from Google Form); assign squads; confirm environment setup.
+**Dates:** Sun **Sept 28, 2025** → Sun **Oct 5, 2025**  
+**Sunday Meeting (Sept 28, 2025):** Kickoff; finalize tech stack (from Google Form); assign squads; confirm environment setup.
 
 **Goals**
 - Repo, scaffolds, basic CI, DB schema, auth pipeline started.
@@ -56,7 +44,7 @@ This file is the single source of truth for our timeline, weekly goals, and assi
 ---
 
 ### Week 2 — Auth & Households
-**Dates:** Mon **Oct 7** → Sun **Oct 13**  
+**Dates:** Mon **Oct 6, 2025** → Sun **Oct 12, 2025**  
 **Sunday Meeting:** Review auth + household flows; assign Week 3.
 
 **Goals**
@@ -75,8 +63,8 @@ This file is the single source of truth for our timeline, weekly goals, and assi
 ---
 
 ### Week 3 — Chores (Midpoint)
-**Dates:** Mon **Oct 14** → Sun **Oct 20**  
-**SLP Midpoint:** **Thu, Oct 16**  
+**Dates:** Mon **Oct 13, 2025** → Sun **Oct 19, 2025**  
+**SLP Midpoint:** **Thu, Oct 16, 2025**  
 **Sunday Meeting:** Demo Chores MVP; plan Bills.
 
 **Goals**
@@ -98,8 +86,8 @@ This file is the single source of truth for our timeline, weekly goals, and assi
 ---
 
 ### Week 4 — Bills (Progress Check)
-**Dates:** Mon **Oct 21** → Sun **Oct 27**  
-**SLP Project Progress:** **Thu, Oct 24**  
+**Dates:** Mon **Oct 20, 2025** → Sun **Oct 26, 2025**  
+**SLP Project Progress:** **Thu, Oct 24, 2025**  
 **Sunday Meeting:** Demo Bills; begin Calendar.
 
 **Goals**
@@ -121,7 +109,7 @@ This file is the single source of truth for our timeline, weekly goals, and assi
 ---
 
 ### Week 5 — Calendar
-**Dates:** Mon **Oct 28** → Sun **Nov 3**  
+**Dates:** Mon **Oct 27, 2025** → Sun **Nov 3, 2025**  
 **Sunday Meeting:** Demo Calendar; lock scope.
 
 **Goals**
@@ -143,9 +131,9 @@ This file is the single source of truth for our timeline, weekly goals, and assi
 ---
 
 ### Week 6 — Integration & Theme
-**Dates:** Tue **Nov 4** → Sun **Nov 10**  
-**SLP Guidelines:** **Thu, Nov 6**  
-**Wrap-Up Checkpoint:** **Mon, Nov 10**  
+**Dates:** Tue **Nov 4, 2025** → Sun **Nov 9, 2025**  
+**SLP Guidelines:** **Thu, Nov 6, 2025**  
+**Wrap-Up Checkpoint:** **Mon, Nov 10, 2025**  
 **Sunday Meeting:** Full flow rehearsal; assign final fixes.
 
 **Goals**
@@ -164,8 +152,8 @@ This file is the single source of truth for our timeline, weekly goals, and assi
 ---
 
 ### Week 7 — Extras & Submission
-**Dates:** Tue **Nov 11** → Thu **Nov 13**  
-**Submission:** **Thu, Nov 13**
+**Dates:** Tue **Nov 11, 2025** → Thu **Nov 13, 2025**  
+**Submission:** **Thu, Nov 13, 2025**
 
 **Goals**
 - Optional small features + final polish.
@@ -184,8 +172,8 @@ This file is the single source of truth for our timeline, weekly goals, and assi
 ---
 
 ### Week 8–9 — Demo
-**Dates:** Fri **Nov 14** → Sun **Nov 16**  
-**Demo Day:** **Sun, Nov 16** (10:00 AM–2:00 PM)
+**Dates:** Fri **Nov 14, 2025** → Sun **Nov 16, 2025**  
+**Demo Day:** **Sun, Nov 16, 2025** (10:00 AM–2:00 PM)
 
 **Goals**
 - Rehearsed, confident demo with a reliable backup.
