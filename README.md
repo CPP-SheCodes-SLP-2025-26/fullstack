@@ -85,3 +85,19 @@ npm run dev
 
 ---   
 
+## 🤝 Team Workflow
+
+- **Weekly Standup:** Every Sunday at 8:00 PM (on Zoom).    
+- **Agenda:** quick wins, blockers, priorities for the week, assignments.  
+- **Slides:** upload weekly deck to /docs/meetings
+
+---
+
+## 🎤 Demo Deliverables
+
+- Functional prototype deployed online
+- 5–7 minute live or pre-recorded demo with slides
+- Screenshots and/or demo video backup
+- README with setup instructions
+- Presentation slides with rehearsed flow
+
