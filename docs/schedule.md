@@ -2,7 +2,7 @@
 # 🗓️ Project Schedule — Student Housing App (sheCodes SLP 2025–26)
 
 This file is the single source of truth for our timeline, weekly goals, and assignments.
-- **Team meetings:** Every **Sunday @ 8:00 PM** (in person or Discord voice).
+- **Team meetings:** Every **Sunday @ 8:00 PM** (on Zoom).
 - **Demo Day:** **Sun, Nov 16, 2025** — 10:00 AM–2:00 PM @ BSC Ursa Minor (in person).
 
 ---
