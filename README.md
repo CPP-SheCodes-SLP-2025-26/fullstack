@@ -18,7 +18,8 @@ Our goal is to design and implement a **Student Housing Companion Web Applicatio
 
 - **Lead:** Areesha Imtiaz  
 - **Members:**  
-  - Gloriele Mendoza  
+  - Gloriele Mendoza
+  - Josh Guzman  
   - Roshan Karimi  
   - Sarah Huynh  
   - Natalie Mamikonyan  
