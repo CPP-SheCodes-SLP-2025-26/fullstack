@@ -1,14 +1,22 @@
-const http = require('http');
+import express from 'express';
+import pool from './pool.js'; 
 
-const hostname = '127.0.0.1';
+const app = express();
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
+app.get('/test', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT * FROM users LIMIT 1');
+    res.json({
+      message: 'Database connection successful!',
+      sampleUser: rows
+    });
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    res.status(500).json({ error: 'Database connection failed' });
+  }
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
