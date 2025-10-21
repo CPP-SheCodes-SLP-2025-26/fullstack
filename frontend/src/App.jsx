@@ -4,29 +4,18 @@ import AuthButtons from './components/AuthButtons';
 import Navbar from './components/NavBar';
 import RequireAuth from './components/RequireAuth';
 import { supabase } from './lib/supabase';
+
 import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import Bills from './pages/Bills';
+import Calendar from './pages/Calendar';
+import Chores from './pages/Chores';
+import Login from './pages/Login';
 
-function Login({ session }) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  // If already logged in, bounce back where they came from or home
-  useEffect(() => {
-    if (session) {
-      const dest = location.state?.from?.pathname ?? '/';
-      navigate(dest, { replace: true });
-    }
-  }, [session, location, navigate]);
-
-  return (
-    <div style={{ padding: 20 }}>
-      <h2>Sign in</h2>
-      <AuthButtons />
-    </div>
-  );
-}
+// Make a sign-up page if time allows 
+// import Signup from './pages/Signup';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -45,6 +34,7 @@ export default function App() {
 
   return (
     <Router>
+      
       <Navbar />
       <Routes>
         {/* Public routes */}
@@ -54,6 +44,7 @@ export default function App() {
         {/* Login route (redirects away if already signed in) */}
         <Route path="/login" element={<Login session={session} />} />
 
+        
         {/* Protected route(s) */}
         <Route
           path="/dashboard"
@@ -63,7 +54,7 @@ export default function App() {
             </RequireAuth>
           }
         />
-
+        
         {/* Example: quick sign-out route (optional) */}
         <Route
           path="/logout"
@@ -76,6 +67,7 @@ export default function App() {
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
+        
       </Routes>
 
       {/* Signed-in footer snippet (optional) */}
