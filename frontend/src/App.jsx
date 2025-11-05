@@ -39,7 +39,7 @@ export default function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/calendar" element={<Calendar />} />
 
         {/* Login route (redirects away if already signed in) */}
         <Route path="/login" element={<Login session={session} />} />
