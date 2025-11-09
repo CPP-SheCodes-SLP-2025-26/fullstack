@@ -8,6 +8,9 @@ import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import ChoreList from './pages/ChoreList'
+import CreateChore from './pages/CreateChore';
+import './App.css';
 
 function Login({ session }) {
   const navigate = useNavigate();
@@ -22,8 +25,10 @@ function Login({ session }) {
 
   return (
     <div style={{ padding: 20 }}>
-      <h2>Sign in</h2>
-      <AuthButtons />
+        <h2>Sign in</h2>
+        <div className = "login-buttons">
+          <AuthButtons />
+      </div>
     </div>
   );
 }
@@ -45,11 +50,13 @@ export default function App() {
 
   return (
     <Router>
-      <Navbar />
+      <Navbar className="navbar" />
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/ChoreList" element={<ChoreList />} />
+        <Route path="/create-chore" element={<CreateChore />} />
 
         {/* Login route (redirects away if already signed in) */}
         <Route path="/login" element={<Login session={session} />} />

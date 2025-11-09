@@ -1,0 +1,11 @@
+/*.Home{
+    border: 1px dashed red;
+    height: 100%;
+}
+*/
+
+#root{  
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
