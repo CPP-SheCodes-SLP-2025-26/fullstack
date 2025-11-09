@@ -46,8 +46,8 @@ export default function ProfilePage() {
             value={passwordMasked}
             onEdit={() => alert("Route to change-password flow")}
           />
-          <div className="lips lips--br" aria-hidden="true">💋</div>
         </div>
+		<div className="lips lips--br" aria-hidden="true">💋</div>
       </div>
     </div>
   );
