@@ -62,7 +62,7 @@
   flex-direction: column;
   gap: 22px;
   max-width: 760px;
-  margin-top: 60px;
+  margin-top: 0;
   justify-self: start;
   margin-left: 80px; 
 }
@@ -185,3 +185,109 @@
     display: none;
   }
 }
+
+/* ===== Overlay & Popup ===== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 999; /* above lips & page */
+  animation: fadeIn .12s ease-out;
+}
+
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+.popup {
+  width: min(520px, 92vw);
+  background: #c21888;           /* magenta panel */
+  border-radius: 16px;
+  padding: 28px 22px 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  color: var(--text);
+  transform: translateY(6px);
+  animation: pop .14s ease-out forwards;
+}
+@keyframes pop { to { transform: translateY(0) } }
+
+.popup-title {
+  background: #fff;
+  color: var(--text);
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-align: center;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(18px, 2.6vw, 24px);
+  margin: 0 6px 18px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.15);
+}
+
+.field-block {
+  background: #ddd9de;
+  border-radius: 8px;
+  padding: 14px;
+  margin: 14px 6px;
+}
+
+.field-label {
+  text-align: center;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(16px, 2.3vw, 20px);
+  margin-bottom: 10px;
+}
+
+.popup-input {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  background: #f7f2f6;
+  padding: 12px 14px;
+  font-size: 16px;
+  outline: none;
+  color: #000;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+}
+
+.popup-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin: 18px 6px 0;
+}
+
+.btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn.solid {
+  background: var(--pink-deep);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(0,0,0,.22);
+}
+.btn.solid:disabled { opacity: .55; cursor: not-allowed; }
+.btn.ghost {
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 3px 10px rgba(0,0,0,.12);
+}
+
+/* make warning text red */
+.field-error,
+.error-text {
+  color: red;
+  font-weight: 500;
+}
+
+
+/* keep overlays nice on tiny screens */
+@media (max-width: 420px) {
+  .popup { padding: 22px 16px; }
+  .popup-title { margin: 0 2px 14px; }
+}
+
