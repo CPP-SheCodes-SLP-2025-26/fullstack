@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 import "./ProfilePage.css";
 
 export default function ProfilePage() {
@@ -20,11 +20,26 @@ export default function ProfilePage() {
         <div className="lips lips--tl" aria-hidden="true">💋</div>
 
         <div className="profile-left">
-          <button className="avatar" onClick={onChangePic} aria-label="Change profile picture"
-            style={avatarSrc ? { backgroundImage: `url(${avatarSrc})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
-          >
-            {!avatarSrc && <span className="avatar__cta">change pic</span>}
-          </button>
+          <button
+			className="avatar"
+			onClick={onChangePic}
+			aria-label="Change profile picture"
+			style={
+				avatarSrc
+					? { backgroundImage: `url(${avatarSrc})`,
+						backgroundSize: "cover",
+						backgroundPosition: "center" }
+					: undefined
+				}
+			>
+				{/* show this text in the middle when no picture */}
+				{!avatarSrc && <span className="avatar__cta">change pic</span>}
+
+				{/* show semi-circle only when a picture exists */}
+				{avatarSrc && <span className="avatar__hover">change pic</span>}
+			</button>
+
+
           <p className="greeting">Hi, {username}!</p>
         </div>
 
@@ -108,7 +123,7 @@ function Modal({ title, children, onClose }) {
     <div className="overlay" role="dialog" aria-modal="true" onMouseDown={onClose}>
       <div className="popup" onMouseDown={(e) => e.stopPropagation()}>
         <div className="popup-title">{title}</div>
-        {children}
+        <div className="popup-content">{children}</div>
       </div>
     </div>
   );
@@ -285,50 +300,171 @@ function PasswordForm({ onSave, onCancel }) {
   );
 }
 
-/* ---------- Profile picture form ---------- */
-
 function ProfilePicForm({ onSave, onCancel }) {
-  const [file, setFile] = useState(null);
-  const [path, setPath] = useState("");
+  const stageRef = useRef(null);      // circle stage (for diameter)
+  const imgRef   = useRef(null);      // <img> element used for preview
+  const [img, setImg] = useState(null);     // HTMLImageElement after load
+  const [fileName, setFileName] = useState("");
 
-  const canSave = !!file || !!path.trim();
+  // transform state
+  const [zoom, setZoom] = useState(1);      // 1..3
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  const handleSubmit = (e) => {
+  // dragging
+  const drag = useRef({ active: false, x: 0, y: 0, ox: 0, oy: 0 });
+  const startDrag = (e) => {
+    const p = "touches" in e ? e.touches[0] : e;
+    drag.current = { active: true, x: p.clientX, y: p.clientY, ox: offset.x, oy: offset.y };
+  };
+  const moveDrag = (e) => {
+    if (!drag.current.active) return;
+    const p = "touches" in e ? e.touches[0] : e;
+    setOffset({
+      x: drag.current.ox + (p.clientX - drag.current.x),
+      y: drag.current.oy + (p.clientY - drag.current.y),
+    });
+  };
+  const endDrag = () => (drag.current.active = false);
+
+  // load from file
+  const onFile = (f) => {
+    if (!f) return;
+    setFileName(f.name);
+    const url = URL.createObjectURL(f);
+    const i = new Image();
+    i.onload = () => setImg(i);
+    i.src = url;
+  };
+
+  // load from url text input
+  const [url, setUrl] = useState("");
+  const loadUrl = () => {
+    if (!url.trim()) return;
+    const i = new Image();
+    i.crossOrigin = "anonymous"; // allow canvas export for most hosts
+    i.onload = () => { setImg(i); setFileName(url.split("/").pop() || "image.png"); };
+    i.src = url.trim();
+  };
+
+  const canSave = !!img;
+
+  // export exactly what you see
+  const handleSave = (e) => {
     e.preventDefault();
-    if (!canSave) return;
+    if (!img || !stageRef.current) return;
 
-    if (file) {
-      // For now, show a local preview; replace with upload logic as needed.
-      const previewUrl = URL.createObjectURL(file);
-      onSave(previewUrl);
-    } else {
-      onSave(path.trim());
-    }
+    const D = stageRef.current.clientWidth;    // stage diameter in CSS px
+    const size = 512;                          // output resolution
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d");
+
+    // compute how the image is fit initially (cover the circle)
+    const baseScale = D / Math.min(img.width, img.height); // how many CSS px per image px when zoom=1
+    const effScaleCss = baseScale * zoom;                  // CSS scale shown in the preview
+
+    // factor to translate CSS px -> canvas px
+    const cssToCanvas = size / D;
+
+    ctx.clearRect(0, 0, size, size);
+    ctx.save();
+    // circular mask
+    ctx.beginPath();
+    ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+    ctx.clip();
+
+    // place image so its center is at circle center + offset
+    ctx.translate(
+      size / 2 + offset.x * cssToCanvas,
+      size / 2 + offset.y * cssToCanvas
+    );
+    ctx.scale(effScaleCss * cssToCanvas, effScaleCss * cssToCanvas);
+    // draw image centered
+    ctx.drawImage(img, -img.width / 2, -img.height / 2);
+    ctx.restore();
+
+    const dataUrl = canvas.toDataURL("image/png");
+    onSave(dataUrl, fileName);
   };
 
   return (
-    <form className="popup-form" onSubmit={handleSubmit}>
-      <div className="field-block">
-        <div className="field-label">Upload Your Picture</div>
-        <input
-          className="popup-file"
-          type="file"
-          accept="image/*"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-        />
-      </div>
+    <form className="popup-form" onSubmit={handleSave}>
+  <div className="upload-panel">
+    <div className="upload-title">Upload your Picture</div>
 
-      <div className="field-block">
-        <div className="field-label">OR Enter the path to the picture:</div>
-        <input
-          className="popup-input"
-          value={path}
-          onChange={(e) => setPath(e.target.value)}
-          placeholder="https://example.com/image.jpg"
+    {/* CROP STAGE */}
+    <div
+      ref={stageRef}
+      className="crop-stage"
+      onMouseDown={startDrag}
+      onMouseMove={moveDrag}
+      onMouseUp={endDrag}
+      onMouseLeave={endDrag}
+      onTouchStart={startDrag}
+      onTouchMove={moveDrag}
+      onTouchEnd={endDrag}
+    >
+      {img ? (
+        <img
+          src={img.src}
+          alt=""
+          draggable={false}
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: `translate(-50%,-50%) translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+            transformOrigin: "center center",
+            userSelect: "none",
+            pointerEvents: "none",
+            maxWidth: "none",
+          }}
         />
-      </div>
+      ) : (
+        <div className="crop-placeholder"></div>
+      )}
+    </div>
 
-      <Actions canSave={canSave} onCancel={onCancel} />
-    </form>
-  );
+    {/* zoom */}
+    <input
+      type="range"
+      min="1"
+      max="3"
+      step="0.01"
+      value={zoom}
+      onChange={(e) => setZoom(parseFloat(e.target.value))}
+      className="crop-zoom"
+    />
+  </div>
+
+  {/* rest of your form stays the same */}
+  <div className="field-block">
+    <label className="btn ghost" style={{ display: "inline-block", cursor: "pointer" }}>
+      Choose File
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => onFile(e.target.files?.[0] || null)}
+        style={{ display: "none" }}
+      />
+    </label>
+    <span style={{ marginLeft: 8 }}>{fileName}</span>
+  </div>
+
+  <div className="field-block">
+    <div className="field-label">OR Enter the path to the picture:</div>
+    <div style={{ display: "flex", gap: 8 }}>
+      <input
+        className="popup-input"
+        placeholder="https://example.com/image.jpg"
+        value={url}
+        onChange={(e) => setUrl(e.target.value)}
+      />
+      <button type="button" className="btn solid" onClick={loadUrl}>Load</button>
+    </div>
+  </div>
+
+  <Actions canSave={canSave} onCancel={onCancel} />
+</form>);
 }
