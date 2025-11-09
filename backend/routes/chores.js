@@ -5,12 +5,12 @@ const router = Router(); // groups together requests
 
 // POST a new chore
 router.post('/chores', async (req, res) => {
-  const { user_id, chore_name, due_date, room_num} = req.body;
+  const { user_id, chore_name, due_date, room_num, description} = req.body;
 
-  if(!user_id || !chore_name || !due_date || !room_num) // make sure all values are given
+  if(!user_id || !chore_name || !due_date || !room_num|| !description) // make sure all values are given
     return res.status(400).json({ error: "Missing value" });
 
-  const chore_id = await Chore.createChore(user_id, chore_name, due_date, room_num);
+  const chore_id = await Chore.createChore(user_id, chore_name, due_date, room_num, description);
   if(!chore_id) return res.status(406).json({ errror: "Unable to create chore"});
   res.status(201).json({ msg: "successfully created chore"})
 });
