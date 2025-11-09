@@ -35,6 +35,13 @@
   box-sizing: border-box;
 }
 
+.greeting{
+	font-size: clamp(26px, 4vw, 38px);
+  margin-top: 0;             
+  text-align: center;        
+  align-self: center;      
+}
+
 /* title */
 .profile-title {
   grid-area: title;
