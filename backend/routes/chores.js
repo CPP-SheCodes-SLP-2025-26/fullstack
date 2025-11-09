@@ -16,44 +16,52 @@ router.post('/chores', async (req, res) => {
 });
 
 // GET all chores
-router.get('/chores', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM chores');
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to get chores' });
-  }
+router.get('/get/chores', async (req, res) => {
+  const chores = await Chore.getChores();
+  res.status(200).json(chores);
+});
+
+// GET chores for a room number
+router.get('/get/chores/:id', async (req, res) => {
+  const { id } = req.params;
+  if(!id ) return res.status(400).json({ error: "Missing id" });
+
+  const chores = await Chore.getRoomChores(id);
+  res.status(200).json(chores);
 });
 
 // PUT a chore by ID (updating)
-router.put('/chores/:id', async (req, res) => {
+router.put('/get/chores/:id', async (req, res) => {
   const { id } = req.params;
-  const { title, description, assigned_to, due_date, status } = req.body;
+  const { chore_name, description, user_id, due_date, is_finished } = req.body;
 
-  try {
-    await pool.query(
-      'UPDATE chores SET title = ?, description = ?, assigned_to = ?, due_date = ?, status = ? WHERE id = ?',
-      [title, description, assigned_to, due_date, status, id]
-    );
-    res.json({ message: 'Chore updated!' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to update chore' });
-  }
+  if(!id || !chore_name || !due_date || !user_id|| !description) // make sure all values are given
+    return res.status(400).json({ error: "Missing value" });
+
+  await Chore.editChore(id, chore_name, description, user_id, due_date, is_finished);
+  res.status(200).json({ message: 'Chore updated!' });
+});
+
+// PUT mark a chore as compelted
+router.put('/chore/completed/:id', async (req, res) => {
+  const { id } = req.params;
+  if(!id ) return res.status(400).json({ error: "Missing id" });
+
+  const result = await Chore.markComplete(id);
+
+  if(!result) res.status(400).json({ message: 'There were no chore to complete' });
+  res.status(200).json({ message: 'Chore marked complete!' });
 });
 
 // DELETE a chore by ID
 router.delete('/chores/:id', async (req, res) => {
   const { id } = req.params;
+  if(!id ) return res.status(400).json({ error: "Missing id" });
 
-  try {
-    await pool.query('DELETE FROM chores WHERE id = ?', [id]);
-    res.json({ message: 'Chore deleted!' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to delete chore' });
-  }
+  const result = await Chore.deleteChore(id);
+
+  if(!result) res.status(400).json({ message: 'There were no chores to delete' });
+  res.status(200).json({ message: 'Chore deleted!' });
 });
 
 export default router;
