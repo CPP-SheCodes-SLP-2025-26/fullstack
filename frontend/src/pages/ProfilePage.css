@@ -290,4 +290,32 @@
   .popup { padding: 22px 16px; }
   .popup-title { margin: 0 2px 14px; }
 }
+/* ---------- profile pic popup ---------- */
+
+.popup-file {
+  display: block;
+  width: 100%;
+  padding: 20px;
+  background: #ddd9de;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 18px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.popup-file::file-selector-button {
+  background: var(--pink-deep);
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.popup-file::file-selector-button:hover {
+  filter: brightness(1.1);
+}
 

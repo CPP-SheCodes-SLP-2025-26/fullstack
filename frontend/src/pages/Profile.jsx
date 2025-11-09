@@ -5,10 +5,12 @@ export default function ProfilePage() {
   const [username, setUsername] = useState("usernameExample");
   const [email, setEmail] = useState("email@example.com");
   const [passwordMasked] = useState("********");
+  const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | null
 
-  const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | null
+  // optional local preview for the avatar
+  const [avatarSrc, setAvatarSrc] = useState(null);
 
-  const onChangePic = () => alert("Open file picker to change picture");
+  const onChangePic = () => setEditing("pic");
 
   return (
     <div className="profile-page">
@@ -18,8 +20,10 @@ export default function ProfilePage() {
         <div className="lips lips--tl" aria-hidden="true">💋</div>
 
         <div className="profile-left">
-          <button className="avatar" onClick={onChangePic} aria-label="Change profile picture">
-            <span className="avatar__cta">change pic</span>
+          <button className="avatar" onClick={onChangePic} aria-label="Change profile picture"
+            style={avatarSrc ? { backgroundImage: `url(${avatarSrc})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
+          >
+            {!avatarSrc && <span className="avatar__cta">change pic</span>}
           </button>
           <p className="greeting">Hi, {username}!</p>
         </div>
@@ -43,6 +47,7 @@ export default function ProfilePage() {
           />
         </Modal>
       )}
+
       {editing === "email" && (
         <Modal title="Change your email." onClose={() => setEditing(null)}>
           <EmailForm
@@ -52,11 +57,21 @@ export default function ProfilePage() {
           />
         </Modal>
       )}
+
       {editing === "password" && (
         <Modal title="Change your password." onClose={() => setEditing(null)}>
           <PasswordForm
             onCancel={() => setEditing(null)}
             onSave={() => { /* call API here */ setEditing(null); }}
+          />
+        </Modal>
+      )}
+
+      {editing === "pic" && (
+        <Modal title="Change your head shot." onClose={() => setEditing(null)}>
+          <ProfilePicForm
+            onCancel={() => setEditing(null)}
+            onSave={(src) => { setAvatarSrc(src); setEditing(null); }}
           />
         </Modal>
       )}
@@ -80,10 +95,9 @@ function InfoRow({ label, value, onEdit }) {
   );
 }
 
-/* ---------- Modal + Forms ---------- */
+/* ---------- Modal ---------- */
 
 function Modal({ title, children, onClose }) {
-  // close on Esc or backdrop click
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onKey);
@@ -135,10 +149,7 @@ function UsernameForm({ current, onSave, onCancel }) {
   const canSave = nonEmpty && sameOk;
 
   return (
-    <form
-      className="popup-form"
-      onSubmit={(e) => { e.preventDefault(); if (canSave) onSave(v.trim()); }}
-    >
+    <form className="popup-form" onSubmit={(e) => { e.preventDefault(); if (canSave) onSave(v.trim()); }}>
       <FieldBlock label="Enter your new name." error={vErr}>
         <input
           className="popup-input"
@@ -268,6 +279,54 @@ function PasswordForm({ onSave, onCancel }) {
           onBlur={() => setTouched(t => ({ ...t, cf: true }))}
         />
       </FieldBlock>
+
+      <Actions canSave={canSave} onCancel={onCancel} />
+    </form>
+  );
+}
+
+/* ---------- Profile picture form ---------- */
+
+function ProfilePicForm({ onSave, onCancel }) {
+  const [file, setFile] = useState(null);
+  const [path, setPath] = useState("");
+
+  const canSave = !!file || !!path.trim();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!canSave) return;
+
+    if (file) {
+      // For now, show a local preview; replace with upload logic as needed.
+      const previewUrl = URL.createObjectURL(file);
+      onSave(previewUrl);
+    } else {
+      onSave(path.trim());
+    }
+  };
+
+  return (
+    <form className="popup-form" onSubmit={handleSubmit}>
+      <div className="field-block">
+        <div className="field-label">Upload Your Picture</div>
+        <input
+          className="popup-file"
+          type="file"
+          accept="image/*"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+        />
+      </div>
+
+      <div className="field-block">
+        <div className="field-label">OR Enter the path to the picture:</div>
+        <input
+          className="popup-input"
+          value={path}
+          onChange={(e) => setPath(e.target.value)}
+          placeholder="https://example.com/image.jpg"
+        />
+      </div>
 
       <Actions canSave={canSave} onCancel={onCancel} />
     </form>
