@@ -1,0 +1,177 @@
+:root {
+  --pink: #f8a8d0;
+  --pink-deep: #f15bb5;
+  --pink-light: #ffeef6;
+  --text: #2b2032;
+}
+
+/* make it fill screen */
+.profile-page {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  background: var(--pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+/* main card fills full height but with nice rounded corners */
+.profile-card {
+  background: var(--pink);
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  padding: 40px 60px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  grid-template-areas:
+    "title title"
+    "left right";
+  align-items: start;
+  gap: 24px 40px;
+  box-sizing: border-box;
+}
+
+/* title */
+.profile-title {
+  grid-area: title;
+  text-align: center;
+  font-size: clamp(28px, 5vw, 56px);
+  margin: 8px 0 4px;
+}
+
+/* columns */
+.profile-left {
+  grid-area: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-right {
+  grid-area: right;
+  position: relative;
+  padding: clamp(8px, 1vw, 12px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 640px;
+  justify-self: start;
+}
+
+/* lips decor */
+.lips {
+  font-size: clamp(44px, 6vw, 96px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.lips--tl {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  transform: rotate(-8deg);
+}
+.lips--br {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  transform: rotate(12deg);
+}
+
+/* avatar circle */
+.avatar {
+  width: clamp(180px, 26vw, 260px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 0;
+  cursor: pointer;
+  background: linear-gradient(to bottom, #bdbdbd 0 50%, #ff62c3 50% 100%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.avatar__cta {
+  position: absolute;
+  bottom: 20%;
+  font-size: 14px;
+  color: #220a18;
+  text-decoration: underline;
+}
+
+/* greeting */
+.greeting {
+  font-size: clamp(22px, 3.2vw, 32px);
+  margin-top: 6px;
+  text-align: left;
+  align-self: start;
+}
+
+/* info rows */
+.info-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  max-width: 640px;
+}
+
+.info-box {
+  background: var(--pink-light);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  font-size: clamp(16px, 1.6vw, 18px);
+  width: 100%;
+}
+
+.info-label {
+  font-weight: 700;
+}
+
+.edit-btn {
+  border: none;
+  background: var(--pink-deep);
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  transition: transform 0.06s ease, filter 0.2s ease;
+}
+.edit-btn:hover {
+  filter: brightness(1.05);
+}
+.edit-btn:active {
+  transform: translateY(1px);
+}
+.edit-btn svg {
+  fill: currentColor;
+}
+
+/* responsive */
+@media (max-width: 900px) {
+  .profile-card {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "left"
+      "right";
+    gap: 18px 16px;
+    padding: 30px 20px;
+  }
+  .profile-right {
+    justify-self: stretch;
+  }
+  .lips--br {
+    display: none;
+  }
+}

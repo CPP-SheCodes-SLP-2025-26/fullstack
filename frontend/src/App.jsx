@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { supabase } from './lib/supabase';
 import AuthButtons from './components/AuthButtons';
 import Navbar from './components/NavBar';
-import RequireAuth from './components/RequireAuth';
-import { supabase } from './lib/supabase';
-
-import About from './pages/About';
+import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
@@ -39,21 +37,11 @@ export default function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/profile" element={<Profile />} />
 
         {/* Login route (redirects away if already signed in) */}
         <Route path="/login" element={<Login session={session} />} />
 
-        
-        {/* Protected route(s) */}
-        <Route
-          path="/dashboard"
-          element={
-            <RequireAuth session={session}>
-              <Dashboard />
-            </RequireAuth>
-          }
-        />
         
         {/* Example: quick sign-out route (optional) */}
         <Route
