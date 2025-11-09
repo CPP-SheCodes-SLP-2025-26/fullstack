@@ -37,6 +37,7 @@ export default function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
 
         {/* Login route (redirects away if already signed in) */}

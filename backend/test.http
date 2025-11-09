@@ -1,0 +1,31 @@
+//Chore table test file using REST extension
+### Get all chores
+GET http://localhost:3000/chores
+
+### Add a new chore
+POST http://localhost:3000/chores
+Content-Type: application/json
+
+{
+  "title": "Take out trash",
+  "description": "Take out trash before 9 PM",
+  "assigned_to": "John",
+  "due_date": "2025-11-05"
+}
+
+### Update a chore
+PUT http://localhost:3000/chores/1
+Content-Type: application/json
+
+{
+  "title": "Take out trash (updated)",
+  "description": "Take out trash before 10 PM",
+  "assigned_to": "John",
+  "due_date": "2025-11-05",
+  "status": "done"
+}
+
+### Delete a chore
+DELETE http://localhost:3000/chores/1
+
+
