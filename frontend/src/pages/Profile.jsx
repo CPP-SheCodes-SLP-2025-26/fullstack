@@ -38,9 +38,6 @@ export default function ProfilePage() {
 				{/* show semi-circle only when a picture exists */}
 				{avatarSrc && <span className="avatar__hover">change pic</span>}
 			</button>
-
-
-          <p className="greeting">Hi, {username}!</p>
         </div>
 
         <div className="profile-right">
