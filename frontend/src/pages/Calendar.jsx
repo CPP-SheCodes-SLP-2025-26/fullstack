@@ -38,6 +38,12 @@ export default function CalendarPage() {
   }
 
   return (
+  <>
+    {/* <section>
+      <h1>Calendar</h1>
+      <p>Events and deadlines.</p>
+    </section> */}
+
     <div style={{ padding: 16 }}>
       <h2>Calendar</h2>
 
@@ -58,7 +64,6 @@ export default function CalendarPage() {
             events={async (info, success, failure) => {
               try {
                 const url = new URL("http://localhost:3000/api/calendar/events");
-                // FullCalendar provides a range; pass to backend
                 url.searchParams.set("start", info.startStr);
                 url.searchParams.set("end", info.endStr);
                 const r = await fetch(url, { credentials: "include" });
@@ -70,12 +75,13 @@ export default function CalendarPage() {
             height="auto"
           />
 
-          {/* simple way to refresh after creation */}
           <RefetchOnCustomEvent />
         </>
       )}
     </div>
-  );
+  </>
+);
+
 }
 
 // Helper component to refetch events when we dispatch "refetch-events"

@@ -1,8 +1,8 @@
 export default function Chores() {
   return (
-    <section>
+    <div className="chores">
       <h1>Chores</h1>
       <p>Assign and track chores.</p>
-    </section>
+    </div>
   );
 }
