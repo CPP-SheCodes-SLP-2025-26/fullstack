@@ -6,7 +6,7 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="navbar">
+    <nav style={{display:'flex',gap:12,padding:'12px 16px',background:'#f5f5f5'}}>
       {/* <Link to="/>Home"</Link> */}
       <Link to="/Home">Home</Link>
       <Link to="/Dashboard">Dashboard</Link>
@@ -16,10 +16,8 @@ export default function Navbar() {
 
       <Link to="/Profile" className="user-profile">Profile</Link>
       <Link to="/Login" className="navbar-signin">Sign In</Link>
-    <nav style={{display:'flex',gap:12,padding:'12px 16px',background:'#f5f5f5'}}>
       <Link to="/">Home</Link>
       <Link to="/about">About</Link>
-      <Link to="/dashboard">Dashboard</Link>
 
       {/* Change links on top depending on current page: ChoreList */}
       {location.pathname === '/ChoreList' ? (
