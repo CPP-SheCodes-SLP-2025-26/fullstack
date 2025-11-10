@@ -1,13 +1,13 @@
 /* Layout */
 .home-page {
-    min-height: calc(100dvh - 56px); /* minus your navbar height */
-    background: #f8a7c1;            /* your pink bg */
+    min-height: calc(100dvh - 56px); 
+    background: #f8a7c1;            
     display: grid;
     gap: 3rem;
     padding: clamp(16px, 4vw, 48px);
   }
   
-  /* Hero */
+
   .home-hero {
     text-align: center;
     margin-inline: auto;
@@ -24,7 +24,7 @@
     margin: 1rem 0 .5rem;
   }
   
-  /* CTAs */
+
   .cta-row {
     display: flex;
     justify-content: center;
@@ -35,11 +35,11 @@
   
   .submit-container {
     display: flex;
-    justify-content: center;   /* ✅ center horizontally */
+    justify-content: center;  
     align-items: center;
     gap: 30px;
     margin: 60px auto;
-    text-decoration: none;     /* ✅ ensure no underline */
+    text-decoration: none;     
   }
   
   .submit {
@@ -56,7 +56,7 @@
     transition: all 0.25s ease-in-out;
     box-shadow: 4px 4px #000;
     border: none;
-    text-decoration: none;     /* ✅ removes underline from link buttons */
+    text-decoration: none;     
   }
   
   /* Primary (pink) */
@@ -71,7 +71,7 @@
     color: #000;
   }
   
-  /* 💅 Hover effect — swap colors */
+
   .submit.primary:hover {
     background: #fff;
     color: #e43173;
@@ -92,7 +92,7 @@
     position: relative;
     margin: 30px auto 0;
     max-width: 500px;
-    background: #f6cad7;                 /* 🟨 soft sticky-note yellow */
+    background: #f6cad7;           
     border: 1px solid #e43173;
     border-radius: 4px;
     padding: 28px 30px;
@@ -100,8 +100,8 @@
     color: #5b0d2a;
     box-shadow:
       2px 2px 4px rgba(0,0,0,0.2),
-      6px 6px 10px rgba(0,0,0,0.15);    /* slight 3D shadow */
-    transform: rotate(-1.5deg);         /* 🌀 slight tilt for realism */
+      6px 6px 10px rgba(0,0,0,0.15); 
+    transform: rotate(-1.5deg);   
     font-family: "Barbie", "Dollie Script";
   }
   
