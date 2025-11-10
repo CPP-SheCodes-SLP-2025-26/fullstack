@@ -32,28 +32,27 @@ function Login({ session }) {
     </div>
   );
 }
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/NavBar";
-
-import Home from "./pages/Home";
-import Calendar from "./pages/Calendar";
-import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import Chores from "./pages/Chores";
-import Bills from "./pages/Bills";
-import NotFound from "./pages/NotFound";
 
 export default function App() {
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setSession(session);
+    })();
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
   return (
     <Router>
       <Navbar className="navbar" />
       <Routes>
         {/* Public routes */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/chores" element={<Chores />} />
-        <Route path="/bills" element={<Bills />} /> 
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/ChoreList" element={<ChoreList />} />
@@ -72,12 +71,26 @@ export default function App() {
           }
         />
 
-        {/* Login route */}
-        <Route path="/login" element={<Login />} />
+        {/* Example: quick sign-out route (optional) */}
+        <Route
+          path="/logout"
+          element={
+            session
+              ? (supabase.auth.signOut(), <Navigate to="/" replace />)
+              : <Navigate to="/" replace />
+          }
+        />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Signed-in footer snippet (optional) */}
+      <div style={{ padding: 20, opacity: 0.7 }}>
+        {session
+          ? <>Signed in as <strong>{session.user.email}</strong> · <button onClick={() => supabase.auth.signOut()}>Sign out</button></>
+          : <>You are not signed in.</>}
+      </div>
     </Router>
   );
 }

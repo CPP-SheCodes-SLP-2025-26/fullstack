@@ -1,8 +1,9 @@
 export default function Dashboard() {
-  return (
-    <section>
-      <h1>Dashboard</h1>
-      <p>Welcome to your overview.</p>
-    </section>
-  );
-}
+    return (
+      <div style={{padding:20}}>
+        <h1>Dashboard</h1>
+        <p>Only visible to signed-in users.</p>
+      </div>
+    );
+  }
+  
