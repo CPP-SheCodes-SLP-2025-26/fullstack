@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import ChoresRoute from "./routes/chores.js"
 import AuthRoute from './routes/googleAuth.js';
 import CalendarRoute from './routes/calendar.js';
+import ProfileRoute from './routes/profile.js';
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.use(session({
 
 // Route handlers
 app.use(ChoresRoute);
+app.use(ProfileRoute);
 app.use('/api/auth', AuthRoute);      // /api/auth/...
 app.use('/api/calendar', CalendarRoute); // /api/calendar/...
 
