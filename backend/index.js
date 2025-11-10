@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import ChoresRoute from "./routes/chores.js"
 import AuthRoute from './routes/googleAuth.js';
 import CalendarRoute from './routes/calendar.js';
+import receiptRoutes from './routes/veryfi.js';
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use(session({
 app.use(ChoresRoute);
 app.use('/api/auth', AuthRoute);      // /api/auth/...
 app.use('/api/calendar', CalendarRoute); // /api/calendar/...
+app.use('/api/receipts', receiptRoutes);  // /api/receipts/...
 
 // Catch-all error handler
 app.use((err, req, res, next) => {
