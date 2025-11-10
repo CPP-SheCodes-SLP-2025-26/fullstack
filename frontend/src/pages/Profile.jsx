@@ -15,7 +15,7 @@ export default function ProfilePage() {
   return (
     <div className="profile-page">
       <div className="profile-card">
-        <h1 className="profile-title">She doesn’t even go here!</h1>
+        <h1 className="profile-title">She Doesn’t Even Go Here!</h1>
 
         <div className="lips lips--tl" aria-hidden="true">💋</div>
 

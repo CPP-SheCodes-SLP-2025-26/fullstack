@@ -1,5 +1,5 @@
 :root {
-  --pink: #f8a8d0;
+  --pink: #f9a5be;
   --pink-deep: #f15bb5;
   --pink-light: #ffeef6;
   --text: #2b2032;
@@ -46,8 +46,11 @@
 .profile-title {
   grid-area: title;
   text-align: center;
-  font-size: clamp(32px, 6vw, 64px);
+  /* font-size: clamp(32px, 6vw, 64px); */
   margin: 8px 0 4px;
+  text-shadow: 3px 3px #ffffff;
+  font-size: 70px;
+  color: ;
 }
 
 /* columns */

@@ -1,13 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import "./NavBar.css";
 
 export default function Navbar() {
   return (
-    <nav style={{display:'flex',gap:12,padding:'12px 16px',background:'#f5f5f5'}}>
-      <Link to="/">Home</Link>
-      <Link to="/calendar">calendar</Link>
-      <Link to="/profile">Profile</Link>
-      <Link to="/dashboard">Dashboard</Link>
-      <Link to="/login" style={{marginLeft:'auto'}}>Sign in</Link>
+    <nav className="navbar">
+      {/* <Link to="/>Home"</Link> */}
+      <Link to="/Home">Home</Link>
+      <Link to="/Dashboard">Dashboard</Link>
+      <Link to="/Calendar">Calendar</Link>
+      <Link to="/Chores">Chores</Link>
+      <Link to="/Bills">Bills</Link>
+
+      <Link to="/Profile" className="user-profile">Profile</Link>
+      <Link to="/Login" className="navbar-signin">Sign In</Link>
     </nav>
   );
 }

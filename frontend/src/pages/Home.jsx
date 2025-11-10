@@ -1,8 +1,10 @@
+import './Home.css'
+
 export default function Home() {
     return (
-      <div style={{padding:20}}>
+      <div className="home-page">
         <h1>Home</h1>
-        <p>Welcome! This is your public homepage.</p>
+        <p1>Welcome! This is your public homepage.</p1>
       </div>
     );
   }
