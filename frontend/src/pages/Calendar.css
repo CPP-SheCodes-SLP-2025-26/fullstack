@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   padding: 24px;
-  background-color: #ffffff;
+  background-color: #f9a5be;
   color: #333;
   min-height: 100vh;
   min-height: 500px;
@@ -28,7 +28,7 @@
   width: 220px;
   min-width: 160px;
   max-width: 240px;
-  background: #f8e9f3;
+  background: #e7638b;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(228,49,115,0.08);
   padding: 18px 16px;
@@ -40,7 +40,7 @@
 }
 
 .calendar-sidebar h3 {
-  color: #e43173;
+  color: #fff;
   margin-top: 0;
   margin-bottom: 12px;
   font-size: 1.2rem;
