@@ -1,3 +1,4 @@
+
 .calendar-page {
   display: flex;
   flex-direction: column;
@@ -6,6 +7,62 @@
   background-color: #ffffff;
   color: #333;
   min-height: 100vh;
+  min-height: 500px;
+}
+
+
+.calendar-main-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  max-width: 1100px;
+  margin-top: 8px;
+  gap: 24px;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  height: 100%;
+}
+
+
+.calendar-sidebar {
+  width: 220px;
+  min-width: 160px;
+  max-width: 240px;
+  background: #f8e9f3;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(228,49,115,0.08);
+  padding: 18px 16px;
+  margin-right: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.calendar-sidebar h3 {
+  color: #e43173;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.2rem;
+}
+
+.upcoming-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.upcoming-list li {
+  margin-bottom: 16px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 4px rgba(228,49,115,0.07);
+  font-size: 1rem;
+}
+
+.upcoming-list li:last-child {
+  margin-bottom: 0;
 }
 
 .calendar-header {
@@ -31,8 +88,13 @@
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 16px;
-  width: 90%;
-  max-width: 900px;
+  width: 0;
+  min-width: 0;
+  max-width: 700px;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 /* Optional: style FullCalendar itself */
