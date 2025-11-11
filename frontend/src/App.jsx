@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Chores from "./pages/Chores";
 import Bills from "./pages/Bills";
 import NotFound from "./pages/NotFound";
+import ForgotPassword from "./pages/ForgotPassword"; // ✅ add this line
 
 export default function App() {
   return (
@@ -20,10 +21,11 @@ export default function App() {
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chores" element={<Chores />} />
-        <Route path="/bills" element={<Bills />} /> 
+        <Route path="/bills" element={<Bills />} />
 
-        {/* Login route */}
+        {/* Auth routes */}
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot" element={<ForgotPassword />} /> {/* ✅ add this route */}
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom"; // ✅ added Link here
 import "./Login.css";
 
-// Use paths relative to /src/pages → /src/assets
 import email_icon from "../assets/email.png";
 import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
@@ -52,10 +51,13 @@ export default function Login({ session }) {
         </div>
       </div>
 
-      {/* Forgot password (hide on Sign Up) */}
+      {/* ✅ Updated Forgot Password Section */}
       {action === "Join The Plastics!" ? null : (
         <div className="forgot-password">
-          Forgot Your Password? Ugh Same. <span>Click Here, Loser!</span>
+          Forgot Your Password? Ugh Same.{" "}
+          <Link className="forgot-link" to="/forgot">
+            Click Here, Loser!
+          </Link>
         </div>
       )}
 
