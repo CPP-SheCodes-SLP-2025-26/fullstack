@@ -1,38 +1,31 @@
-@font-face {
-  font-family: "Dollie Script";
-  src: url("../assets/Dollie-Script.ttf") format("truetype");
-}
-
 .navbar {
   display: flex;
-  gap: 40px;
-  padding: 12px 16px;
-  background: #e43173;
   align-items: center;
+  justify-content: space-between;
+  background: #e43173;
   border-bottom: 6px solid #ffffff;
-  padding-left: 40px;
+  padding: 12px 30px; /* now this actually adds space on both sides */
 }
 
-
-/* Right-align the "Sign in" link */
-.navbar-signin {
-    margin-left: auto;
-    font-family: "Barbie", 'Dollie Script';
-    font-weight: 900;
-    padding-right: 30px;
+/* Left-side links */
+.navbar-links {
+  display: flex;
+  gap: 40px;
+  /*padding-left: 40px; /* <-- this will now work properly */
 }
 
-.user-profile {
-  margin-left: 700px;
-  font-family: "Barbie", 'Dollie Script';
-  font-weight: 900;
+/* Right-side links */
+.navbar-right {
+  display: flex;
+  gap: 40px;
+  margin-left: auto;
+  padding-right: 30px;
 }
 
 /* Link styling */
 .navbar a {
   color: #ffffff;
   text-decoration: none;
-  font-weight: 500;
   font-family: "Barbie", 'Dollie Script';
   font-weight: 900;
   font-size: 21px;
@@ -41,5 +34,4 @@
 
 .navbar a:hover {
   color: #fbafcb;
-  /* text-decoration: underline; */
 }

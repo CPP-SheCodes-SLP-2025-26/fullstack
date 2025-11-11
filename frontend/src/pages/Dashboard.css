@@ -1,0 +1,133 @@
+/* Layout */
+.dashboard {
+  display: grid;
+  grid-template-columns: 220px 1fr 280px;
+  gap: 2rem;
+  height: 100vh;
+  padding: 20px;
+  background: #f8a7c1; /* use same base background as home page */
+  font-family: "Barbie", "Dollie Script", serif;
+  /*text-shadow: 2px 2px #000; --> ugly*/
+}
+
+/* Sidebar (left) */
+.sidebar {
+  background-color: #e43173;
+  color: #fff;
+  width: 250px;
+  padding: 20px;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 90px;
+  height: 90px;
+  background-color: #ad1b51;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.greeting {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.nav-menu li {
+  font-size: 25px; /* menu size*/
+  padding: 15px 18px;
+  padding: 12px 15px;
+  margin-bottom: 20px; /* space between each item */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.nav-menu li:hover {
+  background-color: #f9a5be;
+  color: #000;
+}
+
+/* Middle section */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.chore-card {
+  width: 70%;
+  max-width: 600px;
+  margin: 50px auto 0 auto; /* top margin + horizontal centering */
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 18px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: #000;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  min-height: 500px;
+}
+
+.chore-card h2 {
+  font-size: clamp(22px, 2.5vw, 28px); /* consistent with other headings */
+  font-family: "Barbie", "Dollie Script", serif;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #5b0d2a;
+}
+
+/* Right sticky notes */
+.right-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: flex-start;
+   margin-top: 50px; /* push sticky notes lower */
+}
+
+.quote-card, .events-card {
+  background: #f6cad7;
+  border: 1px solid #e43173;
+  border-radius: 8px;
+  padding: 25px 30px; /* more padding */
+  font-size: clamp(16px, 2vw, 20px);
+  color: #5b0d2a;
+  box-shadow:
+      2px 2px 4px rgba(0,0,0,0.2),
+      6px 6px 10px rgba(0,0,0,0.15);
+  width: 100%;
+  min-height: 200px; /* larger size */
+  transform: rotate(-1deg); /* slight rotation */
+  position: relative;
+}
+.quote-card::before, .quote-card::after,
+.events-card::before, .events-card::after {
+  content: "";
+  position: absolute;
+  width: 70px;
+  height: 20px;
+  background: #e43173;
+  opacity: 0.9;
+  top: -10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.quote-card::before { left: 15%; transform: rotate(-10deg); }
+.quote-card::after { right: 15%; transform: rotate(8deg); }
+.events-card::before { left: 15%; transform: rotate(-12deg); }
+.events-card::after { right: 15%; transform: rotate(10deg); }
