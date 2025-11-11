@@ -9,7 +9,6 @@ import Chores from "./pages/Chores";
 import Bills from "./pages/Bills";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
-import NewChore from "./pages/NewChore";
 
 export default function App() {
   return (
@@ -25,7 +24,6 @@ export default function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/chores" element={<Chores />} />
         <Route path="/bills" element={<Bills />} /> 
-        <Route path="/new-chore" element={<NewChore />} />
 
         {/* Login route */}
         <Route path="/login" element={<Login mode="login" />} />
