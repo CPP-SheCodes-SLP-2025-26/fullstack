@@ -96,7 +96,7 @@ class Profile
         }
     }
 
-    static validateEmail(email) {return ( email.length === 0 || !(/^\S+@\S+\.\S+$/.test(email)));}
+    static validateEmail(email) {return (email.length === 0 || !(/^\S+@\S+\.\S+$/.test(email)));}
 
     static async DuplicateEmail(email) 
     {
@@ -136,6 +136,88 @@ class Profile
         return { ok: false, error: 'Server error' };
       }
     }
+
+    static async changePassword(userId, oldPass, newPass, confmPass) 
+    {
+      try {
+        if (!oldPass || !newPass || !confmPass) return { ok: false, errors: ['Missing password fields'] };
+        if (oldPass === newPass) return { ok: false, errors: ['Old Password was entered'] };
+        if (newPass !== confmPass) return { ok: false, errors: ['New passwords do not match'] };
+  
+        // Get the user’s current password hash
+        const [result] = await pool.query('SELECT password FROM users WHERE id = ?', [userId]);
+        console.log(result)
+        if (result.length === 0) return { ok: false, errors: ['User not found'] };
+  
+        const user = result[0];
+  
+        // Compare old password
+        const match = await bcrypt.compare(oldPass, user.password);
+        if (!match) return { ok: false, errors: ['Incorrect old password'] };
+  
+        // Hash and update new password
+        const hashed = await bcrypt.hash(newPass, 10);
+        await pool.query('UPDATE users SET password = ? WHERE id = ?', [hashed, userId,]);
+  
+        return { ok: true, msg: 'Password updated successfully' };
+      } catch (err) {
+        console.error(err);
+        return { ok: false, errors: ['Server error while changing password'] };
+      }
+    }
+
+    static async changeEmail(userId, newEmail, confmEmail) 
+    {
+      try {
+        if (!newEmail || !confmEmail) return { ok: false, errors: ['Missing email fields'] };
+        if (newEmail !== confmEmail) return { ok: false, errors: ['Emails do not match'] };
+        if (this.validateEmail(newEmail)) return { ok: false, errors: ['Invalid email format'] };
+    
+        const [userRows] = await pool.query('SELECT email FROM users WHERE id = ?', [userId]);
+        if (userRows.length === 0) return { ok: false, errors: ['User not found'] };
+    
+        const currentEmail = userRows[0].email;
+        if (currentEmail === newEmail) return { ok: false, errors: ['New email cannot be the same as the old email'] };
+    
+        const isDuplicate = await this.DuplicateEmail(newEmail);
+        if (isDuplicate) return { ok: false, errors: ['Email already in use'] };
+    
+        await pool.query('UPDATE users SET email = ? WHERE id = ?', [newEmail, userId]);
+        return { ok: true, msg: 'Email updated successfully' };
+
+      } catch (err) {
+        console.error('changeEmail error:', err);
+        return { ok: false, errors: ['Server error while changing email'] };
+      }
+    }
+
+    static async changeUsername(userId, newUsername, confmUsername) 
+    {
+      try {
+        if (!userId || !newUsername || !confmUsername) return { ok: false, errors: ['Missing required fields'] };
+        if (newUsername !== confmUsername) return { ok: false, errors: ['Usernames do not match'] };
+    
+        // Check if user exists
+        const [userRows] = await pool.query('SELECT name FROM users WHERE id = ?', [userId]);
+        if (userRows.length === 0) return { ok: false, errors: ['User not found'] };
+    
+        const currentName = userRows[0].name;
+        if (currentName === newUsername) return { ok: false, errors: ['New username cannot be the same as the old one'] };
+    
+        // Check if username is already taken
+        const [dupRows] = await pool.query('SELECT id FROM users WHERE name = ? LIMIT 1', [newUsername]);
+        if (dupRows.length > 0) return { ok: false, errors: ['Username already in use'] };
+    
+        // Update username
+        await pool.query('UPDATE users SET name = ? WHERE id = ?', [newUsername, userId]);
+        return { ok: true, msg: 'Username updated successfully' };
+
+      } catch (err) {
+        console.error(err);
+        return { ok: false, errors: ['Server error while changing username'] };
+      }
+    }
+    
 }
 
 export default Profile;
