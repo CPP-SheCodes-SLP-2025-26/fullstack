@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Chores from "./pages/Chores";
 import Bills from "./pages/Bills";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
 
 export default function App() {
   return (
@@ -15,15 +16,18 @@ export default function App() {
       <Navbar />
 
       <Routes>
+        <Route path="/" element={<Home />} />
         {/* Public routes */}
         <Route path="/home" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chores" element={<Chores />} />
         <Route path="/bills" element={<Bills />} /> 
 
         {/* Login route */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login mode="login" />} />
+        <Route path="/signup" element={<Login mode="signup" />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
