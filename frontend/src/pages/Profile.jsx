@@ -15,7 +15,7 @@ export default function ProfilePage() {
   return (
     <div className="profile-page">
       <div className="profile-card">
-        <h1 className="profile-title">She doesn’t even go here!</h1>
+        <h1 className="profile-title">She Doesn’t Even Go Here!</h1>
 
         <div className="lips lips--tl" aria-hidden="true">💋</div>
 
@@ -33,10 +33,10 @@ export default function ProfilePage() {
 				}
 			>
 				{/* show this text in the middle when no picture */}
-				{!avatarSrc && <span className="avatar__cta">change pic</span>}
+				{!avatarSrc && <span className="avatar__cta">Change Picture</span>}
 
 				{/* show semi-circle only when a picture exists */}
-				{avatarSrc && <span className="avatar__hover">change pic</span>}
+				{avatarSrc && <span className="avatar__hover">Change Pic</span>}
 			</button>
 			<p className="greeting">Hi, {username}!</p>
         </div>
