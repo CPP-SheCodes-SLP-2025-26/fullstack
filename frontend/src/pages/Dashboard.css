@@ -7,6 +7,7 @@
   padding: 20px;
   background: #f8a7c1; /* use same base background as home page */
   font-family: "Barbie", "Dollie Script", serif;
+  /*text-shadow: 2px 2px #000; --> ugly*/
 }
 
 /* Sidebar (left) */
