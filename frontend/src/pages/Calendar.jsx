@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import ConnectGoogleButton from "../components/ConnectGoogleButton.jsx";
@@ -6,8 +6,8 @@ import ConnectGoogleButton from "../components/ConnectGoogleButton.jsx";
 export default function CalendarPage() {
   const [connected, setConnected] = useState(false);
   const [creating, setCreating] = useState(false);
+  const calendarRef = useRef(null);
 
-  // Calls API to see if Google is linked
   const refreshStatus = useCallback(async () => {
     const r = await fetch("http://localhost:3000/api/auth/status", { credentials: "include" });
     const j = await r.json();
@@ -16,7 +16,6 @@ export default function CalendarPage() {
 
   useEffect(() => { refreshStatus(); }, [refreshStatus]);
 
-  // quick demo create
   async function createDemoEvent() {
     setCreating(true);
     const start = new Date();
@@ -32,73 +31,65 @@ export default function CalendarPage() {
       })
     });
     setCreating(false);
-    // force FullCalendar to refetch
-    const ev = new Event("refetch-events");
-    window.dispatchEvent(ev);
+
+    // ask FullCalendar to refetch via custom event
+    window.dispatchEvent(new Event("refetch-events"));
   }
 
-  // Get upcoming events (future dates only)
-  const today = new Date().toISOString().slice(0, 10);
-  const upcomingEvents = events.filter(e => e.date >= today);
+  // (Removed the undefined `events`/`upcomingEvents` code)
 
   return (
-  <>
-    {/* <section>
-      <h1>Calendar</h1>
-      <p>Events and deadlines.</p>
-    </section> */}
+    <>
+      <div style={{ padding: 16 }}>
+        <h2>Calendar</h2>
 
-    <div style={{ padding: 16 }}>
-      <h2>Calendar</h2>
+        {!connected ? (
+          <>
+            <p>Connect your Google account to load events.</p>
+            <ConnectGoogleButton onConnected={refreshStatus} />
+          </>
+        ) : (
+          <>
+            <button onClick={createDemoEvent} disabled={creating} style={{ marginBottom: 12 }}>
+              {creating ? "Creating..." : "Create button (need to do)"}
+            </button>
 
-      {!connected ? (
-        <>
-          <p>Connect your Google account to load events.</p>
-          <ConnectGoogleButton onConnected={refreshStatus} />
-        </>
-      ) : (
-        <>
-          <button onClick={createDemoEvent} disabled={creating} style={{ marginBottom: 12 }}>
-            {creating ? "Creating..." : "Create button (need to do)"}
-          </button>
+            <FullCalendar
+              ref={calendarRef}
+              plugins={[dayGridPlugin]}
+              initialView="dayGridMonth"
+              events={async (info, success, failure) => {
+                try {
+                  const url = new URL("http://localhost:3000/api/calendar/events");
+                  url.searchParams.set("start", info.startStr);
+                  url.searchParams.set("end", info.endStr);
+                  const r = await fetch(url, { credentials: "include" });
+                  const data = await r.json();
+                  success(data);
+                } catch (e) {
+                  failure(e);
+                }
+              }}
+              height="auto"
+            />
 
-          <FullCalendar
-            plugins={[dayGridPlugin]}
-            initialView="dayGridMonth"
-            events={async (info, success, failure) => {
-              try {
-                const url = new URL("http://localhost:3000/api/calendar/events");
-                url.searchParams.set("start", info.startStr);
-                url.searchParams.set("end", info.endStr);
-                const r = await fetch(url, { credentials: "include" });
-                success(await r.json());
-              } catch (e) {
-                failure(e);
-              }
-            }}
-            height="auto"
-          />
-
-          <RefetchOnCustomEvent />
-        </>
-      )}
-    </div>
-  </>
-);
-
+            <RefetchOnCustomEvent calendarRef={calendarRef} />
+          </>
+        )}
+      </div>
+    </>
+  );
 }
 
 // Helper component to refetch events when we dispatch "refetch-events"
-function RefetchOnCustomEvent() {
+function RefetchOnCustomEvent({ calendarRef }) {
   useEffect(() => {
     const handler = () => {
-      const fc = document.querySelector(".fc"); // FullCalendar root
-      if (!fc) return;
-      const inst = fc.__fullCalendar; // internal ref in v6
-      if (inst?.getApi) inst.getApi().refetchEvents();
+      const api = calendarRef.current?.getApi?.();
+      api?.refetchEvents();
     };
     window.addEventListener("refetch-events", handler);
     return () => window.removeEventListener("refetch-events", handler);
-  }, []);
+  }, [calendarRef]);
   return null;
 }
