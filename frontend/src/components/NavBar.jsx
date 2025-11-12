@@ -15,7 +15,7 @@ export default function Navbar() {
           <Link to="/dashboard">Dashboard</Link>
 
           {/* Add These In The Dashboard */}
-          {/* <Link to="/calendar">Calendar</Link> */}
+          {<Link to="/calendar">Calendar</Link>}
           {/* <Link to="/chores">Chores</Link> */}
           {/* <Link to="/bills">Bills</Link> */}
         </div>
