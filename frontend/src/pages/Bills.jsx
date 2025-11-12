@@ -1,13 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Bills.css";
-import fallbackReceipt from "../assets/SLP-bills-icon.jpg"; // <-- import fallback image  
+
+const ICON_URL = "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/receipt.svg";
 
 export default function BillsPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [bills, setBills] = useState([]);
 
+  const ROOM = 204; // adjust as needed
+
   const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
 
+  // 🧾 Load receipts from DB
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/receipt/${ROOM}`);
+        if (!res.ok) throw new Error("Failed to load receipts");
+        const data = await res.json();
+        setBills(data.receipts || []);
+      } catch (err) {
+        console.error("Error loading receipts:", err);
+      }
+    })();
+  }, []);
+
+  // 📤 Upload new receipt
   const handleUpload = async () => {
     if (!selectedFile) return alert("Please select a file first");
 
@@ -19,39 +37,33 @@ export default function BillsPage() {
         method: "POST",
         body: formData,
       });
-
       if (!res.ok) throw new Error("Upload failed");
 
       const data = await res.json();
       const receipt = data?.data || data;
-      const total = receipt?.total || 0;
-      const thumbnail = receipt?.thumbnailUrl || "";
+      const total = Number(receipt?.total || 0);
       const title = receipt?.vendor?.name || "Untitled";
 
-      setBills([{ total, thumbnail, title }, ...bills]);
-      setSelectedFile(null);
-
-      const save = await fetch("http://localhost:3000/apireceipts/db/upload", {
+      // Save to DB
+      const save = await fetch("http://localhost:3000/receipt/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          room_num: 204,
+          room_num: ROOM,
           name: title,
-          total: Number(total.toFixed(2)), // normalize
+          total: total.toFixed(2),
         }),
       });
       if (!save.ok) throw new Error("Failed to save receipt to DB");
-      const saved = await save.json(); // contains { id }
+      const saved = await save.json();
 
-      // 3) Update UI
-      setBills([{ total, thumbnail, title, id: saved.id }, ...bills]);
+      // Update list
+      setBills((prev) => [{ id: saved.id, name: title, total }, ...prev]);
       setSelectedFile(null);
-
     } catch (err) {
       console.error(err);
       alert("Upload failed. Check console.");
     }
-    
   };
 
   return (
@@ -68,17 +80,17 @@ export default function BillsPage() {
         <p className="no-bills">No receipts uploaded yet</p>
       ) : (
         <div className="bills-list">
-          {bills.map((bill, index) => (
-            <div className="bill-card" key={index}>
+          {bills.map((bill) => (
+            <div className="bill-card" key={bill.id}>
               <img
-                src={bill.thumbnail ? `http://localhost:3000${bill.thumbnail}` : fallbackReceipt}
-                alt={`Receipt ${index + 1}`}
-                className="thumbnail"
+                src={ICON_URL}
+                alt="Receipt icon"
+                className="receipt-icon"
               />
               <div className="bill-info">
-                <p className="bill-title">{bill.title}</p>
+                <p className="bill-title">{bill.name}</p>
+                <p className="bill-total"><strong>${Number(bill.total).toFixed(2)}</strong></p>
               </div>
-              <p className="bill-total"><strong>${bill.total}</strong></p>
             </div>
           ))}
         </div>
@@ -86,7 +98,3 @@ export default function BillsPage() {
     </div>
   );
 }
-
-
-
-

@@ -8,6 +8,7 @@ import AuthRoute from './routes/googleAuth.js';
 import CalendarRoute from './routes/calendar.js';
 import receiptRoutes from './routes/bills.js';
 import ProfileRoute from './routes/profile.js';
+import receiptRoutes2 from './routes/finances.js';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use(session({
 // Route handlers
 app.use(ChoresRoute);
 app.use(ProfileRoute);
+app.use(receiptRoutes2);
 app.use('/api/auth', AuthRoute);      // /api/auth/...
 app.use('/api/calendar', CalendarRoute); // /api/calendar/...
 app.use('/api/receipts', receiptRoutes);  // /api/receipts/...
