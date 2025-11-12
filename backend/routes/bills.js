@@ -1,45 +1,38 @@
 // backend for receipts API
+// routes/bills.js
 import { Router } from 'express';
-import multer from 'multer'; // For file uploads
-import Veryfi from '@veryfi/veryfi-sdk';
+import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
+import veryfiClient from '../functions/veryfi.js'; // <- import client
 
 const router = Router();
-
-// Configure multer to store uploaded files in memory
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// Create Veryfi client using env variables
-const veryfiClient = new Veryfi(
-  process.env.VERYFI_CLIENT_ID,
-  process.env.VERYFI_CLIENT_SECRET,
-  process.env.VERYFI_USERNAME,
-  process.env.VERYFI_API_KEY
-);
-
-// POST receipts (upload)
 router.post('/upload', upload.single('receipt'), async (req, res) => {
-	console.log("Upload route hit");
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
 
-    // Save buffer to temporary file
     const tempDir = path.join('./temp');
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
     const tempPath = path.join(tempDir, req.file.originalname);
     fs.writeFileSync(tempPath, req.file.buffer);
 
-    // Process file with Veryfi
     const response = await veryfiClient.process_document(tempPath, []);
 
-    // Clean up temporary file
     fs.unlinkSync(tempPath);
 
-    // Send parsed data back to frontend
-    res.json({ success: true, data: response });
+    const billData = {
+      id: Date.now(),
+      vendor: response.vendor || "Unknown",
+      date: response.date || new Date().toISOString().split('T')[0],
+      total: response.total || 0,
+      thumbnailUrl: req.file ? `/temp/${req.file.originalname}` : null,
+    };
+
+    res.json(billData);
   } catch (error) {
     console.error('Veryfi upload error:', error);
     res.status(500).json({ error: 'Failed to process receipt' });
@@ -47,6 +40,7 @@ router.post('/upload', upload.single('receipt'), async (req, res) => {
 });
 
 export default router;
+
 
 
 /**
