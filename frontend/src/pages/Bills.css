@@ -90,18 +90,17 @@
 
 .bill-card {
   display: flex;
-  margin-bottom: 1.5rem;
   align-items: center;
-  justify-content: center; 
+  justify-content: space-between; /* spread icon+title left, total right */
   background-color: #eda6bc;
   border: 2px solid #c44d75;
   border-radius: 12px;
   padding: 14px 24px;
-  gap: 22px;
-  flex: 1 1 100%;
+  margin-bottom: 1.5rem;
   box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 
+/* Icon stays left */
 .receipt-icon {
   width: 40px;
   height: 40px;
@@ -109,24 +108,26 @@
   filter: invert(20%) sepia(60%) saturate(300%) hue-rotate(-20deg);
 }
 
+/* Title and total layout */
 .bill-info {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 450px; 
+  justify-content: space-between; /* pushes total all the way right */
   flex: 1;
 }
 
+/* Text styles */
 .bill-title {
   font-size: 20px;
   font-weight: 700;
   color: #9b1045;
-  margin: 0;
+  margin-left: 12px; /* spacing between icon and title */
 }
 
 .bill-total {
   font-size: 20px;
   color: #000;
   font-weight: 700;
-  margin: 0;
+  margin-left: auto; /* ensures it stays to the right */
 }
+
