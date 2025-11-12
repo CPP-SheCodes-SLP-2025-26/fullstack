@@ -10,26 +10,51 @@
 }
 
 .page-title {
-  color: #e43173; /* hot pink */
-  font-size: 2rem;
-  text-align: center; /* center header */
-  margin-bottom: 3rem; /* more space from upload */
+  color: #e43173;
+  font-size: 3rem;
+  text-align: center; 
+  margin-bottom: 3rem;
   text-shadow: 1px 1px #ad1b51;
+  padding-left: 3rem; 
 }
 
 .upload-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem; /* spacing between elements */
-  margin-bottom: 2rem;
+  gap: 1rem; /* small space between file input and upload button */
+  margin-bottom: 4rem;
 }
 
+/* File input container */
 .upload-container input[type="file"] {
-  display: block;
-  margin-bottom: 0.3rem;
+  width: auto; /* no stretching */
+  max-width: 250px;
+  color: #e43173;
+  background-color: #fce4ec;
+  border: 2px solid #e7638b;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-family: inherit;
+  cursor: pointer;
 }
 
+.upload-container input[type="file"]::file-selector-button {
+  background-color: #e43173;
+  color: white;
+  border: 2px solid #ad1b51;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+
+.upload-container input[type="file"]::file-selector-button:hover {
+  background-color: #ad1b51;
+}
+
+/* Upload button to the right */
 .upload-button {
   background-color: #e7638b;
   color: white;
@@ -39,17 +64,21 @@
   border-radius: 8px;
   border: 2px solid #ad1b51;
   text-align: center;
+  white-space: nowrap;
 }
 
 .upload-button:hover {
   background-color: #e43173;
 }
 
-.no-file-selected {
-  font-size: 0.9rem;
-  color: #e43173;
+/* Hide the “No file chosen” text outside the buttons */
+.upload-container input[type="file"]::-webkit-file-upload-text {
+  display: none;
 }
 
+.upload-container input[type="file"]::-webkit-file-upload-text {
+  display: none;
+}
 
 .thumbnail {
   width: 100px;
@@ -59,11 +88,11 @@
   border: 2px dashed #ad1b51;
 }
 
-
 .bill-card {
   display: flex;
+  margin-bottom: 1.5rem;
   align-items: center;
-  justify-content: center; /* center all content horizontally */
+  justify-content: center; 
   background-color: #eda6bc;
   border: 2px solid #c44d75;
   border-radius: 12px;
@@ -84,7 +113,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 450px; /* space between title and total */
+  gap: 450px; 
   flex: 1;
 }
 

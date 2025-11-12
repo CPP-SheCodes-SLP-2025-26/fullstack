@@ -73,9 +73,7 @@ export default function BillsPage() {
       <div className="upload-container">
         <input type="file" accept="image/*" id="fileInput" onChange={handleFileChange} />
         <button className="upload-button" onClick={handleUpload}>Upload Receipt</button>
-        <p className="no-file-selected">{selectedFile ? selectedFile.name : "No file chosen"}</p>
       </div>
-
       {bills.length === 0 ? (
         <p className="no-bills">No receipts uploaded yet</p>
       ) : (
