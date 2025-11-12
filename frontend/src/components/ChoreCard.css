@@ -1,0 +1,49 @@
+@font-face {
+  font-family: 'Nothing You Could Do';
+  src: url('../assets/NothingYouCouldDo-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Oregano';
+  src: url('../assets/Oregano-Regular.ttf') format('truetype');
+}
+.card{
+    all:unset;
+}
+
+.card.choreCard{
+    background-color: lightgoldenrodyellow;
+     background-image: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 1.8rem, /* space between lines */
+    #aaa 1.9rem           /* line thickness */
+  );
+
+  font-family: "Nothing You Could Do", serif;
+  font-size: 1.6rem;
+  padding:0;
+  text-align: center;
+}
+
+.card.choreCard .card-title {
+  font-family: "Oregano", serif;
+  font-size: 2.5rem;
+  color: #e43173;
+  margin-bottom: 23px;
+  position: relative;
+  top: 5px;
+  text-align: left;
+  padding-left: 18px;
+}
+
+.checkbox{
+    width: 50px;          
+    height: 50px;
+    border: 2px solid black; 
+    border-radius: 4px;    
+    background-color: transparent; 
+    position: absolute;     
+    top: 24px;              
+    right: 35px;   
+}
