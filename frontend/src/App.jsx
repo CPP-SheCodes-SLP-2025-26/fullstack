@@ -4,7 +4,7 @@ import Navbar from "./components/NavBar";
 import Home from "./pages/Home";
 import Calendar from "./pages/Calendar";
 import Profile from "./pages/Profile";
-import Login from "./pages/GetInLoser";
+import Login from "./pages/Login";
 import Signup from "./pages/JoinPlastics";
 import Chores from "./pages/Chores";
 import Bills from "./pages/Bills";
