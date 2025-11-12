@@ -80,6 +80,30 @@ class Chore
       return false;
     }
   }
+
+  static async getPersonChores(user_id)
+  {
+    try {
+      const [rows] = await pool.query('SELECT * FROM chores WHERE user_id = ?', [user_id]);
+      return rows;
+
+    } catch (error) {
+      console.error("Error in getPersonChores:", error);
+      return null;
+    }
+  }
+
+  static async getAllChoresSorted() 
+  {
+    try {
+      const [rows] = await pool.query('SELECT * FROM chores ORDER BY due_date ASC');
+      return rows;
+      
+    } catch (error) {
+      console.error("Error in getAllChoresSorted:", error);
+      return null;
+    }
+  }
 }
 
 export default Chore; 
