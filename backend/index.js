@@ -3,10 +3,10 @@ import cors from "cors"  // a way for browsers and servers to interact
 import session from 'express-session';
 import dotenv from 'dotenv';
 
-import ChoresRoute from "./routes/chores.js"
+import ChoresRoute from "./routes/chores.js";
 import AuthRoute from './routes/googleAuth.js';
 import CalendarRoute from './routes/calendar.js';
-import receiptRoutes from './routes/veryfi.js';
+import receiptRoutes from './routes/bills.js';
 import ProfileRoute from './routes/profile.js';
 
 dotenv.config();

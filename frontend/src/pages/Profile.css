@@ -1,6 +1,6 @@
 :root {
   --pink: #f9a5be;
-  --pink-deep: #f15bb5;
+  --pink-deep: #e43173;
   --pink-light: #ffeef6;
   --text: #2b2032;
 }
@@ -40,6 +40,7 @@
   margin-top: 0;             
   text-align: center;        
   align-self: center;      
+  color: #ffffff;
 }
 
 /* title */
@@ -48,9 +49,10 @@
   text-align: center;
   /* font-size: clamp(32px, 6vw, 64px); */
   margin: 8px 0 4px;
-  text-shadow: 3px 3px #ffffff;
   font-size: 70px;
-  color: ;
+  color: #5b0d2a;
+  font-weight: 1000;
+  text-shadow: 2px 2px #fff;
 }
 
 /* columns */
@@ -104,12 +106,13 @@
   border-radius: 50%;
   border: 0;
   cursor: pointer;
-  background: linear-gradient(to bottom, #bdbdbd 0 50%, #ff62c3 50% 100%);
+  background: linear-gradient(to bottom, #ffffff 0 50%, #e43173 50% 100%);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   position: relative;
   display: grid;
   place-items: center;
 }
+
 .avatar__cta {
   position: absolute;
   bottom: 18%;

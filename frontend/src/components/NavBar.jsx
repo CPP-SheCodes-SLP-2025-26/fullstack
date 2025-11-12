@@ -9,15 +9,17 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      {!onDashboard && (
+      {/* {!onDashboard && ( */}
         <div className="navbar-links">
           <Link to="/home">Home</Link>
           <Link to="/dashboard">Dashboard</Link>
-          <Link to="/calendar">Calendar</Link>
-          <Link to="/chores">Chores</Link>
-          <Link to="/bills">Bills</Link>
+
+          {/* Add These In The Dashboard */}
+          {<Link to="/calendar">Calendar</Link>}
+          {/* <Link to="/chores">Chores</Link> */}
+          {/* <Link to="/bills">Bills</Link> */}
         </div>
-      )}
+      {/* )} */}
 
       <div className="navbar-right">
         <Link to="/profile" className="user-profile">Profile</Link>
