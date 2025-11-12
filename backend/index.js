@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json()); // To parse JSON request bodies
 
 const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173',
-  'http://localhost:5175','http://localhost:5176']; // if needed, you can add more origins
+  'http://localhost:5175','http://localhost:5176','http://localhost:5177']; // if needed, you can add more origins
 
 app.use(cors({
   origin: function (origin, callback) {

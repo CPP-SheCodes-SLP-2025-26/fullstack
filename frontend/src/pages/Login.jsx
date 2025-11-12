@@ -16,6 +16,9 @@ export default function Login({ session, setSession }) {
   const [username, setUsername] = useState(""); // Must be username for backend login
   const [password, setPassword] = useState("");
 
+  // store error message for inline display
+  const [errorMessage, setErrorMessage] = useState("");
+
   // Redirect if already logged in
   useEffect(() => {
     if (session) {
@@ -27,6 +30,7 @@ export default function Login({ session, setSession }) {
   // Login function
   const handleLogin = async () => {
     try {
+      setErrorMessage(""); // clear any old error
       const res = await fetch("http://localhost:3000/api/profile/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -36,18 +40,20 @@ export default function Login({ session, setSession }) {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Login successful!");
-        setSession(true); // Update session in parent
-        navigate("/"); // Redirect to dashboard/home
+        // Safe check 
+        if (typeof setSession === "function") {
+          setSession(true);
+        }
+        navigate("/dashboard"); // redirect to dashboard after login
       } else {
-        alert(
-          data.error ||
-            "Login failed. Make sure you typed your username correctly!"
+        // show inline error, no alert
+        setErrorMessage(
+          data.error || "Incorrect username or password. Try again!"
         );
       }
     } catch (err) {
       console.error("Login error:", err);
-      alert("Server error");
+      setErrorMessage("Server error. Please try again later.");
     }
   };
 
@@ -88,9 +94,15 @@ export default function Login({ session, setSession }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
+
+        {/* inline error message */}
+        {errorMessage && (
+          <p style={{ color: "red", marginTop: "8px", fontSize: "0.9rem" }}>
+            {errorMessage}
+          </p>
+        )}
       </div>
 
-      {/* Forgot password */}
       {action === "Join The Plastics!" ? null : (
         <div className="forgot-password">
           Forgot Your Password? Ugh Same. <span>Click Here, Loser!</span>
