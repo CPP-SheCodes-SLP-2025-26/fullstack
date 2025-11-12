@@ -49,7 +49,6 @@
   text-align: center;
   /* font-size: clamp(32px, 6vw, 64px); */
   margin: 8px 0 4px;
-  text-shadow: 3px 3px #ffffff;
   font-size: 70px;
   color: #000000;
 }
@@ -111,6 +110,7 @@
   display: grid;
   place-items: center;
 }
+
 .avatar__cta {
   position: absolute;
   bottom: 18%;

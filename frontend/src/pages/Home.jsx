@@ -63,8 +63,8 @@ export default function Home() {
           ) : (
             <>
             <div className="submit-container">
-              <Link className="submit primary" to="/login">Log In</Link>
-              <Link className="submit secondary" to="/signup">Join The Plastics</Link>
+              <Link className="submit secondary" to="/signup">Join The Plastics!</Link>
+              <Link className="submit primary" to="/login">Get In Loser!</Link>
               </div>
             </>
           )}
