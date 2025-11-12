@@ -1,16 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./AuthForm.css";
 
-// Use paths relative to /src/pages → /src/assets
+// Icons
 import email_icon from "../assets/email.png";
 import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
 
-export default function Login({ session }) {
+export default function Login({ session, setSession }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const action = "Get In Loser!";
+  const [action, setAction] = useState("Get In Loser!");
+
+  // Track input fields
+  const [username, setUsername] = useState(""); // Must be username for backend login
+  const [password, setPassword] = useState("");
 
   // Redirect if already logged in
   useEffect(() => {
@@ -19,6 +23,33 @@ export default function Login({ session }) {
       navigate(dest, { replace: true });
     }
   }, [session, location, navigate]);
+
+  // Login function
+  const handleLogin = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/profile/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Login successful!");
+        setSession(true); // Update session in parent
+        navigate("/"); // Redirect to dashboard/home
+      } else {
+        alert(
+          data.error ||
+            "Login failed. Make sure you typed your username correctly!"
+        );
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Server error");
+    }
+  };
 
   return (
     <div className="container">
@@ -36,10 +67,15 @@ export default function Login({ session }) {
           </div>
         )}
 
-        {/* Email */}
+        {/* Username (used instead of email) */}
         <div className="input">
-          <img src={email_icon} alt="email" />
-          <input type="email" placeholder="Your Super Secret Email ID" />
+          <img src={email_icon} alt="username" />
+          <input
+            type="text"
+            placeholder="Your Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
 
         {/* Password */}
@@ -47,28 +83,31 @@ export default function Login({ session }) {
           <img src={password_icon} alt="password" />
           <input
             type="password"
-            placeholder={'Your Totally Not "1234" Password'}
+            placeholder='Your Totally Not "1234" Password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
       </div>
 
-      {/* Forgot password (hide on Sign Up) */}
+      {/* Forgot password */}
       {action === "Join The Plastics!" ? null : (
         <div className="forgot-password">
           Forgot Your Password? Ugh Same. <span>Click Here, Loser!</span>
         </div>
       )}
 
+      {/* Buttons */}
       <div className="submit-container">
         <div
           className={action === "Join The Plastics!" ? "submit gray" : "submit"}
-          onClick={() => navigate("/signup")}
+          onClick={() => navigate("/signup")} // Redirect to signup
         >
           Join The Plastics!
         </div>
         <div
           className={action === "Get In Loser!" ? "submit gray" : "submit"}
-          onClick={() => navigate("/login")}
+          onClick={handleLogin} // Call login
         >
           Get In Loser!
         </div>
@@ -76,3 +115,5 @@ export default function Login({ session }) {
     </div>
   );
 }
+
+
