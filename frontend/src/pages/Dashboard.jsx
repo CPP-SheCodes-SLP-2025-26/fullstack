@@ -36,16 +36,17 @@ const Dashboard = ({ username }) => {
       <aside className="right-notes">
         <div className="quote-card">
           <p>“On Wednesdays, We Wear Pink”</p>
+          <p>“That's So Fetch!”</p>
         </div>
         <div className="events-card">
           <p>Upcoming Events</p>
-          <p>Nov 16: SLP Demo Day</p>
-          <p>Nov 27: Thanksgiving</p>
+          <p><span>Nov 16: SLP Demo Day</span></p>
+          <p><span>Nov 27: Thanksgiving</span></p>
         </div>
         <div className="bills-card">
           <p>Overdue Charges</p>
-          <p>Target: $125. 17</p>
-          <p>Trader Joe's: $67.67</p>
+          <p><span>Target: $125. 17</span></p>
+          <p><span>Trader Joe's: $67.67</span></p>
         </div>
       </aside>
     </div>

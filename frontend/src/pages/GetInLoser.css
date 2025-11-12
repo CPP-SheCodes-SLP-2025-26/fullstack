@@ -1,56 +1,55 @@
-/* Optional: rename the font file to avoid spaces: Dollie-Script.ttf */
 @font-face {
   font-family: "Dollie Script";
   src: url("../assets/Dollie-Script.ttf") format("truetype");
 }
 
-.container {
+.gil-auth .container {
   display: flex;
   flex-direction: column;
   margin: auto;
-  margin-top: 55px;
-  background: #e7638b;
+  margin-top: 20px;
+  background: #e7638b;     
   padding-bottom: 30px;
-  width: 10px;       
-  height: 650px;
+  height: 710px;
   border-radius: 100px;
   box-shadow: 10px 10px #ad1b51;
+  width: 900px;
 }
 
-.header {
+.gil-auth .header {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 9px;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 50px;
 }
 
-.text {
+.gil-auth .text {
   margin-top: 30px;
   color: #ffffff;
   font-size: 65px;
   font-weight: 1000;
-  font-family: "Barbie", 'Dollie Script';
+  font-family: "Barbie", "Dollie Script";
   text-shadow: 3px 3px #000;
   text-align: center;
 }
 
-.underline {
+.gil-auth .underline {
   width: 61px;
   height: 6px;
   background: #ffffff;
   border-radius: 9px;
 }
 
-.inputs {
+.gil-auth .inputs {
   margin-top: 35px;
   display: flex;
   flex-direction: column;
   gap: 25px;
 }
 
-.input {
+.gil-auth .input {
   display: flex;
   align-items: center;
   margin: auto;
@@ -58,15 +57,15 @@
   height: 80px;
   background: #e7638b;
   border-radius: 6px;
-  font-family: "Barbie", 'Dollie Script';
+  font-family: "Barbie", "Dollie Script";
 }
 
-.input img {
+.gil-auth .input img {
   margin: 0 30px;
   height: 40px;
 }
 
-.input input {
+.gil-auth .input input {
   height: 50px;
   width: 400px;
   background: #ffffff;
@@ -80,29 +79,30 @@
   box-shadow: 3px 3px #000;
 }
 
-.forgot-password {
+.gil-auth .forgot-password {
   padding-left: 62px;
   margin-top: 35px;
   color: #000;
   font-size: 21px;
   font-weight: 1000;
-  font-family: "Barbie", 'Dollie Script';
-  margin-left: 350px;
+  font-family: "Barbie", "Dollie Script";
+  margin-left: 150px;
 }
 
-.forgot-password span {
+.gil-auth .forgot-password span {
   color: #ffffff;
   cursor: pointer;
   text-decoration: underline;
 }
 
-.submit-container {
+.gil-auth .submit-container {
   display: flex;
-  gap: 30px;
+  gap: 80px;
   margin: 60px auto;
+  margin-left: 200px;
 }
 
-.submit {
+.gil-auth .submit {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,11 +114,11 @@
   border-radius: 50px;
   font-size: 19px;
   cursor: pointer;
-  font-family: "Barbie", 'Dollie Script';
+  font-family: "Barbie", "Dollie Script";
   box-shadow: 3px 3px #000;
 }
 
-.gray {
+.gil-auth .submit.gray {
   background: #ffffff;
   color: #000000;
 }

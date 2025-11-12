@@ -138,8 +138,17 @@
   font-weight: 1000;
   text-align: center;
   padding-top: 40px;
-  text
 }
+.events-card span, .bills-card span{
+  cursor: pointer;
+  text-decoration: underline;
+  color: #5b0d2a;
+}
+
+.events-card span:hover, .bills-card span:hover {
+  color: #e43173;
+}
+
 .quote-card::before, .quote-card::after,
 .events-card::before, .events-card::after,
 .bills-card::before, .bills-card::after {
