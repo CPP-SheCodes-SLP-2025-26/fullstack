@@ -14,7 +14,8 @@ dotenv.config();
 const app = express();
 app.use(express.json()); // To parse JSON request bodies
 
-const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173']; // if needed, you can add more origins
+const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173', // if needed, you can add more origins
+'http://localhost:5174']
 
 app.use(cors({
   origin: function (origin, callback) {

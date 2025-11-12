@@ -1,10 +1,30 @@
-import Chorecard from "../components/ChoreCard"
-import './Chores.css'
+import Chorecard from "../components/ChoreCard";
+import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import './Chores.css';
 
 function Chores() {
+  const navigate = useNavigate();
+  const [chores, setChores] = useState([]);
+  const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+   async function fetchChores() {
+  try {
+    const response = await fetch('http://localhost:3000/get/chores');
+    const data = await response.json();
+    setChores(data);
+  } catch (err) {
+    console.error("Failed to fetch chores", err);
+  }
+}
+
+    fetchChores();
+  }, []);
+
   return (
     <div className="container mt- main-container">
-       <button className="create-chore-btn"> Add a new <br/>chore! </button>
+       <button className="create-chore-btn" onClick={() => navigate("/create-chore")}> Add a new <br/>chore! </button>
       <h1 className="text-center mt-4 fs-1 mb-5 chore-title">Your Chore List</h1>
       
       <div className="mb-4 d-flex flex-row align-items-center gap-4 justify-content-center mx-auto mt-4 mb-5 filter-container" style={{ maxWidth: '700px' }}>
@@ -17,18 +37,13 @@ function Chores() {
        <div>
 
       <div className="d-flex flex-column align-items-center gap-5">
+        {chores.map((chore)=>(
         <Chorecard 
-          title="Clean Kitchen" 
-          text="Wash the dishes and wipe down counters." 
-        />
-        <Chorecard 
-          title="Laundry" 
-          text="Sort, wash, and fold clothes." 
-        />
-        <Chorecard 
-          title="Vacuum Living Room" 
-          text="Vacuum the floors and dust surfaces." 
-        />
+          key={chore.id}
+          title={chore.chore_name} 
+          dueDate={chore.due_date}
+          description={chore.description}/>
+        ))}
       </div>
     </div>
     </div>
