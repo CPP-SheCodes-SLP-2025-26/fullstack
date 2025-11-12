@@ -30,10 +30,28 @@ export default function BillsPage() {
 
       setBills([{ total, thumbnail, title }, ...bills]);
       setSelectedFile(null);
+
+      const save = await fetch("http://localhost:3000/apireceipts/db/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          room_num: 204,
+          name: title,
+          total: Number(total.toFixed(2)), // normalize
+        }),
+      });
+      if (!save.ok) throw new Error("Failed to save receipt to DB");
+      const saved = await save.json(); // contains { id }
+
+      // 3) Update UI
+      setBills([{ total, thumbnail, title, id: saved.id }, ...bills]);
+      setSelectedFile(null);
+
     } catch (err) {
       console.error(err);
       alert("Upload failed. Check console.");
     }
+    
   };
 
   return (

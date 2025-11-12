@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Calendar from "./pages/Calendar";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Chores from "./pages/Chores";
 import Bills from "./pages/Bills";
 import NotFound from "./pages/NotFound";
@@ -28,8 +29,8 @@ export default function App() {
         <Route path="/new-chore" element={<NewChore />} />
 
         {/* Login route */}
-        <Route path="/login" element={<Login mode="login" />} />
-        <Route path="/signup" element={<Login mode="signup" />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
