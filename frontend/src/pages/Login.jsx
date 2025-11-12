@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./GetInLoser.css";
+import "./Login.css";
 
 import email_icon from "../assets/email.png";
 import password_icon from "../assets/password.png";
