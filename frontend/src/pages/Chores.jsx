@@ -23,7 +23,7 @@ function Chores() {
   }, []);
 
   return (
-    <div className="container mt- main-container">
+    <div className="chore-container mt- main-container">
        <button className="create-chore-btn" onClick={() => navigate("/create-chore")}> Add a new <br/>chore! </button>
       <h1 className="text-center mt-4 fs-1 mb-5 chore-title">Your Chore List</h1>
       

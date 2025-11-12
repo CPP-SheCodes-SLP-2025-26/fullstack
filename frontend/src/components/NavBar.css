@@ -4,14 +4,13 @@
   justify-content: space-between;
   background: #e43173;
   border-bottom: 6px solid #ffffff;
-  padding: 12px 30px; /* now this actually adds space on both sides */
 }
 
 /* Left-side links */
 .navbar-links {
   display: flex;
   gap: 40px;
-  /*padding-left: 40px; /* <-- this will now work properly */
+  padding-left: 30px;
 }
 
 /* Right-side links */
