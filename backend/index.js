@@ -3,10 +3,10 @@ import cors from "cors"  // a way for browsers and servers to interact
 import session from 'express-session';
 import dotenv from 'dotenv';
 
-import ChoresRoute from "./routes/chores.js"
+import ChoresRoute from "./routes/chores.js";
 import AuthRoute from './routes/googleAuth.js';
 import CalendarRoute from './routes/calendar.js';
-import receiptRoutes from './routes/veryfi.js';
+import receiptRoutes from './routes/bills.js';
 import ProfileRoute from './routes/profile.js';
 
 dotenv.config();
@@ -14,7 +14,8 @@ dotenv.config();
 const app = express();
 app.use(express.json()); // To parse JSON request bodies
 
-const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173']; // if needed, you can add more origins
+const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173',
+  'http://localhost:5175']; // if needed, you can add more origins
 
 app.use(cors({
   origin: function (origin, callback) {

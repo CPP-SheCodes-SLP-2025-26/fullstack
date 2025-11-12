@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./Login.css";
+import "./AuthForm.css";
 
 // Use paths relative to /src/pages → /src/assets
 import email_icon from "../assets/email.png";
@@ -10,7 +10,7 @@ import user_icon from "../assets/user.png";
 export default function Login({ session }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [action, setAction] = useState("Get In Loser!");
+  const action = "Get In Loser!";
 
   // Redirect if already logged in
   useEffect(() => {
@@ -62,13 +62,13 @@ export default function Login({ session }) {
       <div className="submit-container">
         <div
           className={action === "Join The Plastics!" ? "submit gray" : "submit"}
-          onClick={() => setAction("Join The Plastics!")}
+          onClick={() => navigate("/signup")}
         >
           Join The Plastics!
         </div>
         <div
           className={action === "Get In Loser!" ? "submit gray" : "submit"}
-          onClick={() => setAction("Get In Loser!")}
+          onClick={() => navigate("/login")}
         >
           Get In Loser!
         </div>
