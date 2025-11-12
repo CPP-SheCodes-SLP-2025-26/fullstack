@@ -22,16 +22,32 @@ router.get('/get/chores', async (req, res) => {
 });
 
 // GET chores for a room number
-router.get('/get/chores/:id', async (req, res) => {
-  const { id } = req.params;
-  if(!id ) return res.status(400).json({ error: "Missing id" });
+router.get('/get/chores/:roomNum', async (req, res) => {
+  const { roomNum } = req.params;
+  if(!roomNum ) return res.status(400).json({ error: "Missing roomNum" });
 
-  const chores = await Chore.getRoomChores(id);
+  const chores = await Chore.getRoomChores(roomNum);
   res.status(200).json(chores);
 });
 
+// GET chores for a person
+router.get('/get/personal/chores/:id', async (req, res) => {
+  const { id } = req.params;
+  if(!id ) return res.status(400).json({ error: "Missing id" });
+
+  const chores = await Chore.getPersonChores(id);
+  res.status(200).json(chores);
+});
+
+// GET all chores for all users, sorted by earliest due date
+router.get("/chores/sorted", async (req, res) => {
+  
+    const chores = await Chore.getAllChoresSorted();
+    res.status(200).json(chores);
+});
+
 // PUT a chore by ID (updating)
-router.put('/get/chores/:id', async (req, res) => {
+router.put('/chores/:id', async (req, res) => {
   const { id } = req.params;
   const { chore_name, description, user_id, due_date, is_finished } = req.body;
 
