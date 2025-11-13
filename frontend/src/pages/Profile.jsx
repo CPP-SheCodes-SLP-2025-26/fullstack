@@ -2,16 +2,43 @@ import { useEffect, useState, useRef} from "react";
 import "./Profile.css";
 
 export default function ProfilePage() {
-  const [username, setUsername] = useState("Regina George");
+  const [username, setUsername] = useState(null);
   const [email, setEmail] = useState("reginageorge@sofetch.com");
-  // New state for room number
+  
   const [roomNumber, setRoomNumber] = useState("123");
   const [passwordMasked] = useState("********");
-  // 'roomNumber' added as a possible editing state
+  
   const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | 'roomNumber' | null
 
   // optional local preview for the avatar
   const [avatarSrc, setAvatarSrc] = useState(null);
+
+  const USER_ID = 123; //adjust as needed
+
+  //populate profile page with user info from DB
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/profile/${USER_ID}`, {
+          // Use credentials if behind an authenticated session
+          credentials: "include", 
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+		setUsername(data.name || "");
+		setEmail(data.email || "");
+		setRoomNumber(data.room_num || "");
+        
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      }
+    })();
+  }, []); 
 
   const onChangePic = () => setEditing("pic");
 
