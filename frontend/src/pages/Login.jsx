@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./Login.css";
 
 // Icons
-import email_icon from "../assets/email.png";
 import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
 
@@ -76,7 +75,7 @@ export default function Login({ session, setSession }) {
 
           {/* Username (used instead of email) */}
           <div className="input">
-            <img src={email_icon} alt="username" />
+            <img src={user_icon} alt="username" />
             <input
               type="text"
               placeholder="Your Username"
@@ -98,9 +97,9 @@ export default function Login({ session, setSession }) {
 
           {/* inline error message */}
           {errorMessage && (
-            <p style={{ color: "red", marginTop: "8px", fontSize: "0.9rem" }}>
+            <div className="login-error">
               {errorMessage}
-            </p>
+            </div>
           )}
         </div>
 

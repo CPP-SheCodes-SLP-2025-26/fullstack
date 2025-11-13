@@ -47,6 +47,12 @@ h1.chore-title{
     transform: scale(1.05)!important;
 }
 
+.filter-btn.active{
+    background-color: #ffabc6!important;
+    color: white!important;
+    border: none;
+}
+
 .filter-container{
     background-color: #ef6195;
     padding: 15px;

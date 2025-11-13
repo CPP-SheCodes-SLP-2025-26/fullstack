@@ -1,7 +1,22 @@
 import React from 'react';
 import './ChoreCard.css'
+import bin from '../assets/bin.png'
+import kiss from '../assets/kiss.png'
+import { useState } from 'react'
 
-export default function ChoreCard({ title, dueDate, description }) {
+export default function ChoreCard({ title, dueDate, description, onDelete }) {
+  const [checked, setChecked] = useState(false);
+  const formattedDueDate = new Date(dueDate).toLocaleDateString('en-US', {
+    weekday: 'short', 
+    year: 'numeric', 
+    month: 'short',  
+    day: 'numeric'   
+});
+
+  const handleCheckboxClick = () => {
+    setChecked(!checked);
+  };
+
   return (
     <div
       className="card shadow rounded choreCard"  
@@ -9,11 +24,23 @@ export default function ChoreCard({ title, dueDate, description }) {
     >
       <div className="card-body" >
         <h5 className="card-title">{title}</h5>
-        <h4 className="card-due-date">{dueDate}</h4>
+        <h4 className="card-due-date">Due: {formattedDueDate}</h4>
         <p className="card-text">{description}</p>
       </div>
 
-      <button className="checkbox" style={{padding:'1rem' }}></button>
+       <button className="checkbox" style={{ padding: '1rem' }} onClick={handleCheckboxClick}>
+        {checked && (
+          <img
+            src={kiss}
+            alt="checked"
+            className="checkbox-img"
+          />
+        )}
+      </button>
+      <button className="delete-btn" style={{padding:'1rem'}} onClick={onDelete}>
+        <img src={bin} alt="delete" />
+      </button>
+
     </div>
   );
 }
