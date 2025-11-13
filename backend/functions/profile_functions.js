@@ -129,7 +129,7 @@ class Profile
         console.log(user.password)
         if (!match) return { ok: false, error: 'Invalid username or password' };
 
-        return { ok: true};
+        return { ok: true, user : user};
 
       } catch (err) {
         console.error('Login error:', err);
