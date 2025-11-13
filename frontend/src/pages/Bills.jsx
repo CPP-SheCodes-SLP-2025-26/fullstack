@@ -11,7 +11,7 @@ export default function BillsPage() {
 
   const handleFileChange = (e) => setSelectedFile(e.target.files[0]);
 
-  // 🧾 Load receipts from DB
+  // Load receipts from DB
   useEffect(() => {
     (async () => {
       try {
@@ -25,7 +25,7 @@ export default function BillsPage() {
     })();
   }, []);
 
-  // 📤 Upload new receipt
+  // Upload new receipt
   const handleUpload = async () => {
     if (!selectedFile) return alert("Please select a file first");
 

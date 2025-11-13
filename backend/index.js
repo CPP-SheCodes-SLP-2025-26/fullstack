@@ -13,6 +13,8 @@ import receiptRoutes2 from './routes/finances.js';
 dotenv.config();
 
 const app = express();
+
+app.use("/uploads", express.static("uploads"));
 app.use(express.json()); // To parse JSON request bodies
 
 const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173',
