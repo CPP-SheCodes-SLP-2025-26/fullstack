@@ -1,13 +1,19 @@
 /* Layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f8a7c1;
+}
+
 .dashboard {
   display: grid;
   grid-template-columns: 220px 1fr 280px;
   gap: 2rem;
-  height: 100vh;
+  min-height: 100vh;
   padding: 20px;
-  background: #f8a7c1; /* use same base background as home page */
+  background: #f8a7c1; /* same base background as home page */
   font-family: "Barbie", "Dollie Script", serif;
-  /*text-shadow: 2px 2px #000; --> ugly*/
 }
 
 /* Sidebar (left) */
@@ -20,27 +26,23 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 700px;
-  margin-left: 10px;
-  margin-top: 10px;
-  box-shadow: 3px 3px #000;
+  /* removed fixed height and extra margin */
 }
 
 .profile-pic {
-  width: 130px;
-  height: 130px;
+  width: 120px;
+  height: 120px;
   background-color: #ad1b51;
   border-radius: 50%;
   margin-bottom: 10px;
-  margin-top: 30px;
+  margin-top: 30px; /* keep some spacing */
 }
 
 .greeting {
-  margin-top: 30px;
-  font-size: 23px;
-  font-weight: 800;
+  font-size: 25px;
+  font-weight: 500;
   margin-bottom: 30px;
-  text-shadow: 2px 2px #000;
+  /* removed text-shadow- ugly */
 }
 
 .nav-menu ul {
@@ -50,16 +52,13 @@
 }
 
 .nav-menu li {
-  font-size: 23px; /* menu size*/
-  padding: 30px;
-  /* margin-bottom: 20px;  */
+  font-size: 25px; /* menu size */
+  padding: 12px 15px;
+  margin-bottom: 30px; /* space between items */
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s;
-  /* text-shadow: 2px 2px #000; */
-  font-weight: 800;
   text-align: center;
-  margin-top: 30px;
 }
 
 .nav-menu li:hover {
@@ -76,9 +75,9 @@
 }
 
 .chore-card {
-  width: 700px;
-  /* max-width: 600px; */
-  margin: 10px auto 0 auto; /* top margin + horizontal centering */
+  width: 70%;
+  max-width: 600px;
+  margin: 50px auto 0 auto; /* top margin + center */
   background: rgba(255,255,255,.85);
   border: 1px solid rgba(255,255,255,.6);
   border-radius: 18px;
@@ -89,18 +88,15 @@
   justify-content: flex-start;
   color: #000;
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  min-height: 700px;
-  box-shadow: 3px 3px #000;
-  margin-left: 85px;
+  min-height: 630px; /* restored original height for chore list */
 }
 
 .chore-card h2 {
-  font-size: 60px;
+  font-size: clamp(22px, 2.5vw, 28px); /* restored original size */
   font-family: "Barbie", "Dollie Script", serif;
-  font-weight: 1000;
+  font-weight: 800;
   margin-bottom: 12px;
   color: #5b0d2a;
-  margin-top: 25px;
 }
 
 .underline2 {
@@ -108,38 +104,37 @@
   height: 6px;
   background: #5b0d2a;
   border-radius: 9px;
-  margin-left: 300px;
+  margin-left: 0; /* align with center better */
+  margin: 0 auto 20px auto;
 }
 
 /* Right sticky notes */
 .right-notes {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 40px;
   justify-content: flex-start;
-  margin-top: 10px; 
+  margin-top: 50px; /* restored spacing */
 }
 
 .quote-card, .events-card, .bills-card {
   background: #f6cad7;
   border: 1px solid #e43173;
   border-radius: 8px;
-  padding: 25px 30px; /* more padding */
+  padding: 25px 30px;
   font-size: clamp(16px, 2vw, 20px);
   color: #5b0d2a;
   box-shadow:
       2px 2px 4px rgba(0,0,0,0.2),
       6px 6px 10px rgba(0,0,0,0.15);
   width: 100%;
-  min-height: 200px; /* larger size */
-  transform: rotate(-1deg); /* slight rotation */
+  min-height: 200px;
+  transform: rotate(-1deg);
   position: relative;
-  margin-left: -15px;
-  font-weight: 1000;
   text-align: center;
-  padding-top: 40px;
 }
-.events-card span, .bills-card span{
+
+.events-card span, .bills-card span {
   cursor: pointer;
   text-decoration: underline;
   color: #5b0d2a;
@@ -169,3 +164,5 @@
 .events-card::after { right: 15%; transform: rotate(10deg); }
 .bills-card::before { left: 15%; transform: rotate(-12deg); }
 .bills-card::after { right: 15%; transform: rotate(10deg); }
+
+
