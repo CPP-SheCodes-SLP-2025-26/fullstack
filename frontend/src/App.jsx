@@ -11,6 +11,7 @@ import Chores from "./pages/Chores";
 import Bills from "./pages/Bills";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
+import CreateChore from "./pages/CreateChore";
 
 export default function App() {
 
@@ -27,16 +28,16 @@ export default function App() {
         setUserId={setUserId}
       />
 
-    <Routes>
-      <Route path="/" element={<Home />} />
-
-      {/* Public-ish routes (you can lock them later if you want) */}
-      <Route path="/home" element={<Home />} />
-      <Route path="/dashboard" element={<Dashboard userId={userId} />} />
-      <Route path="/calendar" element={<Calendar userId={userId} />} />
-      <Route path="/profile" element={<Profile userId={userId} />} />
-      <Route path="/chores" element={<Chores userId={userId} />} />
-      <Route path="/bills" element={<Bills userId={userId} />} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* Public routes */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/chores" element={<Chores />} />
+        <Route path="/create-chore" element={<CreateChore />} />
+        <Route path="/bills" element={<Bills />} /> 
 
         {/* Login route */}
         <Route

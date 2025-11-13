@@ -11,7 +11,7 @@ router.post('/chores', async (req, res) => {
     return res.status(400).json({ error: "Missing value" });
 
   const chore_id = await Chore.createChore(user_id, chore_name, due_date, room_num, description);
-  if(!chore_id) return res.status(406).json({ errror: "Unable to create chore"});
+  if(!chore_id) return res.status(406).json({ error: "Unable to create chore"});
   res.status(201).json({ msg: "successfully created chore"})
 });
 

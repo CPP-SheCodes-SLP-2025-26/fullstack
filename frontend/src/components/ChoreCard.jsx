@@ -1,7 +1,7 @@
 import React from 'react';
 import './ChoreCard.css'
 
-export default function ChoreCard({ title, text }) {
+export default function ChoreCard({ title, dueDate, description }) {
   return (
     <div
       className="card shadow rounded choreCard"  
@@ -9,7 +9,8 @@ export default function ChoreCard({ title, text }) {
     >
       <div className="card-body" >
         <h5 className="card-title">{title}</h5>
-        <p className="card-text">{text}</p>
+        <h4 className="card-due-date">{dueDate}</h4>
+        <p className="card-text">{description}</p>
       </div>
 
       <button className="checkbox" style={{padding:'1rem' }}></button>
