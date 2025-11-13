@@ -73,7 +73,7 @@ router.post('/login', async (req, res) => {
 
   if (!result.ok) return res.status(401).json({ error: result.error });
 
-  res.status(200).json({message: 'Login successful'});
+  res.status(200).json({message: 'Login successful', userId: result.user.id});
 });
 
 // change a users password

@@ -17,6 +17,8 @@ const Dashboard = ({ username, userId }) => {
         const res = await fetch(`http://localhost:3000/get/personal/chores/${userId}`);
         const data = await res.json();
         setChores(data); // store fetched chores in state
+        console.log("userId: ", userId)
+        console.log("chores: ", data)
       } catch (err) {
         console.error("Error fetching chores:", err);
       }

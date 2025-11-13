@@ -32,7 +32,12 @@ export default function App() {
         <Route path="/" element={<Home />} />
         {/* Public routes */}
         <Route path="/home" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard userId={userId} />}
+        />
+        
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chores" element={<Chores />} />

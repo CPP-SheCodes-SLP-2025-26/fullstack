@@ -6,7 +6,7 @@ import "./Login.css";
 import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
 
-export default function Login({ session, setSession }) {
+export default function Login({ session, setSession, setUserId }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [action, setAction] = useState("Get In Loser!");
@@ -42,6 +42,9 @@ export default function Login({ session, setSession }) {
         // Safe check 
         if (typeof setSession === "function") {
           setSession(true);
+        }
+        if (typeof setUserId === "function" && data.userId) {
+          setUserId(data.userId);
         }
         navigate("/dashboard"); // redirect to dashboard after login
       } else {
