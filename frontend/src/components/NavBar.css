@@ -1,0 +1,36 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e43173;
+  border-bottom: 6px solid #ffffff;
+}
+
+/* Left-side links */
+.navbar-links {
+  display: flex;
+  gap: 40px;
+  padding-left: 30px;
+}
+
+/* Right-side links */
+.navbar-right {
+  display: flex;
+  gap: 40px;
+  margin-left: auto;
+  padding-right: 30px;
+}
+
+/* Link styling */
+.navbar a {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: "Barbie", 'Dollie Script';
+  font-weight: 900;
+  font-size: 21px;
+  text-shadow: 2px 2px #000;
+}
+
+.navbar a:hover {
+  color: #fbafcb;
+}
