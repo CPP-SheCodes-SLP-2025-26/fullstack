@@ -4,8 +4,11 @@ import "./Profile.css";
 export default function ProfilePage() {
   const [username, setUsername] = useState("Regina George");
   const [email, setEmail] = useState("reginageorge@sofetch.com");
+  // New state for room number
+  const [roomNumber, setRoomNumber] = useState("123");
   const [passwordMasked] = useState("********");
-  const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | null
+  // 'roomNumber' added as a possible editing state
+  const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | 'roomNumber' | null
 
   // optional local preview for the avatar
   const [avatarSrc, setAvatarSrc] = useState(null);
@@ -21,29 +24,31 @@ export default function ProfilePage() {
 
         <div className="profile-left">
           <button
-			className="avatar"
-			onClick={onChangePic}
-			aria-label="Change profile picture"
-			style={
-				avatarSrc
-					? { backgroundImage: `url(${avatarSrc})`,
-						backgroundSize: "cover",
-						backgroundPosition: "center" }
-					: undefined
-				}
-			>
-				{/* show this text in the middle when no picture */}
-				{!avatarSrc && <span className="avatar__cta">Change Picture</span>}
+            className="avatar"
+            onClick={onChangePic}
+            aria-label="Change profile picture"
+            style={
+                avatarSrc
+                    ? { backgroundImage: `url(${avatarSrc})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center" }
+                    : undefined
+                }
+            >
+                {/* show this text in the middle when no picture */}
+                {!avatarSrc && <span className="avatar__cta">Change Picture</span>}
 
-				{/* show semi-circle only when a picture exists */}
-				{avatarSrc && <span className="avatar__hover">Change Pic</span>}
-			</button>
-			<p className="greeting">Hi, {username}!</p>
+                {/* show semi-circle only when a picture exists */}
+                {avatarSrc && <span className="avatar__hover">Change Pic</span>}
+            </button>
+            <p className="greeting">Hi, {username}!</p>
         </div>
 
         <div className="profile-right">
           <InfoRow label="Username" value={username} onEdit={() => setEditing("username")} />
           <InfoRow label="Email" value={email} onEdit={() => setEditing("email")} />
+          {/* New InfoRow for Room Number */}
+          <InfoRow label="Room Number" value={roomNumber} onEdit={() => setEditing("roomNumber")} />
           <InfoRow label="Password" value={passwordMasked} onEdit={() => setEditing("password")} />
         </div>
 
@@ -71,6 +76,17 @@ export default function ProfilePage() {
         </Modal>
       )}
 
+      {/* New Modal for Room Number */}
+      {editing === "roomNumber" && (
+        <Modal title="Change your room number." onClose={() => setEditing(null)}>
+          <RoomNumberForm
+            current={roomNumber}
+            onCancel={() => setEditing(null)}
+            onSave={(val) => { setRoomNumber(val); setEditing(null); }}
+          />
+        </Modal>
+      )}
+
       {editing === "password" && (
         <Modal title="Change your password." onClose={() => setEditing(null)}>
           <PasswordForm
@@ -92,6 +108,7 @@ export default function ProfilePage() {
   );
 }
 
+// InfoRow, Modal, FieldBlock, Actions components remain unchanged
 function InfoRow({ label, value, onEdit }) {
   return (
     <div className="info-row">
@@ -107,8 +124,6 @@ function InfoRow({ label, value, onEdit }) {
     </div>
   );
 }
-
-/* ---------- Modal ---------- */
 
 function Modal({ title, children, onClose }) {
   useEffect(() => {
@@ -237,6 +252,55 @@ function EmailForm({ current, onSave, onCancel }) {
   );
 }
 
+// New component for Room Number
+function RoomNumberForm({ current, onSave, onCancel }) {
+  const [v, setV] = useState(current);
+  const [c, setC] = useState(current);
+  const [touched, setTouched] = useState({ v: false, c: false });
+
+  // Basic validation: must be non-empty and must match
+  const nonEmpty = !!v.trim();
+  const matchOk = v === c;
+
+  const vErr = touched.v && !nonEmpty ? "Room number cannot be empty." : "";
+  const cErr = touched.c && !matchOk ? "Room numbers do not match." : "";
+
+  const canSave = nonEmpty && matchOk;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!canSave) return;
+    onSave(v.trim().toUpperCase()); // Save as uppercase for consistency
+  };
+
+  return (
+    <form className="popup-form" onSubmit={handleSubmit}>
+      <FieldBlock label="Enter your new room number." error={vErr}>
+        <input
+          className="popup-input"
+          style={{ color: "var(--text)" }}
+          value={v}
+          onChange={(e) => setV(e.target.value)}
+          onBlur={() => setTouched(t => ({ ...t, v: true }))}
+        />
+      </FieldBlock>
+
+      <FieldBlock label="Confirm your new room number." error={cErr}>
+        <input
+          className="popup-input"
+          style={{ color: "var(--text)" }}
+          value={c}
+          onChange={(e) => setC(e.target.value)}
+          onBlur={() => setTouched(t => ({ ...t, c: true }))}
+        />
+      </FieldBlock>
+
+      <Actions canSave={canSave} onCancel={onCancel} />
+    </form>
+  );
+}
+
+
 function PasswordForm({ onSave, onCancel }) {
   const [oldP, setOldP] = useState("");
   const [newP, setNewP] = useState("");
@@ -298,6 +362,7 @@ function PasswordForm({ onSave, onCancel }) {
   );
 }
 
+// ProfilePicForm component remains unchanged
 function ProfilePicForm({ onSave, onCancel }) {
   const stageRef = useRef(null);      // circle stage (for diameter)
   const imgRef   = useRef(null);      // <img> element used for preview

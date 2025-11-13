@@ -76,6 +76,7 @@
   margin-top: 0;
   justify-self: stretch;
   margin-left: 0; 
+  margin-top: -60px;
 }
 
 /* lips decor */
@@ -126,6 +127,7 @@
   align-items: center;
   gap: 16px;
   max-width: 1000px;
+  transform: translateY(-20px);
 }
 
 .info-box {
