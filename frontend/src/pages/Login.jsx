@@ -1,16 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./AuthForm.css";
+import "./Login.css";
 
-// Use paths relative to /src/pages → /src/assets
+// Icons
 import email_icon from "../assets/email.png";
 import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
 
-export default function Login({ session }) {
+export default function Login({ session, setSession }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const action = "Get In Loser!";
+  const [action, setAction] = useState("Get In Loser!");
+
+  // Track input fields
+  const [username, setUsername] = useState(""); // Must be username for backend login
+  const [password, setPassword] = useState("");
+
+  // store error message for inline display
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Redirect if already logged in
   useEffect(() => {
@@ -20,59 +27,107 @@ export default function Login({ session }) {
     }
   }, [session, location, navigate]);
 
-  return (
-    <div className="container">
-      <div className="header">
-        <div className="text">{action}</div>
-        <div className="underline"></div>
-      </div>
+  // Login function
+  const handleLogin = async () => {
+    try {
+      setErrorMessage(""); // clear any old error
+      const res = await fetch("http://localhost:3000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
 
-      <div className="inputs">
-        {/* Name (Sign Up only) */}
-        {action === "Get In Loser!" ? null : (
+      const data = await res.json();
+
+      if (res.ok) {
+        // Safe check 
+        if (typeof setSession === "function") {
+          setSession(true);
+        }
+        navigate("/dashboard"); // redirect to dashboard after login
+      } else {
+        // show inline error, no alert
+        setErrorMessage(
+          data.error || "Incorrect username or password. Try again!"
+        );
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setErrorMessage("Server error. Please try again later.");
+    }
+  };
+
+  return (
+    <div className="gil-auth">
+      <div className="container">
+        <div className="header">
+          <div className="text">{action}</div>
+          <div className="underline"></div>
+        </div>
+
+        <div className="inputs">
+          {/* Name (Sign Up only) */}
+          {action === "Get In Loser!" ? null : (
+            <div className="input">
+              <img src={user_icon} alt="user" />
+              <input type="text" placeholder="Your Full Fetch Name" />
+            </div>
+          )}
+
+          {/* Username (used instead of email) */}
           <div className="input">
-            <img src={user_icon} alt="user" />
-            <input type="text" placeholder="Your Full Fetch Name" />
+            <img src={email_icon} alt="username" />
+            <input
+              type="text"
+              placeholder="Your Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          {/* Password */}
+          <div className="input">
+            <img src={password_icon} alt="password" />
+            <input
+              type="password"
+              placeholder='Your Totally Not "1234" Password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          {/* inline error message */}
+          {errorMessage && (
+            <p style={{ color: "red", marginTop: "8px", fontSize: "0.9rem" }}>
+              {errorMessage}
+            </p>
+          )}
+        </div>
+
+        {action === "Join The Plastics!" ? null : (
+          <div className="forgot-password">
+            Forgot Your Password? Ugh Same. <span>Click Here, Loser!</span>
           </div>
         )}
 
-        {/* Email */}
-        <div className="input">
-          <img src={email_icon} alt="email" />
-          <input type="email" placeholder="Your Super Secret Email ID" />
-        </div>
-
-        {/* Password */}
-        <div className="input">
-          <img src={password_icon} alt="password" />
-          <input
-            type="password"
-            placeholder={'Your Totally Not "1234" Password'}
-          />
-        </div>
-      </div>
-
-      {/* Forgot password (hide on Sign Up) */}
-      {action === "Join The Plastics!" ? null : (
-        <div className="forgot-password">
-          Forgot Your Password? Ugh Same. <span>Click Here, Loser!</span>
-        </div>
-      )}
-
-      <div className="submit-container">
-        <div
-          className={action === "Join The Plastics!" ? "submit gray" : "submit"}
-          onClick={() => navigate("/signup")}
-        >
-          Join The Plastics!
-        </div>
-        <div
-          className={action === "Get In Loser!" ? "submit gray" : "submit"}
-          onClick={() => navigate("/login")}
-        >
-          Get In Loser!
+        {/* Buttons */}
+        <div className="submit-container">
+          <div
+            className={action === "Join The Plastics!" ? "submit gray" : "submit"}
+            onClick={() => navigate("/signup")} // Redirect to signup
+          >
+            Join The Plastics!
+          </div>
+          <div
+            className={action === "Get In Loser!" ? "submit gray" : "submit"}
+            onClick={handleLogin} // Call login
+          >
+            Get In Loser!
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+

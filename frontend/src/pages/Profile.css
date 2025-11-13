@@ -1,8 +1,8 @@
 :root {
   --pink: #f9a5be;
-  --pink-deep: #f15bb5;
-  --pink-light: #ffeef6;
-  --text: #2b2032;
+  --pink-deep: #e43173;
+  --white: #ffffff ;
+  --text: #000000;
 }
 
 .profile-page {
@@ -35,11 +35,12 @@
   box-sizing: border-box;
 }
 
-.greeting{
-	font-size: clamp(26px, 4vw, 38px);
-  margin-top: 0;             
-  text-align: center;        
-  align-self: center;      
+.greeting {
+  font-size: clamp(30px, 3.5vw, 46px);
+  font-weight: 700;
+  text-align: center;
+  color: var(--text);
+  text-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 /* title */
@@ -48,9 +49,8 @@
   text-align: center;
   /* font-size: clamp(32px, 6vw, 64px); */
   margin: 8px 0 4px;
-  text-shadow: 3px 3px #ffffff;
   font-size: 70px;
-  color: ;
+  color: #000000;
 }
 
 /* columns */
@@ -104,12 +104,13 @@
   border-radius: 50%;
   border: 0;
   cursor: pointer;
-  background: linear-gradient(to bottom, #bdbdbd 0 50%, #ff62c3 50% 100%);
+  background: linear-gradient(to bottom, #bdbdbd 0 50%, #e43173 50% 100%);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   position: relative;
   display: grid;
   place-items: center;
 }
+
 .avatar__cta {
   position: absolute;
   bottom: 18%;
@@ -128,7 +129,7 @@
 }
 
 .info-box {
-  background: var(--pink-light);
+  background: var(--white);
   border-radius: 14px;
   padding: 26px 28px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
@@ -205,7 +206,7 @@
 .popup {
   width: min(640px, 92vw);
   max-height: min(86vh, 760px);
-  background: #c1277d;         /* your magenta panel color */
+  background: #e43173;         /* your magenta panel color */
   border-radius: 18px;
   box-shadow: 0 20px 60px rgba(0,0,0,.35);
   display: flex;               /* <- important */
@@ -231,7 +232,7 @@
   display: grid;
   gap: 16px;
   /* extra bottom room so last field isn't hidden behind sticky actions */
-  padding-bottom: 88px;
+  padding-bottom: 24px;
 }
 
 .popup-actions {
@@ -243,7 +244,7 @@
   justify-content: flex-end;
 
   /* solid to match the modal panel — no gradient */
-  background: #c1277d;                 /* same as your panel color */
+  background: #e43173;                 /* same as your panel color */
   border-top: 1px solid rgba(255,255,255,.28);
   box-shadow: 0 -10px 22px rgba(0,0,0,.18);
   padding-bottom: calc(12px + env(safe-area-inset-bottom));
@@ -368,7 +369,7 @@
 .avatar__hover{
   position:absolute; left:0; right:0; bottom:0; height:50%;
   display:flex; align-items:center; justify-content:center;
-  background: rgba(241,91,181,.9); /* var(--pink-deep) w/ alpha */
+  background: #e43173; 
   color:#fff; font-weight:700;
   border-bottom-left-radius:50%; border-bottom-right-radius:50%;
   opacity:0; transition:opacity .18s ease; pointer-events:none;

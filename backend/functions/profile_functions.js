@@ -217,7 +217,23 @@ class Profile
         return { ok: false, errors: ['Server error while changing username'] };
       }
     }
-    
+
+    static async uploadProfilePicture(userId, profilePicturePath) 
+    {
+      try {
+
+        const { rows } = await pool.query(`UPDATE users SET profile_picture = ? WHERE id = ?
+        RETURNING id, profile_picture, name, email, room_num;`, [profilePicturePath, userId]);
+
+        if (rows.length === 0) return { ok: false, error: "User not found" };
+  
+        return { ok: true, user: rows[0] };
+        
+      } catch (err) {
+        console.error("Error updating profile picture:", err);
+        return { ok: false, error: "Database error" };
+      }
+    }
 }
 
 export default Profile;

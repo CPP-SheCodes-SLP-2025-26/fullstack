@@ -8,14 +8,17 @@ import AuthRoute from './routes/googleAuth.js';
 import CalendarRoute from './routes/calendar.js';
 import receiptRoutes from './routes/bills.js';
 import ProfileRoute from './routes/profile.js';
+import receiptRoutes2 from './routes/finances.js';
 
 dotenv.config();
 
 const app = express();
+
+app.use("/uploads", express.static("uploads"));
 app.use(express.json()); // To parse JSON request bodies
 
 const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173',
-  'http://localhost:5175']; // if needed, you can add more origins
+  'http://localhost:5175','http://localhost:5176','http://localhost:5177']; // if needed, you can add more origins
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -40,6 +43,7 @@ app.use(session({
 // Route handlers
 app.use(ChoresRoute);
 app.use(ProfileRoute);
+app.use(receiptRoutes2);
 app.use('/api/auth', AuthRoute);      // /api/auth/...
 app.use('/api/calendar', CalendarRoute); // /api/calendar/...
 app.use('/api/receipts', receiptRoutes);  // /api/receipts/...

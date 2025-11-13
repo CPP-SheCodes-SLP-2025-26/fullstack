@@ -5,7 +5,6 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 import veryfiClient from '../functions/veryfi.js'; // <- import client
-import Finances from "../functions/finance_functions.js"
 
 const router = Router();
 const storage = multer.memoryStorage();
@@ -37,26 +36,6 @@ router.post('/upload', upload.single('receipt'), async (req, res) => {
   } catch (error) {
     console.error('Veryfi upload error:', error);
     res.status(500).json({ error: 'Failed to process receipt' });
-  }
-});
-
-router.post("/db/upload", async (req, res) => {
-  try {
-    const { room_num, name, total } = req.body;
-
-    if (!room_num || !name || total == null) 
-      return res.status(400).json({ error: "Missing required fields" });
-
-    const result = await Finances.addReceipt(room_num, name, total);
-
-    if (!result.ok) 
-      return res.status(500).json({ error: "Failed to save receipt" });
-
-    res.status(201).json({message: "Receipt saved successfully",id: result.id,});
-
-  } catch (err) {
-    console.error("Error in /api/finances/upload:", err);
-    res.status(500).json({ error: "Server error" });
   }
 });
 

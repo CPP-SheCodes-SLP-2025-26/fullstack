@@ -1,7 +1,43 @@
 import { Router } from "express"; // so we can split up the different routes into sections
-import Profile from "../functions/profile_fucntions.js"
+import Profile from "../functions/profile_functions.js"
+import multer from "multer";
+import path from "path";
 
 const router = Router(); // groups together requests
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/profile_pictures"); 
+  },
+  filename: (req, file, cb) => {
+    const userId = req.params.id; // comes from /profile/:id/picture
+    const ext = path.extname(file.originalname); // keep original extension
+    cb(null, `user_${userId}${ext}`); // always same name -> overwrites old file
+  },
+});
+
+const upload = multer({ storage });
+
+router.post("/profile/:id/picture", upload.single("profile_picture"), async (req, res) => {
+
+  const userId = req.params.id;
+
+  if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+
+  // This is the path the frontend will use
+  const relativePath = `/uploads/profile_pictures/${req.file.filename}`;
+
+  const result = await Profile.uploadProfilePicture(userId, relativePath);
+
+  if (!result.ok) return res.status(400).json({ error: result.error });
+
+  res.status(200).json({
+    msg: "Profile picture uploaded",
+    profile_picture: relativePath,
+    user: result.user,
+  });
+  }
+);
 
 // register a user
 router.post('/register', async (req, res) => {

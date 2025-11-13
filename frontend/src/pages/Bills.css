@@ -10,26 +10,51 @@
 }
 
 .page-title {
-  color: #e43173; /* hot pink */
-  font-size: 2rem;
-  text-align: center; /* center header */
-  margin-bottom: 3rem; /* more space from upload */
+  color: #e43173;
+  font-size: 3rem;
+  text-align: center; 
+  margin-bottom: 3rem;
   text-shadow: 1px 1px #ad1b51;
+  padding-left: 3rem; 
 }
 
 .upload-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem; /* spacing between elements */
-  margin-bottom: 2rem;
+  gap: 1rem; /* small space between file input and upload button */
+  margin-bottom: 4rem;
 }
 
+/* File input container */
 .upload-container input[type="file"] {
-  display: block;
-  margin-bottom: 0.3rem;
+  width: auto; /* no stretching */
+  max-width: 250px;
+  color: #e43173;
+  background-color: #fce4ec;
+  border: 2px solid #e7638b;
+  border-radius: 6px;
+  padding: 0.5rem;
+  font-family: inherit;
+  cursor: pointer;
 }
 
+.upload-container input[type="file"]::file-selector-button {
+  background-color: #e43173;
+  color: white;
+  border: 2px solid #ad1b51;
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+
+.upload-container input[type="file"]::file-selector-button:hover {
+  background-color: #ad1b51;
+}
+
+/* Upload button to the right */
 .upload-button {
   background-color: #e7638b;
   color: white;
@@ -39,35 +64,20 @@
   border-radius: 8px;
   border: 2px solid #ad1b51;
   text-align: center;
+  white-space: nowrap;
 }
 
 .upload-button:hover {
   background-color: #e43173;
 }
 
-.no-file-selected {
-  font-size: 0.9rem;
-  color: #e43173;
+/* Hide the “No file chosen” text outside the buttons */
+.upload-container input[type="file"]::-webkit-file-upload-text {
+  display: none;
 }
 
-.bills-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-}
-
-.bill-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* title left, total right */
-  width: 100%;
-  max-width: 700px;
-  padding: 1rem;
-  background-color: #f9a5be;
-  border-radius: 10px;
-  border: 2px solid #e43173;
-  gap: 1rem;
+.upload-container input[type="file"]::-webkit-file-upload-text {
+  display: none;
 }
 
 .thumbnail {
@@ -78,20 +88,46 @@
   border: 2px dashed #ad1b51;
 }
 
-.bill-info {
-  flex: 1;
-  text-align: left; /* title on left */
+.bill-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* spread icon+title left, total right */
+  background-color: #eda6bc;
+  border: 2px solid #c44d75;
+  border-radius: 12px;
+  padding: 14px 24px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 
+/* Icon stays left */
+.receipt-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  filter: invert(20%) sepia(60%) saturate(300%) hue-rotate(-20deg);
+}
+
+/* Title and total layout */
+.bill-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* pushes total all the way right */
+  flex: 1;
+}
+
+/* Text styles */
 .bill-title {
-  font-weight: bold;
-  color: #e43173;
-  font-size: 1rem;
-  margin-bottom: 0.3rem;
+  font-size: 20px;
+  font-weight: 700;
+  color: #9b1045;
+  margin-left: 12px; /* spacing between icon and title */
 }
 
 .bill-total {
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: 20px;
   color: #000;
+  font-weight: 700;
+  margin-left: auto; /* ensures it stays to the right */
 }
+
