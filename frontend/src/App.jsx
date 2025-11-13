@@ -15,36 +15,59 @@ import Dashboard from "./pages/Dashboard";
 export default function App() {
 
   const [session, setSession] = useState(false); // added state here
+  const [userId, setUserId] = useState(null);
 
   return (
     <Router>
-      <Navbar />
+      {/* Navbar sees auth state */}
+      <Navbar
+        session={session}
+        userId={userId}
+        setSession={setSession}
+        setUserId={setUserId}
+      />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* Public routes */}
-        <Route path="/home" element={<Home />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/chores" element={<Chores />} />
-        <Route path="/bills" element={<Bills />} /> 
+    <Routes>
+      <Route path="/" element={<Home />} />
+
+      {/* Public-ish routes (you can lock them later if you want) */}
+      <Route path="/home" element={<Home />} />
+      <Route path="/dashboard" element={<Dashboard userId={userId} />} />
+      <Route path="/calendar" element={<Calendar userId={userId} />} />
+      <Route path="/profile" element={<Profile userId={userId} />} />
+      <Route path="/chores" element={<Chores userId={userId} />} />
+      <Route path="/bills" element={<Bills userId={userId} />} />
 
         {/* Login route */}
         <Route
-          path="/login" //only show the login page if session is false, otherwise sends the user to diff page
+          path="/login"
           element={
-              session
-               ? <Navigate to="/dashboard" replace /> 
-               : <Login session={session} setSession={setSession} /> 
-          } // changed routes here, pass props
+            session ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login
+                session={session}
+                setSession={setSession}
+                setUserId={setUserId}   // so Login can save userId
+              />
+            )
+          }
         />
-        <Route path="/signup" element={<Signup />} />
+
+        <Route
+          path="/signup"
+          element={
+            <Signup
+              session={session}
+              setSession={setSession}
+              setUserId={setUserId}     // so Signup can save userId
+            />
+          }
+        />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-
     </Router>
   );
 }
