@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/NavBar";
 
 import Home from "./pages/Home";
@@ -12,6 +13,9 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 
 export default function App() {
+
+  const [session, setSession] = useState(false); // added state here
+
   return (
     <Router>
       <Navbar />
@@ -27,12 +31,20 @@ export default function App() {
         <Route path="/bills" element={<Bills />} /> 
 
         {/* Login route */}
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login" //only show the login page if session is false, otherwise sends the user to diff page
+          element={
+              session
+               ? <Navigate to="/dashboard" replace /> 
+               : <Login session={session} setSession={setSession} /> 
+          } // changed routes here, pass props
+        />
         <Route path="/signup" element={<Signup />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+
     </Router>
   );
 }

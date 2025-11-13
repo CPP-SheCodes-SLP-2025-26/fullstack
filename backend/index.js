@@ -15,7 +15,7 @@ const app = express();
 app.use(express.json()); // To parse JSON request bodies
 
 const allowedOrigins = [process.env.CORS_ORIGIN || 'http://localhost:5173',
-  'http://localhost:5175']; // if needed, you can add more origins
+  'http://localhost:5175','http://localhost:5176','http://localhost:5177']; // if needed, you can add more origins
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -39,7 +39,7 @@ app.use(session({
 
 // Route handlers
 app.use(ChoresRoute);
-app.use(ProfileRoute);
+app.use('/api/profile', ProfileRoute);
 app.use('/api/auth', AuthRoute);      // /api/auth/...
 app.use('/api/calendar', CalendarRoute); // /api/calendar/...
 app.use('/api/receipts', receiptRoutes);  // /api/receipts/...
