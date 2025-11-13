@@ -1,15 +1,14 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./NavBar.css";
 
-export default function Navbar({ session, userId, setSession, setUserId }) {
-  const location = useLocation();
-  const navigate = useNavigate();        
-  const onDashboard = location.pathname.toLowerCase() === "/dashboard";
+export default function Navbar({ session,onLogout }) {
+  // const location = useLocation();
+  const navigate = useNavigate();
+  // const onDashboard = location.pathname.toLowerCase() === "/dashboard";
 
   const handleLogout = () => {
-    setSession(false);
-    setUserId(null);
-    navigate("/home");           
+    onLogout();          
+    navigate("/home");
   };
 
   return (
@@ -22,7 +21,6 @@ export default function Navbar({ session, userId, setSession, setUserId }) {
       <div className="navbar-right">
         {session ? (
           <>
-            {/* link to that user's profile */}
             <Link to={`/profile`} className="user-profile">
               Profile
             </Link>

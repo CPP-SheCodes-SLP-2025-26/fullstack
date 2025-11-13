@@ -7,7 +7,7 @@ import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
 import room_icon from "../assets/room.png";
 
-export default function JoinPlastics({ session, setSession, setUserId }) {
+export default function JoinPlastics({ session, onLogin }) { 
   const navigate = useNavigate();
   const location = useLocation();
   const action = "Join The Plastics!";
@@ -30,7 +30,6 @@ export default function JoinPlastics({ session, setSession, setUserId }) {
   }, [session, location, navigate]);
 
   const handleSignup = async () => {
-
     if (!name || !roomNum || !email || !password) {
       setErrorMessage("All fields are required.");
       return;
@@ -46,21 +45,17 @@ export default function JoinPlastics({ session, setSession, setUserId }) {
           name,
           email,
           password,
-          room_num: roomNum, 
+          room_num: roomNum,
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
+        onLogin(data);
+        
 
-        if (typeof setUserId === "function") {
-          setUserId(data.userId);
-        }
-        if (typeof setSession === "function") {
-          setSession(true);
-        }
-
+        // clear form
         setName("");
         setRoomNum("");
         setEmail("");
