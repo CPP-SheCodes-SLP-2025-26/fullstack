@@ -6,7 +6,7 @@ import "./Login.css";
 import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
 
-export default function Login({ session, setSession, setUserId }) {
+export default function Login({ session, onLogin }) {  
   const navigate = useNavigate();
   const location = useLocation();
   const [action, setAction] = useState("Get In Loser!");
@@ -39,16 +39,12 @@ export default function Login({ session, setSession, setUserId }) {
       const data = await res.json();
 
       if (res.ok) {
-        // Safe check 
-        if (typeof setSession === "function") {
-          setSession(true);
-        }
-        if (typeof setUserId === "function" && data.userId) {
-          setUserId(data.userId);
-        }
+        
+        console.log("signup data: ", data)
+        onLogin(data);
         navigate("/dashboard"); // redirect to dashboard after login
       } else {
-        // show inline error, no alert
+
         setErrorMessage(
           data.error || "Incorrect username or password. Try again!"
         );
@@ -76,7 +72,7 @@ export default function Login({ session, setSession, setUserId }) {
             </div>
           )}
 
-          {/* Username (used instead of email) */}
+          {/* Username */}
           <div className="input">
             <img src={user_icon} alt="username" />
             <input
@@ -131,5 +127,3 @@ export default function Login({ session, setSession, setUserId }) {
     </div>
   );
 }
-
-

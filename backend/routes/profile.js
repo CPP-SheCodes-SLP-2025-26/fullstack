@@ -49,7 +49,7 @@ router.post('/register', async (req, res) => {
   const result = await Profile.createProfile(name, email, password, room_num);
 
   if (!result.ok) return res.status(406).json({ errors: result.errors });
-  res.status(201).json({ msg: "Successfully created profile" });
+  res.status(201).json({ message: 'Register successful', userId : result.id });
 });
 
 // select a profile
@@ -89,6 +89,20 @@ router.post('/change/password', async (req, res) => {
 
   res.status(200).json({ msg: result.msg });
 });
+
+// change a users room
+router.post('/change/room', async (req, res) => {
+  const { userId, room_num } = req.body;
+
+  if (!userId || !room_num) return res.status(400).json({ error: 'Missing required fields' });
+
+  const result = await Profile.changeRoomNumber(userId, room_num);
+
+  if (!result.ok) return res.status(400).json({ error: result.error });
+
+  res.status(200).json({ msg: "Room number updated successfully." });
+});
+
 
 // change a users email
 router.post('/change/email', async (req, res) => {

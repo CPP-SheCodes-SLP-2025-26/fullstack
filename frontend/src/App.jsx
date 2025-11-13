@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/NavBar";
 
@@ -14,35 +14,78 @@ import Dashboard from "./pages/Dashboard";
 import CreateChore from "./pages/CreateChore";
 
 export default function App() {
-
-  const [session, setSession] = useState(false); // added state here
+  const [session, setSession] = useState(null);
   const [userId, setUserId] = useState(null);
+
+  // Restore from localStorage on first load
+  useEffect(() => {
+    const savedSession = localStorage.getItem("session");
+    const savedUserId = localStorage.getItem("userId");
+
+    if (savedSession) {
+      try {
+        setSession(JSON.parse(savedSession));
+      } catch {
+        localStorage.removeItem("session");
+      }
+    }
+
+    if (savedUserId) {
+      setUserId(Number(savedUserId));
+    }
+  }, []);
+
+  // Called when login/signup succeeds
+  const handleLogin = (userData) => {
+
+    setSession(userData);
+    setUserId(userData.userId);
+
+    localStorage.setItem("session", JSON.stringify(userData));
+    localStorage.setItem("userId", String(userData.userId));
+  };
+
+  // Called when Logout button clicked
+  const handleLogout = () => {
+    setSession(null);
+    setUserId(null);
+
+    localStorage.removeItem("session");
+    localStorage.removeItem("userId");
+  };
 
   return (
     <Router>
-      {/* Navbar sees auth state */}
       <Navbar
         session={session}
         userId={userId}
-        setSession={setSession}
-        setUserId={setUserId}
+        onLogout={handleLogout}  
       />
 
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* Public routes */}
         <Route path="/home" element={<Home />} />
 
+        {/* Protect dashboard so only logged-in users see it */}
         <Route
           path="/dashboard"
-          element={<Dashboard userId={userId} />}
+          element={
+            session ? (
+              <Dashboard
+                userId={userId}
+                username={session?.name || session?.username} // adjust field name
+              />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
         />
-        
+
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/chores" element={<Chores />} />
         <Route path="/create-chore" element={<CreateChore />} />
-        <Route path="/bills" element={<Bills />} /> 
+        <Route path="/bills" element={<Bills />} />
 
         {/* Login route */}
         <Route
@@ -53,25 +96,23 @@ export default function App() {
             ) : (
               <Login
                 session={session}
-                setSession={setSession}
-                setUserId={setUserId}   // so Login can save userId
+                onLogin={handleLogin}    
               />
             )
           }
         />
 
+        {/* Signup route */}
         <Route
           path="/signup"
           element={
             <Signup
               session={session}
-              setSession={setSession}
-              setUserId={setUserId}     // so Signup can save userId
+              onLogin={handleLogin}      
             />
           }
         />
 
-        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
