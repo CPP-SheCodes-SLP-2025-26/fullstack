@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef} from "react";
-import "./ProfilePage.css";
+import "./Profile.css";
 
 export default function ProfilePage() {
-  const [username, setUsername] = useState("usernameExample");
-  const [email, setEmail] = useState("email@example.com");
+  const [username, setUsername] = useState("Regina George");
+  const [email, setEmail] = useState("reginageorge@sofetch.com");
   const [passwordMasked] = useState("********");
   const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | null
 

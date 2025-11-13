@@ -67,8 +67,8 @@
   
   /* Secondary (white) */
   .submit.secondary {
-    background: #fff;
-    color: #000;
+    background: #e43173;
+    color: #fff;
   }
   
 
@@ -78,8 +78,8 @@
   }
   
   .submit.secondary:hover {
-    background: #e43173;
-    color: #fff;
+    background: #ffffff;
+    color: #e43173;
   }
   
   /* Pressed effect */

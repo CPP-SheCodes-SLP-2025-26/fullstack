@@ -1,5 +1,5 @@
 import { Router } from "express"; // so we can split up the different routes into sections
-import Profile from "../functions/profile_fucntions.js"
+import Profile from "../functions/profile_functions.js"
 
 const router = Router(); // groups together requests
 

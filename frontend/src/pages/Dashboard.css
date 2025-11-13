@@ -20,20 +20,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 700px;
+  margin-left: 10px;
+  margin-top: 10px;
+  box-shadow: 3px 3px #000;
 }
 
 .profile-pic {
-  width: 90px;
-  height: 90px;
+  width: 130px;
+  height: 130px;
   background-color: #ad1b51;
   border-radius: 50%;
   margin-bottom: 10px;
+  margin-top: 30px;
 }
 
 .greeting {
-  font-size: 20px;
-  font-weight: 500;
+  margin-top: 30px;
+  font-size: 23px;
+  font-weight: 800;
   margin-bottom: 30px;
+  text-shadow: 2px 2px #000;
 }
 
 .nav-menu ul {
@@ -43,13 +50,16 @@
 }
 
 .nav-menu li {
-  font-size: 25px; /* menu size*/
-  padding: 15px 18px;
-  padding: 12px 15px;
-  margin-bottom: 20px; /* space between each item */
+  font-size: 23px; /* menu size*/
+  padding: 30px;
+  /* margin-bottom: 20px;  */
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s;
+  /* text-shadow: 2px 2px #000; */
+  font-weight: 800;
+  text-align: center;
+  margin-top: 30px;
 }
 
 .nav-menu li:hover {
@@ -66,9 +76,9 @@
 }
 
 .chore-card {
-  width: 70%;
-  max-width: 600px;
-  margin: 50px auto 0 auto; /* top margin + horizontal centering */
+  width: 700px;
+  /* max-width: 600px; */
+  margin: 10px auto 0 auto; /* top margin + horizontal centering */
   background: rgba(255,255,255,.85);
   border: 1px solid rgba(255,255,255,.6);
   border-radius: 18px;
@@ -79,27 +89,38 @@
   justify-content: flex-start;
   color: #000;
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  min-height: 500px;
+  min-height: 700px;
+  box-shadow: 3px 3px #000;
+  margin-left: 85px;
 }
 
 .chore-card h2 {
-  font-size: clamp(22px, 2.5vw, 28px); /* consistent with other headings */
+  font-size: 60px;
   font-family: "Barbie", "Dollie Script", serif;
-  font-weight: 800;
+  font-weight: 1000;
   margin-bottom: 12px;
   color: #5b0d2a;
+  margin-top: 25px;
+}
+
+.underline2 {
+  width: 61px;
+  height: 6px;
+  background: #5b0d2a;
+  border-radius: 9px;
+  margin-left: 300px;
 }
 
 /* Right sticky notes */
 .right-notes {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 50px;
   justify-content: flex-start;
-   margin-top: 50px; /* push sticky notes lower */
+  margin-top: 10px; 
 }
 
-.quote-card, .events-card {
+.quote-card, .events-card, .bills-card {
   background: #f6cad7;
   border: 1px solid #e43173;
   border-radius: 8px;
@@ -113,9 +134,24 @@
   min-height: 200px; /* larger size */
   transform: rotate(-1deg); /* slight rotation */
   position: relative;
+  margin-left: -15px;
+  font-weight: 1000;
+  text-align: center;
+  padding-top: 40px;
 }
+.events-card span, .bills-card span{
+  cursor: pointer;
+  text-decoration: underline;
+  color: #5b0d2a;
+}
+
+.events-card span:hover, .bills-card span:hover {
+  color: #e43173;
+}
+
 .quote-card::before, .quote-card::after,
-.events-card::before, .events-card::after {
+.events-card::before, .events-card::after,
+.bills-card::before, .bills-card::after {
   content: "";
   position: absolute;
   width: 70px;
@@ -131,3 +167,5 @@
 .quote-card::after { right: 15%; transform: rotate(8deg); }
 .events-card::before { left: 15%; transform: rotate(-12deg); }
 .events-card::after { right: 15%; transform: rotate(10deg); }
+.bills-card::before { left: 15%; transform: rotate(-12deg); }
+.bills-card::after { right: 15%; transform: rotate(10deg); }
