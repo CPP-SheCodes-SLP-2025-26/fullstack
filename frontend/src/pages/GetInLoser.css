@@ -122,3 +122,14 @@
   background: #ffffff;
   color: #000000;
 }
+
+/* Style for the new forgot password link */
+.forgot-link {
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.forgot-link:hover {
+  opacity: 0.8;
+}
