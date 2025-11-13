@@ -16,10 +16,17 @@ import CreateChore from "./pages/CreateChore";
 export default function App() {
 
   const [session, setSession] = useState(false); // added state here
+  const [userId, setUserId] = useState(null);
 
   return (
     <Router>
-      <Navbar />
+      {/* Navbar sees auth state */}
+      <Navbar
+        session={session}
+        userId={userId}
+        setSession={setSession}
+        setUserId={setUserId}
+      />
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -34,19 +41,34 @@ export default function App() {
 
         {/* Login route */}
         <Route
-          path="/login" //only show the login page if session is false, otherwise sends the user to diff page
+          path="/login"
           element={
-              session
-               ? <Navigate to="/dashboard" replace /> 
-               : <Login session={session} setSession={setSession} /> 
-          } // changed routes here, pass props
+            session ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Login
+                session={session}
+                setSession={setSession}
+                setUserId={setUserId}   // so Login can save userId
+              />
+            )
+          }
         />
-        <Route path="/signup" element={<Signup />} />
+
+        <Route
+          path="/signup"
+          element={
+            <Signup
+              session={session}
+              setSession={setSession}
+              setUserId={setUserId}     // so Signup can save userId
+            />
+          }
+        />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
-
     </Router>
   );
 }
