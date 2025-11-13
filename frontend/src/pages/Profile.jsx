@@ -3,20 +3,30 @@ import "./Profile.css";
 
 export default function ProfilePage() {
   const [username, setUsername] = useState(null);
-  const [email, setEmail] = useState("reginageorge@sofetch.com");
-  
-  const [roomNumber, setRoomNumber] = useState("123");
+  const [email, setEmail] = useState(null);
+  const [roomNumber, setRoomNumber] = useState(null);
   const [passwordMasked] = useState("********");
   
+  const storedUserId = localStorage.getItem('userId');
+  const USER_ID = storedUserId ? Number(storedUserId) : null;
+
   const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | 'roomNumber' | null
+
+  //state for avatar URL fetched from DB
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   // optional local preview for the avatar
   const [avatarSrc, setAvatarSrc] = useState(null);
 
-  const USER_ID = 123; //adjust as needed
-
+  
   //populate profile page with user info from DB
   useEffect(() => {
+	if (!USER_ID) {
+    console.error("No user ID found in storage. User must be logged in.");
+    // Optionally redirect to login page here.
+    return;
+  	
+	}
     (async () => {
       try {
         const response = await fetch(`http://localhost:3000/profile/${USER_ID}`, {
@@ -33,14 +43,152 @@ export default function ProfilePage() {
 		setUsername(data.name || "");
 		setEmail(data.email || "");
 		setRoomNumber(data.room_num || "");
+
+		const fullAvatarPath = data.avatar_url ? `http://localhost:3000${data.avatar_url}` : null;
+
+		setAvatarUrl(data.avatar_url || null); 
+        setAvatarSrc(fullAvatarPath);
         
       } catch (error) {
         console.error("Failed to fetch user profile:", error);
       }
     })();
-  }, []); 
+  }, [USER_ID]); 
 
-  const onChangePic = () => setEditing("pic");
+  // Username is edited and have to update DB
+  const changeUsername = async (newUsername) => {
+	if (!USER_ID) return;
+    const confmUsername = newUsername;
+
+    try {
+        const response = await fetch("http://localhost:3000/change/username", {
+            method: "POST",
+            headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          userId: USER_ID,            
+          newUsername: newUsername,   
+          confmUsername: confmUsername
+        }),
+        credentials: "include",
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+        const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
+        throw new Error(errorMsg); 
+    } 
+
+    setUsername(newUsername);
+    setEditing(null);
+    
+    } catch (error) { 
+      console.error("Error saving username:", error);
+    }
+  }; 
+
+// Email is edited and have to update DB
+const changeEmail = async (newEmail) => {
+    const confmEmail = newEmail;
+
+    try {
+        const response = await fetch("http://localhost:3000/change/email", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: USER_ID,
+                newEmail: newEmail,
+                confmEmail: confmEmail 
+            }),
+            credentials: "include",
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
+            throw new Error(errorMsg);
+        }
+
+		setEmail(newEmail);
+        setEditing(null);
+
+    } catch (error) {
+        console.error("Error saving email:", error);
+    }
+};
+
+// Password is edited and have to update DB
+const changePassword = async (oldPassword, newPassword) => {
+	const confmPassword = newPassword;
+
+    try {
+        const response = await fetch("http://localhost:3000/change/password", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: USER_ID,
+				oldPass: oldPassword,
+                newPass: newPassword,
+                confmPass: confmPassword 
+            }),
+            credentials: "include",
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
+            throw new Error(errorMsg);
+        }
+        setEditing(null);
+
+    } catch (error) {
+        console.error("Error saving password:", error);
+    }
+};
+
+// Profile pic is changed and needs to be updated in DB
+const changeProfilePic = async (dataUrl, fileName) => {
+    try {
+        // Create FormData object
+        const formData = new FormData();
+        // The field name 'profile_picture' must match what's expected by upload.single()
+        formData.append("profile_picture", file); 
+
+        // Send the file to the route
+        const response = await fetch(`http://localhost:3000/profile/${USER_ID}/picture`, {
+            method: "POST",
+            body: formData, 
+            credentials: "include",
+        });
+
+        const result = await response.json();
+        if (!response.ok) {
+            const errorMsg = result.error || `HTTP error! status: ${response.status}`;
+            throw new Error(errorMsg);
+        }
+        
+        // The server returns the relative path (e.g., /uploads/profile_pictures/user_345.png)
+        const newRelativePath = result.profile_picture; 
+        // We need the full URL to display the image
+        const newFullUrl = `http://localhost:3000${newRelativePath}`;
+
+        setAvatarUrl(newRelativePath); // Store the relative path returned by server
+        setAvatarSrc(newFullUrl);      // Set the full URL for display preview
+        setEditing(null); 
+
+    } catch (error) {
+        console.error("Error saving profile picture:", error);
+        // Revert to old avatar or clear preview on failure
+        setAvatarSrc(avatarUrl ? `http://localhost:3000${avatarUrl}` : null);
+    }
+};
+
+const onChangePic = () => setEditing("pic"); 
 
   return (
     <div className="profile-page">
@@ -88,7 +236,7 @@ export default function ProfilePage() {
           <UsernameForm
             current={username}
             onCancel={() => setEditing(null)}
-            onSave={(val) => { setUsername(val); setEditing(null); }}
+            onSave={changeUsername}
           />
         </Modal>
       )}
@@ -98,7 +246,7 @@ export default function ProfilePage() {
           <EmailForm
             current={email}
             onCancel={() => setEditing(null)}
-            onSave={(val) => { setEmail(val); setEditing(null); }}
+            onSave={changeEmail}
           />
         </Modal>
       )}
@@ -118,7 +266,7 @@ export default function ProfilePage() {
         <Modal title="Change your password." onClose={() => setEditing(null)}>
           <PasswordForm
             onCancel={() => setEditing(null)}
-            onSave={() => { /* call API here */ setEditing(null); }}
+            onSave={changePassword}
           />
         </Modal>
       )}
@@ -127,7 +275,7 @@ export default function ProfilePage() {
         <Modal title="Change your head shot." onClose={() => setEditing(null)}>
           <ProfilePicForm
             onCancel={() => setEditing(null)}
-            onSave={(src) => { setAvatarSrc(src); setEditing(null); }}
+            onSave={(src) => { setAvatarSrc(src); setEditing(changeProfilePic); }}
           />
         </Modal>
       )}
@@ -191,11 +339,18 @@ function Actions({ canSave, onCancel }) {
 /* ---------- Forms with live validation ---------- */
 
 function UsernameForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState(current);
-  const [c, setC] = useState(current);
+  const [v, setV] = useState(current || "")
+  const [c, setC] = useState(current || "");
   const [touched, setTouched] = useState({ v: false, c: false });
 
-  const sameOk = v === c;
+  useEffect(() => {
+    if (current !== null) {
+      setV(current);
+      setC(current);
+    }
+  }, [current]);
+
+  const sameOk = v.trim() === c.trim();
   const nonEmpty = !!v.trim();
 
   const vErr = touched.v && !nonEmpty ? "Name cannot be empty." : "";
@@ -231,9 +386,16 @@ function UsernameForm({ current, onSave, onCancel }) {
 }
 
 function EmailForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState(current);
-  const [c, setC] = useState(current);
+  const [v, setV] = useState(current || "");
+  const [c, setC] = useState(current || "");
   const [touched, setTouched] = useState({ v: false, c: false });
+
+  useEffect(() => {
+    if (current !== null) {
+      setV(current);
+      setC(current);
+    }
+  }, [current]);
 
   const emailRegex = /^\S+@\S+\.\S+$/;
   const emailOk = emailRegex.test(v);
@@ -346,7 +508,7 @@ function PasswordForm({ onSave, onCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!canSave) return;
-    onSave({ oldP, newP });
+    onSave(oldP, newP);
   };
 
   return (

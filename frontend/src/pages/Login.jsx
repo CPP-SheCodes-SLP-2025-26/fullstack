@@ -43,8 +43,14 @@ export default function Login({ session, setSession, setUserId }) {
         if (typeof setSession === "function") {
           setSession(true);
         }
-        if (typeof setUserId === "function" && data.userId) {
-          setUserId(data.userId);
+        if (data.userId) {
+          //Store the User ID in local storage for persistence
+          localStorage.setItem('userId', data.userId); 
+          
+          // Pass the ID to the parent state (optional, but good for immediate use)
+          if (typeof setUserId === "function") {
+            setUserId(data.userId);
+          }
         }
         navigate("/dashboard"); // redirect to dashboard after login
       } else {
