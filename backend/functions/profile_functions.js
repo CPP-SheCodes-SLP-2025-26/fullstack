@@ -18,7 +18,7 @@ class Profile
           const [user] = await pool.query("INSERT into users (name, email, password, room_num) VALUES (?, ?, ?, ?)",
                             [name, email, hashedPassword, room_num]);
           // console.log("user from login: ", user)
-          return {ok: true, id : user.insertId};
+          return {ok: true, id : user.insertId, room_num : room_num};
         }
         catch (error){
           console.error("Error in createProfile:", error);
@@ -118,7 +118,7 @@ class Profile
     {
       try {
         const [rows] = await pool.query(
-          'SELECT id, name, password FROM users WHERE name = ? LIMIT 1',
+          'SELECT id, name, password, room_num FROM users WHERE name = ? LIMIT 1',
           [username]
         );
         return rows.length ? rows[0] : null;
@@ -135,8 +135,6 @@ class Profile
         if (!user) return { ok: false, error: 'Invalid username or password' };
   
         const match = await bcrypt.compare(password, user.password);
-        console.log(password)
-        console.log(user.password)
         if (!match) return { ok: false, error: 'Invalid username or password' };
 
         return { ok: true, user : user};

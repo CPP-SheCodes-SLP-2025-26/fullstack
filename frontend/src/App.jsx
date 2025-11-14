@@ -16,11 +16,13 @@ import CreateChore from "./pages/CreateChore";
 export default function App() {
   const [session, setSession] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [room_num, setRoomNum] = useState(null);
 
   // Restore from localStorage on first load
   useEffect(() => {
     const savedSession = localStorage.getItem("session");
     const savedUserId = localStorage.getItem("userId");
+    const savedRoomNum = localStorage.getItem("room_num");
 
     if (savedSession) {
       try {
@@ -30,9 +32,8 @@ export default function App() {
       }
     }
 
-    if (savedUserId) {
-      setUserId(Number(savedUserId));
-    }
+    if (savedUserId) setUserId(Number(savedUserId));
+    if (savedRoomNum) setRoomNum(Number(savedRoomNum));
   }, []);
 
   // Called when login/signup succeeds
@@ -40,18 +41,23 @@ export default function App() {
 
     setSession(userData);
     setUserId(userData.userId);
+    setRoomNum(userData.room_num);
 
     localStorage.setItem("session", JSON.stringify(userData));
     localStorage.setItem("userId", String(userData.userId));
+    localStorage.setItem("room_num", String(userData.room_num));
+    
   };
 
   // Called when Logout button clicked
   const handleLogout = () => {
     setSession(null);
     setUserId(null);
+    setRoomNum(null);
 
     localStorage.removeItem("session");
     localStorage.removeItem("userId");
+    localStorage.removeItem("room_num");
   };
 
   return (
@@ -85,7 +91,11 @@ export default function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/chores" element={<Chores />} />
         <Route path="/create-chore" element={<CreateChore />} />
-        <Route path="/bills" element={<Bills />} />
+
+        <Route
+          path="/bills"
+          element={<Bills roomNum={room_num} />}  
+        />
 
         {/* Login route */}
         <Route
