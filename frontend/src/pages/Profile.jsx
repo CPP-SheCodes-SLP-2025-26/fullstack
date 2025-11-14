@@ -151,6 +151,38 @@ const changePassword = async (oldPassword, newPassword) => {
     }
 };
 
+// Room number is edited and have to update DB
+  const changeRoomNum = async (newRoomNum) => {
+	if (!USER_ID) return;
+    const confmRoomNum = newRoomNum;
+
+    try {
+        const response = await fetch("http://localhost:3000/change/room", {
+            method: "POST",
+            headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          userId: USER_ID,            
+          room_num: confmRoomNum
+        }),
+        credentials: "include",
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+        const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
+        throw new Error(errorMsg); 
+    } 
+
+    setRoomNumber(newRoomNum);
+    setEditing(null);
+    
+    } catch (error) { 
+      console.error("Error saving room number:", error);
+    }
+  }; 
+
 // Profile pic is changed and needs to be updated in DB
 const changeProfilePic = async (dataUrl, fileName) => {
     try {
@@ -251,13 +283,12 @@ const onChangePic = () => setEditing("pic");
         </Modal>
       )}
 
-      {/* New Modal for Room Number */}
       {editing === "roomNumber" && (
         <Modal title="Change your room number." onClose={() => setEditing(null)}>
           <RoomNumberForm
             current={roomNumber}
             onCancel={() => setEditing(null)}
-            onSave={(val) => { setRoomNumber(val); setEditing(null); }}
+            onSave={changeRoomNum}
           />
         </Modal>
       )}
@@ -275,7 +306,12 @@ const onChangePic = () => setEditing("pic");
         <Modal title="Change your head shot." onClose={() => setEditing(null)}>
           <ProfilePicForm
             onCancel={() => setEditing(null)}
-            onSave={(src) => { setAvatarSrc(src); setEditing(changeProfilePic); }}
+            onSave={(dataUrl, fileName) => { 
+                // Keep local preview immediately (optional but good UX)
+                setAvatarSrc(dataUrl); 
+                // FIX: Call the async function and let it handle setEditing(null) on success
+                changeProfilePic(dataUrl, fileName);
+			}}
           />
         </Modal>
       )}
@@ -441,25 +477,28 @@ function EmailForm({ current, onSave, onCancel }) {
   );
 }
 
-// New component for Room Number
 function RoomNumberForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState(current);
-  const [c, setC] = useState(current);
+  const [v, setV] = useState(String(current ?? ""));
+  const [c, setC] = useState(String(current ?? ""));
   const [touched, setTouched] = useState({ v: false, c: false });
 
-  // Basic validation: must be non-empty and must match
-  const nonEmpty = !!v.trim();
+  useEffect(() => {
+    setV(String(current ?? ""));
+    setC(String(current ?? ""));
+  }, [current]);
+
+  // Validation without trim()
+  const nonEmpty = v !== "";
   const matchOk = v === c;
 
   const vErr = touched.v && !nonEmpty ? "Room number cannot be empty." : "";
   const cErr = touched.c && !matchOk ? "Room numbers do not match." : "";
-
   const canSave = nonEmpty && matchOk;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!canSave) return;
-    onSave(v.trim().toUpperCase()); // Save as uppercase for consistency
+    onSave(v.toUpperCase()); // keep uppercase for consistency
   };
 
   return (
@@ -488,7 +527,6 @@ function RoomNumberForm({ current, onSave, onCancel }) {
     </form>
   );
 }
-
 
 function PasswordForm({ onSave, onCancel }) {
   const [oldP, setOldP] = useState("");
