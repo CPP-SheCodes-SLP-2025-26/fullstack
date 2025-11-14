@@ -12,6 +12,7 @@ import Bills from "./pages/Bills";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import CreateChore from "./pages/CreateChore";
+import EditChore from "./pages/EditChore";
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -89,8 +90,15 @@ export default function App() {
 
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/chores" element={<Chores />} />
+        <Route path="/chores" element={
+      <Chores
+        userId={userId}
+        room_num={room_num}
+        username={session?.name || session?.username}
+            />
+        } />
         <Route path="/create-chore" element={<CreateChore />} />
+        <Route path="/edit-chore" element={<EditChore userId={userId}/>} />
 
         <Route
           path="/bills"

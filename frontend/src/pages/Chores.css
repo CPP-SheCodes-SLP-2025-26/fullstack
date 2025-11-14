@@ -68,14 +68,11 @@ h1.chore-title{
     font-size: 1.8rem;
     color:white;
 }
-
-/* * {
+/* 
+ * {
   outline: 1px dashed red;
-} */
+}  */
 
 body {
-  background-image: url('/path/to/scrapbook-texture.jpg');
-  background-size: cover;       /* cover the whole page */
-  background-repeat: no-repeat; 
-  background-attachment: fixed; /* optional, stays on scroll */
+  background-color: #ffabc6;
 }
