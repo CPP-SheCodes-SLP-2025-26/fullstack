@@ -185,39 +185,79 @@ const changePassword = async (oldPassword, newPassword) => {
 
 // Profile pic is changed and needs to be updated in DB
 const changeProfilePic = async (dataUrl, fileName) => {
-    try {
-        // Create FormData object
-        const formData = new FormData();
-        // The field name 'profile_picture' must match what's expected by upload.single()
-        formData.append("profile_picture", file); 
+  if (!USER_ID) {
+    alert('User ID is missing. Please log in again.');
+    return;
+  }
+  
+  try {
+    // Convert dataURL to Blob
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    
+    // Create a proper file name
+    const safeName = (fileName && fileName.trim()) ? fileName : `avatar_${USER_ID}.png`;
+    const file = new File([blob], safeName, { type: blob.type || "image/png" });
 
-        // Send the file to the route
-        const response = await fetch(`http://localhost:3000/profile/${USER_ID}/picture`, {
-            method: "POST",
-            body: formData, 
-            credentials: "include",
-        });
+    // Create FormData
+    const formData = new FormData();
+    formData.append("profile_picture", file);
 
-        const result = await response.json();
-        if (!response.ok) {
-            const errorMsg = result.error || `HTTP error! status: ${response.status}`;
-            throw new Error(errorMsg);
-        }
-        
-        // The server returns the relative path (e.g., /uploads/profile_pictures/user_345.png)
-        const newRelativePath = result.profile_picture; 
-        // We need the full URL to display the image
-        const newFullUrl = `http://localhost:3000${newRelativePath}`;
+    // Upload to server (userId is in the URL path)
+    const res = await fetch(`http://localhost:3000/profile/${USER_ID}/picture`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
 
-        setAvatarUrl(newRelativePath); // Store the relative path returned by server
-        setAvatarSrc(newFullUrl);      // Set the full URL for display preview
-        setEditing(null); 
-
-    } catch (error) {
-        console.error("Error saving profile picture:", error);
-        // Revert to old avatar or clear preview on failure
-        setAvatarSrc(avatarUrl ? `http://localhost:3000${avatarUrl}` : null);
+    // Parse response
+    const contentType = res.headers.get("content-type") || "";
+    
+    if (!contentType.includes("application/json")) {
+      const text = await res.text();
+      console.error("Unexpected response format:", text);
+      throw new Error("Server returned non-JSON response");
     }
+
+    const body = await res.json();
+
+    if (!res.ok) {
+      const errorMsg = body?.error || body?.message || `HTTP ${res.status}`;
+      throw new Error(errorMsg);
+    }
+
+    // Server returns "profile_picture" field with the path
+    const avatarPath = body?.profile_picture;
+    
+    if (!avatarPath) {
+      console.error("Server response:", body);
+      throw new Error("Server did not return profile_picture path");
+    }
+
+    // Update state with new avatar
+    // The path already includes /uploads/profile_pictures/user_X.ext
+    const fullAvatarUrl = avatarPath.startsWith("http") 
+      ? avatarPath 
+      : `http://localhost:3000${avatarPath}`;
+
+    setAvatarUrl(avatarPath); // Store relative path
+    setAvatarSrc(fullAvatarUrl); // Use full URL for display
+    setEditing(null);
+    
+    console.log("Profile picture updated successfully:", avatarPath);
+    
+  } catch (err) {
+    console.error("Error saving profile picture:", err);
+    
+    // Revert to previous avatar on error
+    if (avatarUrl) {
+      setAvatarSrc(`http://localhost:3000${avatarUrl}`);
+    } else {
+      setAvatarSrc(null);
+    }
+    
+    alert(`Could not save profile picture: ${err.message}`);
+  }
 };
 
 const onChangePic = () => setEditing("pic"); 
@@ -303,18 +343,18 @@ const onChangePic = () => setEditing("pic");
       )}
 
       {editing === "pic" && (
-        <Modal title="Change your head shot." onClose={() => setEditing(null)}>
-          <ProfilePicForm
-            onCancel={() => setEditing(null)}
-            onSave={(dataUrl, fileName) => { 
-                // Keep local preview immediately (optional but good UX)
-                setAvatarSrc(dataUrl); 
-                // FIX: Call the async function and let it handle setEditing(null) on success
-                changeProfilePic(dataUrl, fileName);
-			}}
-          />
-        </Modal>
-      )}
+  		<Modal title="Change your head shot." onClose={() => setEditing(null)}>
+    	<ProfilePicForm
+      	onCancel={() => setEditing(null)}
+      	onSave={async (dataUrl, fileName) => { 
+        // Keep local preview immediately for better UX
+        setAvatarSrc(dataUrl); 
+        // Call the async function and await it
+        await changeProfilePic(dataUrl, fileName);
+      }}
+    />
+  </Modal>
+)}
     </div>
   );
 }
@@ -379,13 +419,6 @@ function UsernameForm({ current, onSave, onCancel }) {
   const [c, setC] = useState(current || "");
   const [touched, setTouched] = useState({ v: false, c: false });
 
-  useEffect(() => {
-    if (current !== null) {
-      setV(current);
-      setC(current);
-    }
-  }, [current]);
-
   const sameOk = v.trim() === c.trim();
   const nonEmpty = !!v.trim();
 
@@ -425,13 +458,6 @@ function EmailForm({ current, onSave, onCancel }) {
   const [v, setV] = useState(current || "");
   const [c, setC] = useState(current || "");
   const [touched, setTouched] = useState({ v: false, c: false });
-
-  useEffect(() => {
-    if (current !== null) {
-      setV(current);
-      setC(current);
-    }
-  }, [current]);
 
   const emailRegex = /^\S+@\S+\.\S+$/;
   const emailOk = emailRegex.test(v);
@@ -478,16 +504,11 @@ function EmailForm({ current, onSave, onCancel }) {
 }
 
 function RoomNumberForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState(String(current ?? ""));
-  const [c, setC] = useState(String(current ?? ""));
+  const [v, setV] = useState(String(current || ""));
+  const [c, setC] = useState(String(current || ""));
   const [touched, setTouched] = useState({ v: false, c: false });
 
-  useEffect(() => {
-    setV(String(current ?? ""));
-    setC(String(current ?? ""));
-  }, [current]);
-
-  // Validation without trim()
+  // Validation
   const nonEmpty = v !== "";
   const matchOk = v === c;
 

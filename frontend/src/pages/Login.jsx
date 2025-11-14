@@ -44,6 +44,9 @@ export default function Login({ session, onLogin }) {
           setSession(true);
         }
         if (data.userId) {
+			console.log("signup data: ", data)
+			onLogin(data);
+			navigate("/dashboard"); // redirect to dashboard after login
           //Store the User ID in local storage for persistence
           localStorage.setItem('userId', data.userId); 
           
@@ -52,7 +55,6 @@ export default function Login({ session, onLogin }) {
             setUserId(data.userId);
           }
         }
-        navigate("/dashboard"); // redirect to dashboard after login
       } else {
 
         setErrorMessage(
