@@ -18,7 +18,7 @@ class Profile
           const [user] = await pool.query("INSERT into users (name, email, password, room_num) VALUES (?, ?, ?, ?)",
                             [name, email, hashedPassword, room_num]);
           // console.log("user from login: ", user)
-          return {ok: true, id : user.insertId};
+          return {ok: true, id : user.insertId, room_num : room_num, name : name};
         }
         catch (error){
           console.error("Error in createProfile:", error);
@@ -118,7 +118,7 @@ class Profile
     {
       try {
         const [rows] = await pool.query(
-          'SELECT id, name, password FROM users WHERE name = ? LIMIT 1',
+          'SELECT id, name, password, room_num FROM users WHERE name = ? LIMIT 1',
           [username]
         );
         return rows.length ? rows[0] : null;
@@ -135,8 +135,6 @@ class Profile
         if (!user) return { ok: false, error: 'Invalid username or password' };
   
         const match = await bcrypt.compare(password, user.password);
-        console.log(password)
-        console.log(user.password)
         if (!match) return { ok: false, error: 'Invalid username or password' };
 
         return { ok: true, user : user};
@@ -237,9 +235,10 @@ class Profile
         await pool.query("INSERT IGNORE INTO rooms (id) VALUES (?)", [room_num]);
 
         const [updateResult] = await pool.query("UPDATE users SET room_num = ? WHERE id = ?",
-            [room_num, userId]);
+          [room_num, userId]);
   
         if (updateResult.affectedRows === 0) return { ok: false, error: "User not found." };
+
     
         return { ok: true };
   
@@ -253,12 +252,12 @@ class Profile
     {
       try {
 
-        const { rows } = await pool.query(`UPDATE users SET profile_picture = ? WHERE id = ?
-        RETURNING id, profile_picture, name, email, room_num;`, [profilePicturePath, userId]);
+        const [rows] = await pool.query(`UPDATE users SET profile_picture = ? WHERE id = ?;`, 
+          [profilePicturePath, userId]);
 
         if (rows.length === 0) return { ok: false, error: "User not found" };
   
-        return { ok: true, user: rows[0] };
+        return { ok: true, user: "updated profile picture"};
         
       } catch (err) {
         console.error("Error updating profile picture:", err);

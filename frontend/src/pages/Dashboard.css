@@ -1,19 +1,25 @@
 /* Layout */
-html, body {
+/* 
+Gloriele change: I commmented this out bc its leaking into mine and
+on my end dashboard looks fine without it, just fyi hopefully dashboard
+works for everyone else too */
+/* html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   background: #f8a7c1;
-}
+} */
 
 .dashboard {
   display: grid;
   grid-template-columns: 220px 1fr 280px;
   gap: 2rem;
   min-height: 100vh;
+  align-items: stretch; /* <-- makes all 3 columns same height */
   padding: 20px;
   background: #f8a7c1; /* same base background as home page */
   font-family: "Barbie", "Dollie Script", serif;
+  padding-top: 50px;  /* uniform top spacing */
 }
 
 /* Sidebar (left) */
@@ -26,6 +32,8 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 50px; /* restored spacing */
+  /*height: 100%; /* NEW: fills full column height */
   /* removed fixed height and extra margin */
 }
 
@@ -35,7 +43,7 @@ html, body {
   background-color: #ad1b51;
   border-radius: 50%;
   margin-bottom: 10px;
-  margin-top: 30px; /* keep some spacing */
+  margin-top: 30px; 
 }
 
 .greeting {
@@ -88,7 +96,7 @@ html, body {
   justify-content: flex-start;
   color: #000;
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  min-height: 630px; /* restored original height for chore list */
+  min-height: 700px; /* restored original height for chore list */
 }
 
 .chore-card h2 {
@@ -115,6 +123,8 @@ html, body {
   gap: 40px;
   justify-content: flex-start;
   margin-top: 50px; /* restored spacing */
+  margin-left: -40px; /* moves sticky notes closer to chores */
+  margin-right: 50px;
 }
 
 .quote-card, .events-card, .bills-card {

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from '../components/Modal'
 import './Chores.css';
 
-function Chores() {
+function Chores({ userId, room_num}) {
   const navigate = useNavigate();
   const [chores, setChores] = useState([]);
   const [selectedFilter, setSelectedFilter] = useState(null);
@@ -39,11 +39,33 @@ function Chores() {
         setChoreToDelete(null);
       }
     };
+
+    const handleMarkComplete = async (choreId) => {
+        try {
+          const response = await fetch(`http://localhost:3000/chore/completed/${choreId}`, {
+            method: 'PUT',
+          });
+
+          if (response.ok) {
+            // Update state so the UI shows it as complete
+            setChores(prev =>
+              prev.map(chore =>
+                chore.id === choreId ? { ...chore, is_finished: true } : chore
+              )
+            );
+          } else {
+            console.error('Failed to mark chore complete');
+          }
+        } catch (err) {
+          console.error('Error marking chore complete:', err);
+        }
+      };
+
   
   useEffect(() => {
    async function fetchChores() {
       try {
-        const response = await fetch('http://localhost:3000/get/chores');
+        const response = await fetch(`http://localhost:3000/get/chores/${room_num}`);
         const data = await response.json();
         setChores(data);
       } catch (err) {
@@ -52,20 +74,32 @@ function Chores() {
     }
 
     fetchChores();
-  }, [chores]);
 
+  }, [room_num]);
+
+  let displayedChores = chores;
+
+  if (selectedFilter === "unfinished-chores") {
+    displayedChores = [...chores]
+      .filter(chore => !chore.is_finished)
+      .sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+  } else if (selectedFilter === "due-date") {
+    displayedChores = [...chores].sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+  } else {
+    displayedChores = [...chores]; // no filter
+  }
   return (
     <div className="chore-container mt- main-container">
-       <button className="create-chore-btn" onClick={() => navigate("/create-chore")}> Add a new <br/>chore! </button>
+       <button className="create-chore-btn" onClick={() => navigate("/create-chore", { state: { userId, room_num } })}> Add a new <br/>chore! </button>
       <h1 className="text-center mt-4 fs-1 mb-5 chore-title">Your Chore List</h1>
       
       <div className="mb-4 d-flex flex-row align-items-center gap-4 justify-content-center mx-auto mt-4 mb-5 filter-container" style={{ maxWidth: '700px' }}>
         <span className="fw-bold">Filter by:</span>
       <button
-        className={`btn filter-btn ${selectedFilter === "your-chores" ? "active" : ""}`}
-        onClick={() => setSelectedFilter("your-chores")}
+        className={`btn filter-btn ${selectedFilter === "unfinished-chores" ? "active" : ""}`}
+        onClick={() => setSelectedFilter("unfinished-chores")}
       >
-        Your Chores Only
+        Unfinished Chores
       </button>
 
       <button
@@ -80,23 +114,19 @@ function Chores() {
        <div>
 
       <div className="d-flex flex-column align-items-center gap-5">
-          {chores
-    // Sort chores if "due-date" filter is selected
-    .sort((a, b) => {
-      if (selectedFilter === "due-date") {
-        const dateA = new Date(a.due_date);
-        const dateB = new Date(b.due_date);
-        return dateA - dateB; // earlier dates first
-      }
-      return 0; // no sorting otherwise
-    })
-        .map((chore)=>(
+          {
+  
+        displayedChores.map((chore)=>(
         <Chorecard 
           key={chore.id}
           title={chore.chore_name} 
           dueDate={chore.due_date}
           description={chore.description}
           onDelete={() => handleDeleteChore(chore)}
+          onMarkComplete={() => handleMarkComplete(chore.id)}
+          isFinished={chore.is_finished}
+          onEdit={() => navigate("/edit-chore", { state: { chore, userId } })}
+
           />
         ))}
       </div>

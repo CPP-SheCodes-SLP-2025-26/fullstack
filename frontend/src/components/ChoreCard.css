@@ -72,18 +72,44 @@
   cursor: pointer;       
   padding: 0;    
   transition: background-color 0.3s ease; 
-  overflow: visible;     
+  overflow: visible;   
+  box-shadow: none;  
   left: 10px!important;
   bottom: 10px!important;
 }
 
-.delete-btn img{
+ .edit-btn{
+   position:absolute;
+  width: 50px;             
+  height: 50px;            
+  border-radius: 50%;     
+  border: none;            
+  background-color: transparent;  
+  border: 2px solid black;
+  display: flex;         
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;       
+  padding: 0;    
+  transition: background-color 0.3s ease; 
+  overflow: visible;  
+  left: 78px;
+  bottom: 10px;
+  box-shadow: none;
+ }
+
+.delete-btn img, .edit-btn img{
   height: 30px;
   width: 30x;
 }
 
 .delete-btn:hover{
   background-color: #e43173;
+  border: 2px solid black;
+}
+
+.edit-btn:hover{
+  background-color: #f9a5be;
   border: 2px solid black;
 }
 

@@ -60,7 +60,7 @@ class Chore
   static async markComplete(id)
   {
     try {
-      const [rows] = await pool.query('UPDATE chores SET is_finished = true WHERE id = ?', [id]);
+      const [rows] = await pool.query("UPDATE chores SET is_finished = NOT is_finished WHERE id = ?", [id]);
       return rows.affectedRows > 0;
 
     } catch (error) {

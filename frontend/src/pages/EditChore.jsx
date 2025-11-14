@@ -2,60 +2,49 @@ import './CreateChore.css'
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from "react-router-dom";
 
-function CreateChore() {
+function EditChore() {
     const navigate = useNavigate();
-    const location = useLocation();
-    const { userId, room_num } = location.state || {};
+  const { state } = useLocation();
+  const passeduserId = state?.userId;
+  const original = state?.chore;
 
-    const [chore, setChore] = useState({
-        chore_name: "",
-        description: "",
-        user_id: userId || null,
-        due_date: "",
-        is_finished: false,
-        room_num: room_num || ""
-    })
-
-    //  useEffect(() => {
-    //     const storedUser = localStorage.getItem("user");
-    //     if (storedUser) {
-    //     const user = JSON.parse(storedUser);
-    //     setChore((prev) => ({ ...prev, user_id: user.id }));
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     const storedUser = localStorage.getItem("user");
-    //     if (!storedUser) {
-    //         alert("Please log in first!");
-    //         navigate("/login");
-    //     }
-    //     }, []);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-
-    const response = await fetch('http://localhost:3000/chores', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json',
-     },
-    body: JSON.stringify({ ...chore})
+  const [chore, setChore] = useState({
+    chore_name: original.chore_name,
+    description: original.description,
+    user_id: original.user_id || passeduserId,
+    due_date: new Date().toISOString().split('T')[0],
+    is_finished: original.is_finished,
+    room_num: original.room_num
   });
 
-   const data = await response.json();
-  if (response.ok) {
-        alert('Chore created successfully!');
-        setChore({ chore_name: '', description: '', user_id:'', due_date:'', is_finished: false});
-        navigate("/chores");
-  } else {
-        alert('Error: ' + (data.error || 'Unknown error'));
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const response = await fetch(
+      `http://localhost:3000/chores/${original.id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(chore),
+      }
+    );
+
+    if (response.ok) {
+      alert("Chore updated!");
+      navigate("/chores");
+    } else {
+      alert("Failed to update chore");
+    }
+  };
+
+  useEffect(() => {
+  console.log("Original chore:", original);
+  console.log("Initial state:", chore);
+}, []);
 
     return(
         <div className="text-center text-primary mt-5 create-chore-container">
-            <h1 className="create-chore-title">Add A New Chore!</h1>
+            <h1 className="create-chore-title">Edit Chore</h1>
 
         <div className="container shadow rounded p-4 input-container"
             style={{
@@ -106,7 +95,7 @@ function CreateChore() {
                         />
                         </div>
                     <button type="submit" className="btn btn-primary mt-5 submit-chore-btn">
-                        Add Chore!
+                        Finish edit chore
                         </button>
             </form>
         </div>
@@ -114,4 +103,4 @@ function CreateChore() {
     )
 }
 
-export default CreateChore
+export default EditChore
