@@ -235,9 +235,12 @@ class Profile
         await pool.query("INSERT IGNORE INTO rooms (id) VALUES (?)", [room_num]);
 
         const [updateResult] = await pool.query("UPDATE users SET room_num = ? WHERE id = ?",
-            [room_num, userId]);
+          [room_num, userId]);
   
         if (updateResult.affectedRows === 0) return { ok: false, error: "User not found." };
+
+        await pool.query("UPDATE chores SET room_num = ? WHERE user_id = ?",
+          [room_num, userId]);
     
         return { ok: true };
   
