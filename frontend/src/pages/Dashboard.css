@@ -1,10 +1,14 @@
 /* Layout */
-html, body {
+/* 
+Gloriele change: I commmented this out bc its leaking into mine and
+on my end dashboard looks fine without it, just fyi hopefully dashboard
+works for everyone else too */
+/* html, body {
   height: 100%;
   margin: 0;
   padding: 0;
   background: #f8a7c1;
-}
+} */
 
 .dashboard {
   display: grid;

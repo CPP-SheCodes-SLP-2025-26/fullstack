@@ -2,10 +2,11 @@ import React from 'react';
 import './ChoreCard.css'
 import bin from '../assets/bin.png'
 import kiss from '../assets/kiss.png'
+import pencil from '../assets/pencil.png'
 import { useState } from 'react'
 
-export default function ChoreCard({ title, dueDate, description, onDelete }) {
-  const [checked, setChecked] = useState(false);
+export default function ChoreCard({ title, dueDate, description, onDelete, onMarkComplete, isFinished, onEdit, user_id, room_num}) {
+  const [checked, setChecked] = useState(isFinished || false);
   const formattedDueDate = new Date(dueDate).toLocaleDateString('en-US', {
     weekday: 'short', 
     year: 'numeric', 
@@ -13,8 +14,11 @@ export default function ChoreCard({ title, dueDate, description, onDelete }) {
     day: 'numeric'   
 });
 
+
   const handleCheckboxClick = () => {
-    setChecked(!checked);
+    const newChecked = !checked;
+    setChecked(newChecked);
+    onMarkComplete(newChecked);
   };
 
   return (
@@ -39,6 +43,10 @@ export default function ChoreCard({ title, dueDate, description, onDelete }) {
       </button>
       <button className="delete-btn" style={{padding:'1rem'}} onClick={onDelete}>
         <img src={bin} alt="delete" />
+      </button>
+
+      <button className="edit-btn" style={{padding:'1rem'}} onClick={onEdit}>
+        <img src={pencil} alt="edit" />
       </button>
 
     </div>
