@@ -8,6 +8,7 @@ export default function ProfilePage() {
   const [passwordMasked] = useState("********");
   
   const storedUserId = localStorage.getItem('userId');
+  // forces user id to be a number
   const USER_ID = storedUserId ? Number(storedUserId) : null;
 
   const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | 'roomNumber' | null
@@ -415,8 +416,8 @@ function Actions({ canSave, onCancel }) {
 /* ---------- Forms with live validation ---------- */
 
 function UsernameForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState(current || "")
-  const [c, setC] = useState(current || "");
+  const [v, setV] = useState("")
+  const [c, setC] = useState("");
   const [touched, setTouched] = useState({ v: false, c: false });
 
   const sameOk = v.trim() === c.trim();
@@ -455,8 +456,8 @@ function UsernameForm({ current, onSave, onCancel }) {
 }
 
 function EmailForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState(current || "");
-  const [c, setC] = useState(current || "");
+  const [v, setV] = useState("");
+  const [c, setC] = useState("");
   const [touched, setTouched] = useState({ v: false, c: false });
 
   const emailRegex = /^\S+@\S+\.\S+$/;
@@ -504,8 +505,8 @@ function EmailForm({ current, onSave, onCancel }) {
 }
 
 function RoomNumberForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState(String(current || ""));
-  const [c, setC] = useState(String(current || ""));
+  const [v, setV] = useState(String(""));
+  const [c, setC] = useState(String(""));
   const [touched, setTouched] = useState({ v: false, c: false });
 
   // Validation
