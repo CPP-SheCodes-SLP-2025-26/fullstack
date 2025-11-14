@@ -18,7 +18,7 @@ class Profile
           const [user] = await pool.query("INSERT into users (name, email, password, room_num) VALUES (?, ?, ?, ?)",
                             [name, email, hashedPassword, room_num]);
           // console.log("user from login: ", user)
-          return {ok: true, id : user.insertId, room_num : room_num};
+          return {ok: true, id : user.insertId, room_num : room_num, name : name};
         }
         catch (error){
           console.error("Error in createProfile:", error);
@@ -239,8 +239,6 @@ class Profile
   
         if (updateResult.affectedRows === 0) return { ok: false, error: "User not found." };
 
-        await pool.query("UPDATE chores SET room_num = ? WHERE user_id = ?",
-          [room_num, userId]);
     
         return { ok: true };
   
@@ -254,12 +252,12 @@ class Profile
     {
       try {
 
-        const { rows } = await pool.query(`UPDATE users SET profile_picture = ? WHERE id = ?
-        RETURNING id, profile_picture, name, email, room_num;`, [profilePicturePath, userId]);
+        const [rows] = await pool.query(`UPDATE users SET profile_picture = ? WHERE id = ?;`, 
+          [profilePicturePath, userId]);
 
         if (rows.length === 0) return { ok: false, error: "User not found" };
   
-        return { ok: true, user: rows[0] };
+        return { ok: true, user: "updated profile picture"};
         
       } catch (err) {
         console.error("Error updating profile picture:", err);

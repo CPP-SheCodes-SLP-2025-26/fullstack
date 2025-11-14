@@ -18,12 +18,14 @@ export default function App() {
   const [session, setSession] = useState(null);
   const [userId, setUserId] = useState(null);
   const [room_num, setRoomNum] = useState(null);
+  const [username, setUsername] = useState(null);
 
   // Restore from localStorage on first load
   useEffect(() => {
     const savedSession = localStorage.getItem("session");
     const savedUserId = localStorage.getItem("userId");
     const savedRoomNum = localStorage.getItem("room_num");
+    const savedUsername = localStorage.getItem("username");
 
     if (savedSession) {
       try {
@@ -35,18 +37,22 @@ export default function App() {
 
     if (savedUserId) setUserId(Number(savedUserId));
     if (savedRoomNum) setRoomNum(Number(savedRoomNum));
+    if (savedUsername) setUsername(savedUsername);
   }, []);
 
   // Called when login/signup succeeds
   const handleLogin = (userData) => {
+    const nameFromUser = userData.name || userData.username || "";
 
     setSession(userData);
     setUserId(userData.userId);
     setRoomNum(userData.room_num);
+    setUsername(nameFromUser);
 
     localStorage.setItem("session", JSON.stringify(userData));
     localStorage.setItem("userId", String(userData.userId));
     localStorage.setItem("room_num", String(userData.room_num));
+    localStorage.setItem("username", nameFromUser);
     
   };
 
@@ -55,10 +61,12 @@ export default function App() {
     setSession(null);
     setUserId(null);
     setRoomNum(null);
+    setUsername(null);
 
     localStorage.removeItem("session");
     localStorage.removeItem("userId");
     localStorage.removeItem("room_num");
+    localStorage.removeItem("username");
   };
 
   return (
@@ -79,8 +87,8 @@ export default function App() {
           element={
             session ? (
               <Dashboard
-                userId={userId}
-                username={session?.name || session?.username} // adjust field name
+                username={username} // adjust field name
+                room_num={room_num}
               />
             ) : (
               <Navigate to="/login" replace />
@@ -94,7 +102,7 @@ export default function App() {
       <Chores
         userId={userId}
         room_num={room_num}
-        username={session?.name || session?.username}
+        username={username}
             />
         } />
         <Route path="/create-chore" element={<CreateChore />} />

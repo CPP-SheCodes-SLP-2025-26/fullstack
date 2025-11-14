@@ -49,7 +49,11 @@ router.post('/register', async (req, res) => {
   const result = await Profile.createProfile(name, email, password, room_num);
 
   if (!result.ok) return res.status(406).json({ errors: result.errors });
-  res.status(201).json({ message: 'Register successful', userId : result.id, room_num : result.room_num});
+  res.status(201).json({ 
+    message: 'Register successful', 
+    userId : result.id, 
+    room_num : result.room_num,
+    name : result.name});
 });
 
 // select a profile
@@ -73,7 +77,11 @@ router.post('/login', async (req, res) => {
 
   if (!result.ok) return res.status(401).json({ error: result.error });
 
-  res.status(200).json({message: 'Login successful', userId: result.user.id, room_num: result.user.room_num});
+  res.status(200).json({
+    message: 'Login successful', 
+    userId: result.user.id, 
+    room_num: result.user.room_num, 
+    name: result.user.name});
 });
 
 // change a users password

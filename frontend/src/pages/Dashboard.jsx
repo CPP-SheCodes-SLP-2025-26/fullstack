@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-const Dashboard = ({ username, userId }) => {
+const Dashboard = ({ username, room_num }) => {
   const navigate = useNavigate();
 
   // ====== chores state ======
@@ -109,10 +109,10 @@ const Dashboard = ({ username, userId }) => {
 
   // ====== chores fetch (your original logic) ======
   useEffect(() => {
-    if (!userId) return;
+    if (!room_num) return;
     const fetchChores = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/get/personal/chores/${userId}`);
+        const res = await fetch(`http://localhost:3000/get/chores/${room_num}`);
         const data = await res.json();
         setChores(data);
       } catch (err) {
@@ -120,7 +120,7 @@ const Dashboard = ({ username, userId }) => {
       }
     };
     fetchChores();
-  }, [userId]);
+  }, [room_num]);
 
   return (
     <div className="dashboard">
