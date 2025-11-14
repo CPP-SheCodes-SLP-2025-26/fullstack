@@ -6,6 +6,7 @@ function CreateChore() {
     const navigate = useNavigate();
     const location = useLocation();
     const { userId, room_num } = location.state || {};
+    const [ errorMessage, setErrorMessage] = useState("");
 
     const [chore, setChore] = useState({
         chore_name: "",
@@ -16,25 +17,9 @@ function CreateChore() {
         room_num: room_num || ""
     })
 
-    //  useEffect(() => {
-    //     const storedUser = localStorage.getItem("user");
-    //     if (storedUser) {
-    //     const user = JSON.parse(storedUser);
-    //     setChore((prev) => ({ ...prev, user_id: user.id }));
-    //     }
-    // }, []);
-
-    // useEffect(() => {
-    //     const storedUser = localStorage.getItem("user");
-    //     if (!storedUser) {
-    //         alert("Please log in first!");
-    //         navigate("/login");
-    //     }
-    //     }, []);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        setErrorMessage("");
 
     const response = await fetch('http://localhost:3000/chores', {
     method: 'POST',
@@ -45,11 +30,10 @@ function CreateChore() {
 
    const data = await response.json();
   if (response.ok) {
-        alert('Chore created successfully!');
         setChore({ chore_name: '', description: '', user_id:'', due_date:'', is_finished: false});
         navigate("/chores");
   } else {
-        alert('Error: ' + (data.error || 'Unknown error'));
+        setErrorMessage('Error: ' + (data.error || 'Unknown error'));
   }
 };
 
@@ -105,6 +89,13 @@ function CreateChore() {
                         onChange={(e) => setChore({ ...chore, description: e.target.value })}
                         />
                         </div>
+
+                    {errorMessage && (
+                    <p className="error-message">
+                      {errorMessage}
+                    </p>
+                  )}
+
                     <button type="submit" className="btn btn-primary mt-5 submit-chore-btn">
                         Add Chore!
                         </button>

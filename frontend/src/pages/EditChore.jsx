@@ -17,9 +17,14 @@ function EditChore() {
     room_num: original.room_num
   });
 
+  // store error message for inline display
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
 
+      
     const response = await fetch(
       `http://localhost:3000/chores/${original.id}`,
       {
@@ -29,13 +34,15 @@ function EditChore() {
       }
     );
 
+    const data = await response.json();  
+
     if (response.ok) {
-      alert("Chore updated!");
       navigate("/chores");
     } else {
-      alert("Failed to update chore");
+     setErrorMessage(data.error || "Failed to update chore.");
     }
   };
+  
 
   useEffect(() => {
   console.log("Original chore:", original);
@@ -94,6 +101,12 @@ function EditChore() {
                         onChange={(e) => setChore({ ...chore, description: e.target.value })}
                         />
                         </div>
+
+                {errorMessage && (
+                    <p className="error-message">
+                      Error: {errorMessage}
+                    </p>
+                  )}
                     <button type="submit" className="btn btn-primary mt-5 submit-chore-btn">
                         Finish edit chore
                         </button>

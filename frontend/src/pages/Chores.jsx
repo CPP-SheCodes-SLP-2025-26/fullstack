@@ -97,14 +97,19 @@ function Chores({ userId, room_num}) {
         <span className="fw-bold">Filter by:</span>
       <button
         className={`btn filter-btn ${selectedFilter === "unfinished-chores" ? "active" : ""}`}
-        onClick={() => setSelectedFilter("unfinished-chores")}
+        onClick={() =>
+          setSelectedFilter(prev =>
+            prev === "unfinished-chores" ? null : "unfinished-chores"
+          )}
       >
         Unfinished Chores
       </button>
 
       <button
         className={`btn filter-btn ${selectedFilter === "due-date" ? "active" : ""}`}
-        onClick={() => setSelectedFilter("due-date")}
+        onClick={() => setSelectedFilter(prev => 
+          prev === "due-date" ? null : "due-date"
+       )}
       >
         Due Date
       </button>
