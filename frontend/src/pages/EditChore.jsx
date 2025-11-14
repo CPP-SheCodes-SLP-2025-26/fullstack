@@ -52,6 +52,8 @@ function EditChore() {
     return(
         <div className="text-center text-primary mt-5 create-chore-container">
             <h1 className="create-chore-title">Edit Chore</h1>
+             <button className="back-button" onClick={()=> navigate('../chores')}>Back to Chores</button>
+
 
         <div className="container shadow rounded p-4 input-container"
             style={{

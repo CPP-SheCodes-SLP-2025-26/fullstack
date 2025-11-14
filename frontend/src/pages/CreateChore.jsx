@@ -39,7 +39,9 @@ function CreateChore() {
 
     return(
         <div className="text-center text-primary mt-5 create-chore-container">
+            
             <h1 className="create-chore-title">Add A New Chore!</h1>
+                    <button className="back-button" onClick={()=> navigate('../chores')}>Back to Chores</button>
 
         <div className="container shadow rounded p-4 input-container"
             style={{
@@ -48,6 +50,8 @@ function CreateChore() {
                 margin: '20px auto',
             }}
             >
+
+
             <form onSubmit={handleSubmit}>
                 <div className="mb-3 text-start mt-3 chore-input">
                     <label htmlFor="choreTitle" className="form-label">
