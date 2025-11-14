@@ -6,7 +6,7 @@ class Profile
     static async createProfile(name, email, password, room_num)
     {
         try{
-          const errors = await this.getErrors(name, password, email);
+          const errors = await this.getErrors(name, password, email, room_num);
           console.log(errors);
           if (errors.length > 0) {
             return { ok: false, errors };
@@ -15,10 +15,10 @@ class Profile
           await pool.query("INSERT IGNORE INTO rooms (id) VALUES (?)", [room_num]);
           const saltRounds = 10;
           const hashedPassword = await bcrypt.hash(password, saltRounds);
-          await pool.query("INSERT into users (name, email, password, room_num) VALUES (?, ?, ?, ?)",
+          const [user] = await pool.query("INSERT into users (name, email, password, room_num) VALUES (?, ?, ?, ?)",
                             [name, email, hashedPassword, room_num]);
-
-          return { ok: true };
+          // console.log("user from login: ", user)
+          return {ok: true, id : user.insertId, room_num : room_num};
         }
         catch (error){
           console.error("Error in createProfile:", error);
@@ -65,17 +65,21 @@ class Profile
       }
     }
 
-    static async getErrors(_username, _password, _email)
+    static async getErrors(_username, _password, _email, _room_num)
     {
         const returnString = []; 
         const user = await this.validateUsername(_username);
         const validEmail = this.validateEmail(_email);
         const dupEmail = await this.DuplicateEmail(_email);
+        const room_num = this.validateRoomNumber(_room_num);
+
 
         if(user)
             returnString.push("Username already exisits")
         if(validEmail)
             returnString.push("Email must be in valid format")
+        if(!room_num)
+            returnString.push("Room number must contain 3 or 4 digits")
         if(dupEmail)
           returnString.push("Email already exisists")
         if(_password.length < 8)
@@ -96,6 +100,12 @@ class Profile
         }
     }
 
+    static validateRoomNumber(room_num) {
+
+      const value = String(room_num).trim();
+      return /^\d{3,4}$/.test(value);
+    }
+
     static validateEmail(email) {return (email.length === 0 || !(/^\S+@\S+\.\S+$/.test(email)));}
 
     static async DuplicateEmail(email) 
@@ -108,7 +118,7 @@ class Profile
     {
       try {
         const [rows] = await pool.query(
-          'SELECT id, name, password FROM users WHERE name = ? LIMIT 1',
+          'SELECT id, name, password, room_num FROM users WHERE name = ? LIMIT 1',
           [username]
         );
         return rows.length ? rows[0] : null;
@@ -125,11 +135,9 @@ class Profile
         if (!user) return { ok: false, error: 'Invalid username or password' };
   
         const match = await bcrypt.compare(password, user.password);
-        console.log(password)
-        console.log(user.password)
         if (!match) return { ok: false, error: 'Invalid username or password' };
 
-        return { ok: true};
+        return { ok: true, user : user};
 
       } catch (err) {
         console.error('Login error:', err);
@@ -215,6 +223,30 @@ class Profile
       } catch (err) {
         console.error(err);
         return { ok: false, errors: ['Server error while changing username'] };
+      }
+    }
+
+    static async changeRoomNumber(userId, room_num) 
+    {
+      try {
+        if (!this.validateRoomNumber(room_num)) 
+          return { ok: false, error: "Room number must be 3 or 4 digits" };
+  
+        await pool.query("INSERT IGNORE INTO rooms (id) VALUES (?)", [room_num]);
+
+        const [updateResult] = await pool.query("UPDATE users SET room_num = ? WHERE id = ?",
+          [room_num, userId]);
+  
+        if (updateResult.affectedRows === 0) return { ok: false, error: "User not found." };
+
+        await pool.query("UPDATE chores SET room_num = ? WHERE user_id = ?",
+          [room_num, userId]);
+    
+        return { ok: true };
+  
+      } catch (err) {
+        console.error("Error updating room number:", err);
+        return { ok: false, error: "Database error." };
       }
     }
 

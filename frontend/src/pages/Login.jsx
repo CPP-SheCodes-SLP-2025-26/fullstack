@@ -3,11 +3,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import "./Login.css";
 
 // Icons
-import email_icon from "../assets/email.png";
 import password_icon from "../assets/password.png";
 import user_icon from "../assets/user.png";
 
-export default function Login({ session, setSession }) {
+export default function Login({ session, onLogin }) {  
   const navigate = useNavigate();
   const location = useLocation();
   const [action, setAction] = useState("Get In Loser!");
@@ -40,13 +39,12 @@ export default function Login({ session, setSession }) {
       const data = await res.json();
 
       if (res.ok) {
-        // Safe check 
-        if (typeof setSession === "function") {
-          setSession(true);
-        }
+        
+        console.log("signup data: ", data)
+        onLogin(data);
         navigate("/dashboard"); // redirect to dashboard after login
       } else {
-        // show inline error, no alert
+
         setErrorMessage(
           data.error || "Incorrect username or password. Try again!"
         );
@@ -74,9 +72,9 @@ export default function Login({ session, setSession }) {
             </div>
           )}
 
-          {/* Username (used instead of email) */}
+          {/* Username */}
           <div className="input">
-            <img src={email_icon} alt="username" />
+            <img src={user_icon} alt="username" />
             <input
               type="text"
               placeholder="Your Username"
@@ -98,9 +96,9 @@ export default function Login({ session, setSession }) {
 
           {/* inline error message */}
           {errorMessage && (
-            <p style={{ color: "red", marginTop: "8px", fontSize: "0.9rem" }}>
+            <div className="login-error">
               {errorMessage}
-            </p>
+            </div>
           )}
         </div>
 
@@ -129,5 +127,3 @@ export default function Login({ session, setSession }) {
     </div>
   );
 }
-
-

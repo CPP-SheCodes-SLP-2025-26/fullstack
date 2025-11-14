@@ -50,7 +50,7 @@
     height: 65px;
     border-radius: 50px;
     font-size: 22px;
-    font-family: "Barbie", "Dollie Script", cursive;
+    font-family: "Barbie", "Dollie Script";
     font-weight: 1000;
     cursor: pointer;
     transition: all 0.25s ease-in-out;

@@ -15,7 +15,7 @@ import motivImg from "../assets/motivation.png";
 import snoopyImg from "../assets/snoopy.png";
 
 export default function Home() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user = JSON.parse(localStorage.getItem("session") || "null");
 
   const quotes = useMemo(
     () => [
@@ -59,14 +59,16 @@ export default function Home() {
 
         <div className="cta-row">
           {user ? (
-            <Link className="btn primary" to="/dashboard">Go to Dashboard</Link>
+            <div></div>
           ) : (
-            <>
             <div className="submit-container">
-              <Link className="submit secondary" to="/signup">Join The Plastics!</Link>
-              <Link className="submit primary" to="/login">Get In Loser!</Link>
-              </div>
-            </>
+              <Link className="submit secondary" to="/signup">
+                Join The Plastics!
+              </Link>
+              <Link className="submit primary" to="/login">
+                Get In Loser!
+              </Link>
+            </div>
           )}
         </div>
 

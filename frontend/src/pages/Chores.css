@@ -39,6 +39,18 @@ h1.chore-title{
     background-color: rgb(255, 255, 255) !important; 
     font-family: "Oregano", serif!important;
     font-size: 1.4rem!important;
+    box-shadow: 3px 3px 0 black;
+    transition: transform 0.2s ease!important;
+}
+
+.filter-btn:hover{
+    transform: scale(1.05)!important;
+}
+
+.filter-btn.active{
+    background-color: #ffabc6!important;
+    color: white!important;
+    border: none;
 }
 
 .filter-container{
@@ -53,7 +65,8 @@ h1.chore-title{
 
 .filter-container span{
     font-family: 'Oregano', serif;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
+    color:white;
 }
 
 /* * {
