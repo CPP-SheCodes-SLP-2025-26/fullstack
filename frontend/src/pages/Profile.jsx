@@ -672,16 +672,6 @@ function ProfilePicForm({ onSave, onCancel }) {
     i.src = url;
   };
 
-  // load from url text input
-  const [url, setUrl] = useState("");
-  const loadUrl = () => {
-    if (!url.trim()) return;
-    const i = new Image();
-    i.crossOrigin = "anonymous"; // allow canvas export for most hosts
-    i.onload = () => { setImg(i); setFileName(url.split("/").pop() || "image.png"); };
-    i.src = url.trim();
-  };
-
   const canSave = !!img;
 
   // export exactly what you see
@@ -727,8 +717,7 @@ function ProfilePicForm({ onSave, onCancel }) {
   return (
     <form className="popup-form" onSubmit={handleSave}>
   <div className="upload-panel">
-    <div className="upload-title">Upload your Picture</div>
-
+    
     {/* CROP STAGE */}
     <div
       ref={stageRef}
@@ -786,19 +775,6 @@ function ProfilePicForm({ onSave, onCancel }) {
       />
     </label>
     <span style={{ marginLeft: 8 }}>{fileName}</span>
-  </div>
-
-  <div className="field-block">
-    <div className="field-label">OR Enter the path to the picture:</div>
-    <div style={{ display: "flex", gap: 8 }}>
-      <input
-        className="popup-input"
-        placeholder="https://example.com/image.jpg"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-      />
-      <button type="button" className="btn solid" onClick={loadUrl}>Load</button>
-    </div>
   </div>
 
   <Actions canSave={canSave} onCancel={onCancel} />
