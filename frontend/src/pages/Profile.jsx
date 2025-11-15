@@ -1,293 +1,242 @@
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import "./Profile.css";
+
+/** Cache-bust helper: append ?v=<timestamp> so the browser refetches */
+const withBust = (url, bust = Date.now()) =>
+  url ? `${url}${url.includes("?") ? "&" : "?"}v=${bust}` : url;
 
 export default function ProfilePage() {
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [roomNumber, setRoomNumber] = useState(null);
   const [passwordMasked] = useState("********");
-  
+
   const [error, setError] = useState("");
+  const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | 'roomNumber' | null
+
+  // Persisted user id
+  const storedUserId = localStorage.getItem("userId");
+  const USER_ID = storedUserId ? Number(storedUserId) : null;
+
+  // Server-stored avatar *relative* path (e.g. "/uploads/profile_pictures/user_348.png")
+  const [serverAvatarPath, setServerAvatarPath] = useState(null);
+
+  // What we actually render in the UI as the avatar (may be dataURL for instant preview)
+  const [avatarSrc, setAvatarSrc] = useState(null);
+
   const clearErrorAndEdit = (field) => {
-    setError(""); // Clears the main page error
+    setError("");
     setEditing(field);
   };
 
-  const storedUserId = localStorage.getItem('userId');
-  // forces user id to be a number
-  const USER_ID = storedUserId ? Number(storedUserId) : null;
-
-  const [editing, setEditing] = useState(null); // 'username' | 'email' | 'password' | 'pic' | 'roomNumber' | null
-
-  //state for avatar URL fetched from DB
-  const [avatarUrl, setAvatarUrl] = useState(null);
-
-  // optional local preview for the avatar
-  const [avatarSrc, setAvatarSrc] = useState(null);
-
-  
-  //populate profile page with user info from DB
+  // Load profile info
   useEffect(() => {
-	if (!USER_ID) {
-    console.error("No user ID found in storage. User must be logged in.");
-    // Optionally redirect to login page here.
-    return;
-  	
-	}
+    if (!USER_ID) {
+      console.error("No user ID found in storage. User must be logged in.");
+      return;
+    }
     (async () => {
       try {
         const response = await fetch(`http://localhost:3000/profile/${USER_ID}`, {
-          // Use credentials if behind an authenticated session
-          credentials: "include", 
+          credentials: "include",
         });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
-        
-		setUsername(data.name || "");
-		setEmail(data.email || "");
-		setRoomNumber(data.room_num || "");
 
-		const fullAvatarPath = data.profile_picture ? `http://localhost:3000${data.profile_picture}` : null;
+        setUsername(data.name || "");
+        setEmail(data.email || "");
+        setRoomNumber(data.room_num || "");
 
-		setAvatarUrl(data.avatar_url || null); 
-        setAvatarSrc(fullAvatarPath);
-        
-      } catch (error) {
-        console.error("Failed to fetch user profile:", error);
+        // Prefer the actual field your API returns; here we assume "profile_picture"
+        const relPath = data.profile_picture || null;
+        setServerAvatarPath(relPath);
+
+        const fullUrl = relPath ? `http://localhost:3000${relPath}` : null;
+        setAvatarSrc(withBust(fullUrl));
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
       }
     })();
-  }, [USER_ID]); 
+  }, [USER_ID]);
 
-  // Username is edited and have to update DB
+  /* ----------------- Updaters ----------------- */
+
   const changeUsername = async (newUsername) => {
-	if (!USER_ID) return;
+    if (!USER_ID) return;
     const confmUsername = newUsername;
-
     try {
-        const response = await fetch("http://localhost:9999/change/username", {
-            method: "POST",
-            headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          userId: USER_ID,            
-          newUsername: newUsername,   
-          confmUsername: confmUsername
-        }),
+      const response = await fetch("http://localhost:3000/change/username", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: USER_ID, newUsername, confmUsername }),
         credentials: "include",
-    });
-
-    const result = await response.json();
-    if (!response.ok) {
-        const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-        setError(`Username change failed: ${errorMsg}`); 
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        const errorMsg = result.errors ? result.errors.join(", ") : `HTTP ${response.status}`;
+        setError(`Username change failed: ${errorMsg}`);
         return;
-    } 
+      }
+      setError("");
+      setUsername(newUsername);
+      setEditing(null);
+    } catch (err) {
+      setError(`Network error: Could not save username. ${err.message}`);
+    }
+  };
 
-	setError("");
-    setUsername(newUsername);
-    setEditing(null);
-    
-    } catch (error) { 
-	setError(`Network error: Could not save username. ${error.message}`);    
-	}
-  }; 
-
-// Email is edited and have to update DB
-const changeEmail = async (newEmail) => {
+  const changeEmail = async (newEmail) => {
     const confmEmail = newEmail;
-
     try {
-        const response = await fetch("http://localhost:3000/change/email", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId: USER_ID,
-                newEmail: newEmail,
-                confmEmail: confmEmail 
-            }),
-            credentials: "include",
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-            const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-			setError(`Email change failed: ${errorMsg}`); 
-            return;
-        }
-
-		setError("");
-		setEmail(newEmail);
-        setEditing(null);
-
-    } catch (error) {
-		setError(`Network error: Could not save email. ${error.message}`);
+      const response = await fetch("http://localhost:3000/change/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: USER_ID, newEmail, confmEmail }),
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        const errorMsg = result.errors ? result.errors.join(", ") : `HTTP ${response.status}`;
+        setError(`Email change failed: ${errorMsg}`);
+        return;
+      }
+      setError("");
+      setEmail(newEmail);
+      setEditing(null);
+    } catch (err) {
+      setError(`Network error: Could not save email. ${err.message}`);
     }
-};
+  };
 
-// Password is edited and have to update DB
-const changePassword = async (oldPassword, newPassword) => {
-	const confmPassword = newPassword;
-
+  const changePassword = async (oldPassword, newPassword) => {
+    const confmPassword = newPassword;
     try {
-        const response = await fetch("http://localhost:3000/change/password", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId: USER_ID,
-				oldPass: oldPassword,
-                newPass: newPassword,
-                confmPass: confmPassword 
-            }),
-            credentials: "include",
-        });
-
-        const result = await response.json();
-        if (!response.ok) {
-            const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-			setError(`Password change failed: ${errorMsg}`); 
-            return;
-        }
-		setError("");
-        setEditing(null);
-
-    } catch (error) {
-		setError(`Network error: Could not save password. ${error.message}`);
-    }
-};
-
-// Room number is edited and have to update DB
-  const changeRoomNum = async (newRoomNum) => {
-	if (!USER_ID) return;
-    const confmRoomNum = newRoomNum;
-
-    try {
-        const response = await fetch("http://localhost:3000/change/room", {
-            method: "POST",
-            headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          userId: USER_ID,            
-          room_num: confmRoomNum
+      const response = await fetch("http://localhost:3000/change/password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: USER_ID,
+          oldPass: oldPassword,
+          newPass: newPassword,
+          confmPass: confmPassword,
         }),
         credentials: "include",
-    });
-
-    const result = await response.json();
-    if (!response.ok) {
-        const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-		setError(`Room Number change failed: ${errorMsg}`); 
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        const errorMsg = result.errors ? result.errors.join(", ") : `HTTP ${response.status}`;
+        setError(`Password change failed: ${errorMsg}`);
         return;
-    } 
-
-	setError("");
-    setRoomNumber(newRoomNum);
-    setEditing(null);
-    
-    } catch (error) { 
-		setError(`Network error: Could not save room number. ${error.message}`);
+      }
+      setError("");
+      setEditing(null);
+    } catch (err) {
+      setError(`Network error: Could not save password. ${err.message}`);
     }
-  }; 
+  };
 
-// Profile pic is changed and needs to be updated in DB
-const changeProfilePic = async (dataUrl, fileName) => {
-  if (!USER_ID) {
-    alert('User ID is missing. Please log in again.');
-    return;
-  }
-  
-  try {
-    // Convert dataURL to Blob
-    const response = await fetch(dataUrl);
-    const blob = await response.blob();
-    
-    // Create a proper file name
-    const safeName = (fileName && fileName.trim()) ? fileName : `avatar_${USER_ID}.png`;
-    const file = new File([blob], safeName, { type: blob.type || "image/png" });
-
-    // Create FormData
-    const formData = new FormData();
-    formData.append("profile_picture", file);
-
-    // Upload to server (userId is in the URL path)
-    const res = await fetch(`http://localhost:3000/profile/${USER_ID}/picture`, {
-      method: "POST",
-      body: formData,
-      credentials: "include",
-    });
-
-    // Parse response
-    const contentType = res.headers.get("content-type") || "";
-    
-    if (!contentType.includes("application/json")) {
-      const text = await res.text();
-      console.error("Unexpected response format:", text);
-      throw new Error("Server returned non-JSON response");
+  const changeRoomNum = async (newRoomNum) => {
+    if (!USER_ID) return;
+    const confmRoomNum = newRoomNum;
+    try {
+      const response = await fetch("http://localhost:3000/change/room", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: USER_ID, room_num: confmRoomNum }),
+        credentials: "include",
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        const errorMsg = result.errors ? result.errors.join(", ") : `HTTP ${response.status}`;
+        setError(`Room Number change failed: ${errorMsg}`);
+        return;
+      }
+      setError("");
+      setRoomNumber(newRoomNum);
+      setEditing(null);
+    } catch (err) {
+      setError(`Network error: Could not save room number. ${err.message}`);
     }
+  };
 
-    const body = await res.json();
-
-    if (!res.ok) {
-      const errorMsg = body?.error || body?.message || `HTTP ${res.status}`;
-	  setError(`Profile pic change failed: ${errorMsg}`); 
-      return; 
+  /** Upload new profile picture, keep instant preview, then swap to cache-busted server URL */
+  const changeProfilePic = async (dataUrl, fileName) => {
+    if (!USER_ID) {
+      alert("User ID is missing. Please log in again.");
+      return;
     }
+    try {
+      // Convert dataURL to Blob
+      const resp = await fetch(dataUrl);
+      const blob = await resp.blob();
 
-    // Server returns "profile_picture" field with the path
-    const avatarPath = body?.profile_picture;
-    
-    if (!avatarPath) {
-      console.error("Server response:", body);
-      throw new Error("Server did not return profile_picture path");
+      const safeName = fileName && fileName.trim() ? fileName : `avatar_${USER_ID}.png`;
+      const file = new File([blob], safeName, { type: blob.type || "image/png" });
+
+      const formData = new FormData();
+      formData.append("profile_picture", file);
+
+      const res = await fetch(`http://localhost:3000/profile/${USER_ID}/picture`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        const text = await res.text();
+        console.error("Unexpected response format:", text);
+        throw new Error("Server returned non-JSON response");
+      }
+
+      const body = await res.json();
+      if (!res.ok) {
+        const errorMsg = body?.error || body?.message || `HTTP ${res.status}`;
+        setError(`Profile pic change failed: ${errorMsg}`);
+        // Revert to previous server image (with new bust)
+        const fullServerUrl = serverAvatarPath ? `http://localhost:3000${serverAvatarPath}` : null;
+        setAvatarSrc(withBust(fullServerUrl));
+        return;
+      }
+
+      // Expect server returns { profile_picture: "/uploads/profile_pictures/user_348.png" }
+      const newRelPath = body?.profile_picture;
+      if (!newRelPath) throw new Error("Server did not return profile_picture path");
+
+      setServerAvatarPath(newRelPath);
+
+      const fullUrl = newRelPath.startsWith("http")
+        ? newRelPath
+        : `http://localhost:3000${newRelPath}`;
+
+      // IMPORTANT: cache-bust so the newest file shows without a hard reload
+      setError("");
+      setAvatarSrc(withBust(fullUrl));
+      setEditing(null);
+      console.log("Profile picture updated successfully:", newRelPath);
+    } catch (err) {
+      setError(`Network error: Could not save profile pic. ${err.message}`);
+      // Revert to previous server image (with bust)
+      const fullServerUrl = serverAvatarPath ? `http://localhost:3000${serverAvatarPath}` : null;
+      setAvatarSrc(withBust(fullServerUrl));
+      alert(`Could not save profile picture: ${err.message}`);
     }
+  };
 
-    // Update state with new avatar
-    // The path already includes /uploads/profile_pictures/user_X.ext
-    const fullAvatarUrl = avatarPath.startsWith("http") 
-      ? avatarPath 
-      : `http://localhost:3000${avatarPath}`;
-
-	setError("");
-	setAvatarUrl(avatarPath); // Store relative path
-    setAvatarSrc(fullAvatarUrl); // Use full URL for display
-    setEditing(null);
-    
-    console.log("Profile picture updated successfully:", avatarPath);
-    
-  } catch (err) {
-	setError(`Network error: Could not save profile pic. ${error.message}`);    
-    // Revert to previous avatar on error
-    if (avatarUrl) {
-      setAvatarSrc(`http://localhost:3000${avatarUrl}`);
-    } else {
-      setAvatarSrc(null);
-    }
-    
-    alert(`Could not save profile picture: ${err.message}`);
-  }
-};
-
-const onChangePic = () => clearErrorAndEdit("pic");
+  const onChangePic = () => clearErrorAndEdit("pic");
 
   return (
     <div className="profile-page">
-		{error && (
-          <p className="profile-error-message">
-              ⚠️ {error}
-              <button onClick={() => setError("")} className="close-error-btn">
-                  &times;
-              </button>
-          </p>
+      {error && (
+        <p className="profile-error-message">
+          ⚠️ {error}
+          <button onClick={() => setError("")} className="close-error-btn">
+            &times;
+          </button>
+        </p>
       )}
+
       <div className="profile-card">
         <h1 className="profile-title">She Doesn’t Even Go Here!</h1>
 
@@ -299,27 +248,24 @@ const onChangePic = () => clearErrorAndEdit("pic");
             onClick={onChangePic}
             aria-label="Change profile picture"
             style={
-                avatarSrc
-                    ? { backgroundImage: `url(${avatarSrc})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center" }
-                    : undefined
-                }
-            >
-                {/* show this text in the middle when no picture */}
-                {!avatarSrc && <span className="avatar__cta">Change Picture</span>}
-
-                {/* show semi-circle only when a picture exists */}
-                {avatarSrc && <span className="avatar__hover">Change Pic</span>}
-            </button>
-            <p className="greeting">Hi, {username}!</p>
+              avatarSrc
+                ? {
+                    backgroundImage: `url(${avatarSrc})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }
+                : undefined
+            }
+          >
+            {!avatarSrc && <span className="avatar__cta">Change Picture</span>}
+            {avatarSrc && <span className="avatar__hover">Change Pic</span>}
+          </button>
+          <p className="greeting">Hi, {username}!</p>
         </div>
 
         <div className="profile-right">
           <InfoRow label="Username" value={username} onEdit={() => clearErrorAndEdit("username")} />
-          <InfoRow label="Email" value={email} 
-		  onEdit={() => clearErrorAndEdit("email")} />
-          {/* New InfoRow for Room Number */}
+          <InfoRow label="Email" value={email} onEdit={() => clearErrorAndEdit("email")} />
           <InfoRow label="Room Number" value={roomNumber} onEdit={() => clearErrorAndEdit("roomNumber")} />
           <InfoRow label="Password" value={passwordMasked} onEdit={() => clearErrorAndEdit("password")} />
         </div>
@@ -329,62 +275,48 @@ const onChangePic = () => clearErrorAndEdit("pic");
 
       {/* Overlays */}
       {editing === "username" && (
-        <Modal title="Change your name." onClose={() => clearErrorAndEdit(null)}> 
-          <UsernameForm
-            current={username}
-            onCancel={() => clearErrorAndEdit(null)}
-            onSave={changeUsername}
-          />
+        <Modal title="Change your name." onClose={() => clearErrorAndEdit(null)}>
+          <UsernameForm current={username} onCancel={() => clearErrorAndEdit(null)} onSave={changeUsername} />
         </Modal>
       )}
 
       {editing === "email" && (
-        <Modal title="Change your email." onClose={() => clearErrorAndEdit(null)}> 
-          <EmailForm
-            current={email}
-            onCancel={() => clearErrorAndEdit(null)} 
-            onSave={changeEmail}
-          />
+        <Modal title="Change your email." onClose={() => clearErrorAndEdit(null)}>
+          <EmailForm current={email} onCancel={() => clearErrorAndEdit(null)} onSave={changeEmail} />
         </Modal>
       )}
 
       {editing === "roomNumber" && (
-        <Modal title="Change your room number." onClose={() => clearErrorAndEdit(null)}> 
-          <RoomNumberForm
-            current={roomNumber}
-            onCancel={() => clearErrorAndEdit(null)} 
-            onSave={changeRoomNum}
-          />
+        <Modal title="Change your room number." onClose={() => clearErrorAndEdit(null)}>
+          <RoomNumberForm current={roomNumber} onCancel={() => clearErrorAndEdit(null)} onSave={changeRoomNum} />
         </Modal>
       )}
 
       {editing === "password" && (
-        <Modal title="Change your password." onClose={() => clearErrorAndEdit(null)}> 
-          <PasswordForm
-            onCancel={() => clearErrorAndEdit(null)} 
-            onSave={changePassword}
-          />
+        <Modal title="Change your password." onClose={() => clearErrorAndEdit(null)}>
+          <PasswordForm onCancel={() => clearErrorAndEdit(null)} onSave={changePassword} />
         </Modal>
       )}
 
       {editing === "pic" && (
-        <Modal title="Change your head shot." onClose={() => clearErrorAndEdit(null)}> 
-        <ProfilePicForm
-        onCancel={() => clearErrorAndEdit(null)} 
-        onSave={async (dataUrl, fileName) => { 
-        // Keep local preview immediately for better UX
-        setAvatarSrc(dataUrl); 
-        // Call the async function and await it
-        await changeProfilePic(dataUrl, fileName);
-      }}
-    />
-  </Modal>
-)}
+        <Modal title="Change your head shot." onClose={() => clearErrorAndEdit(null)}>
+          <ProfilePicForm
+            onCancel={() => clearErrorAndEdit(null)}
+            onSave={async (dataUrl, fileName) => {
+              // Instant local preview
+              setAvatarSrc(dataUrl);
+              // Upload, then swap to cache-busted server URL
+              await changeProfilePic(dataUrl, fileName);
+            }}
+          />
+        </Modal>
+      )}
     </div>
   );
 }
 
-// InfoRow, Modal, FieldBlock, Actions components remain unchanged
+/* ----------------- Presentational components ----------------- */
+
 function InfoRow({ label, value, onEdit }) {
   return (
     <div className="info-row">
@@ -437,10 +369,10 @@ function Actions({ canSave, onCancel }) {
   );
 }
 
-/* ---------- Forms with live validation ---------- */
+/* ----------------- Forms with live validation ----------------- */
 
-function UsernameForm({ current, onSave, onCancel }) {
-  const [v, setV] = useState("")
+function UsernameForm({ onSave, onCancel }) {
+  const [v, setV] = useState("");
   const [c, setC] = useState("");
   const [touched, setTouched] = useState({ v: false, c: false });
 
@@ -479,7 +411,7 @@ function UsernameForm({ current, onSave, onCancel }) {
   );
 }
 
-function EmailForm({ current, onSave, onCancel }) {
+function EmailForm({ onSave, onCancel }) {
   const [v, setV] = useState("");
   const [c, setC] = useState("");
   const [touched, setTouched] = useState({ v: false, c: false });
@@ -528,12 +460,11 @@ function EmailForm({ current, onSave, onCancel }) {
   );
 }
 
-function RoomNumberForm({ current, onSave, onCancel }) {
+function RoomNumberForm({ onSave, onCancel }) {
   const [v, setV] = useState(String(""));
   const [c, setC] = useState(String(""));
   const [touched, setTouched] = useState({ v: false, c: false });
 
-  // Validation
   const nonEmpty = v !== "";
   const matchOk = v === c;
 
@@ -544,7 +475,7 @@ function RoomNumberForm({ current, onSave, onCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!canSave) return;
-    onSave(v.toUpperCase()); // keep uppercase for consistency
+    onSave(v.toUpperCase());
   };
 
   return (
@@ -635,18 +566,17 @@ function PasswordForm({ onSave, onCancel }) {
   );
 }
 
-// ProfilePicForm component remains unchanged
+/* ----------------- Picture cropper & uploader ----------------- */
+
 function ProfilePicForm({ onSave, onCancel }) {
-  const stageRef = useRef(null);      // circle stage (for diameter)
-  const imgRef   = useRef(null);      // <img> element used for preview
-  const [img, setImg] = useState(null);     // HTMLImageElement after load
+  const stageRef = useRef(null);   // circle stage
+  const [img, setImg] = useState(null); // HTMLImageElement
   const [fileName, setFileName] = useState("");
 
-  // transform state
-  const [zoom, setZoom] = useState(1);      // 1..3
+  const [zoom, setZoom] = useState(1); // 1..3
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  // dragging
+  // drag tracking
   const drag = useRef({ active: false, x: 0, y: 0, ox: 0, oy: 0 });
   const startDrag = (e) => {
     const p = "touches" in e ? e.touches[0] : e;
@@ -662,7 +592,6 @@ function ProfilePicForm({ onSave, onCancel }) {
   };
   const endDrag = () => (drag.current.active = false);
 
-  // load from file
   const onFile = (f) => {
     if (!f) return;
     setFileName(f.name);
@@ -674,39 +603,30 @@ function ProfilePicForm({ onSave, onCancel }) {
 
   const canSave = !!img;
 
-  // export exactly what you see
   const handleSave = (e) => {
     e.preventDefault();
     if (!img || !stageRef.current) return;
 
-    const D = stageRef.current.clientWidth;    // stage diameter in CSS px
-    const size = 512;                          // output resolution
+    const D = stageRef.current.clientWidth; // stage diameter in CSS px
+    const size = 512; // output resolution
     const canvas = document.createElement("canvas");
     canvas.width = size;
     canvas.height = size;
     const ctx = canvas.getContext("2d");
 
-    // compute how the image is fit initially (cover the circle)
-    const baseScale = D / Math.min(img.width, img.height); // how many CSS px per image px when zoom=1
-    const effScaleCss = baseScale * zoom;                  // CSS scale shown in the preview
-
-    // factor to translate CSS px -> canvas px
+    // base scale to cover the circle
+    const baseScale = D / Math.min(img.width, img.height);
+    const effScaleCss = baseScale * zoom;
     const cssToCanvas = size / D;
 
     ctx.clearRect(0, 0, size, size);
     ctx.save();
-    // circular mask
     ctx.beginPath();
     ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
     ctx.clip();
 
-    // place image so its center is at circle center + offset
-    ctx.translate(
-      size / 2 + offset.x * cssToCanvas,
-      size / 2 + offset.y * cssToCanvas
-    );
+    ctx.translate(size / 2 + offset.x * cssToCanvas, size / 2 + offset.y * cssToCanvas);
     ctx.scale(effScaleCss * cssToCanvas, effScaleCss * cssToCanvas);
-    // draw image centered
     ctx.drawImage(img, -img.width / 2, -img.height / 2);
     ctx.restore();
 
@@ -716,67 +636,66 @@ function ProfilePicForm({ onSave, onCancel }) {
 
   return (
     <form className="popup-form" onSubmit={handleSave}>
-  <div className="upload-panel">
-    
-    {/* CROP STAGE */}
-    <div
-      ref={stageRef}
-      className="crop-stage"
-      onMouseDown={startDrag}
-      onMouseMove={moveDrag}
-      onMouseUp={endDrag}
-      onMouseLeave={endDrag}
-      onTouchStart={startDrag}
-      onTouchMove={moveDrag}
-      onTouchEnd={endDrag}
-    >
-      {img ? (
-        <img
-          src={img.src}
-          alt=""
-          draggable={false}
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: `translate(-50%,-50%) translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
-            transformOrigin: "center center",
-            userSelect: "none",
-            pointerEvents: "none",
-            maxWidth: "none",
-          }}
+      <div className="upload-panel">
+        {/* CROP STAGE */}
+        <div
+          ref={stageRef}
+          className="crop-stage"
+          onMouseDown={startDrag}
+          onMouseMove={moveDrag}
+          onMouseUp={endDrag}
+          onMouseLeave={endDrag}
+          onTouchStart={startDrag}
+          onTouchMove={moveDrag}
+          onTouchEnd={endDrag}
+        >
+          {img ? (
+            <img
+              src={img.src}
+              alt=""
+              draggable={false}
+              style={{
+                position: "absolute",
+                left: "50%",
+                top: "50%",
+                transform: `translate(-50%,-50%) translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+                transformOrigin: "center center",
+                userSelect: "none",
+                pointerEvents: "none",
+                maxWidth: "none",
+              }}
+            />
+          ) : (
+            <div className="crop-placeholder"></div>
+          )}
+        </div>
+
+        {/* zoom */}
+        <input
+          type="range"
+          min="1"
+          max="3"
+          step="0.01"
+          value={zoom}
+          onChange={(e) => setZoom(parseFloat(e.target.value))}
+          className="crop-zoom"
         />
-      ) : (
-        <div className="crop-placeholder"></div>
-      )}
-    </div>
+      </div>
 
-    {/* zoom */}
-    <input
-      type="range"
-      min="1"
-      max="3"
-      step="0.01"
-      value={zoom}
-      onChange={(e) => setZoom(parseFloat(e.target.value))}
-      className="crop-zoom"
-    />
-  </div>
+      <div className="field-block">
+        <label className="btn ghost" style={{ display: "inline-block", cursor: "pointer" }}>
+          Choose File
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => onFile(e.target.files?.[0] || null)}
+            style={{ display: "none" }}
+          />
+        </label>
+        <span style={{ marginLeft: 8 }}>{fileName}</span>
+      </div>
 
-  {/* rest of your form stays the same */}
-  <div className="field-block">
-    <label className="btn ghost" style={{ display: "inline-block", cursor: "pointer" }}>
-      Choose File
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => onFile(e.target.files?.[0] || null)}
-        style={{ display: "none" }}
-      />
-    </label>
-    <span style={{ marginLeft: 8 }}>{fileName}</span>
-  </div>
-
-  <Actions canSave={canSave} onCancel={onCancel} />
-</form>);
+      <Actions canSave={canSave} onCancel={onCancel} />
+    </form>
+  );
 }
