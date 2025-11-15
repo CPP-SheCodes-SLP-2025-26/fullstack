@@ -87,8 +87,6 @@ export default function App() {
           element={
             session ? (
               <Dashboard
-                username={username} // adjust field name
-                room_num={room_num}
                 userId={userId}
               />
             ) : (

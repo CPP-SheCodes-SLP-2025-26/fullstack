@@ -6,7 +6,7 @@
 }
 
 .profile-page {
-  height: 100dvh;
+  height: 100dvh;   
   width: 100%;
   margin: 0;
   background: var(--pink);
@@ -21,9 +21,9 @@
 .profile-card {
   background: var(--pink);
   width: 100vw;
-  height: 100dvh;
+  height: 100dvh;  
   border-radius: 20px;
-  padding: 48px 72px;
+  padding: 30px 72px;
   position: relative;
   display: grid;
   grid-template-columns: 420px minmax(720px, 1fr); 
@@ -47,6 +47,7 @@
 .profile-title {
   grid-area: title;
   text-align: center;
+  text-shadow: 3px 3px #fff;
   /* font-size: clamp(32px, 6vw, 64px); */
   margin: 8px 0 4px;
   font-size: 70px;
@@ -93,8 +94,8 @@
 }
 .lips--br {
   position: absolute;
-  right: 1%;   
-  bottom: 1%; 
+  right: 2%;   
+  bottom: -3%; 
   transform: rotate(15deg);
   z-index: 0;
 }
