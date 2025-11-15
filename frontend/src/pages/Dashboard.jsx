@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
+import defaultAvatar from "../assets/default_avatar.png";
 
-const Dashboard = ({ username, room_num }) => {
+
+const Dashboard = ({ username, room_num, userId }) => {
   const navigate = useNavigate();
 
   // ====== chores state ======
@@ -127,18 +129,32 @@ const Dashboard = ({ username, room_num }) => {
       {/* Sidebar with profile and navigation links */}
       <aside className="sidebar">
         <div className="profile">
-          <div className="profile-pic"></div>
+          <div className="profile-pic">
+            <img
+              src={
+                userId
+                  ? `http://localhost:3000/uploads/profile_pictures/user_${userId}.jpg`
+                  : defaultAvatar
+              }
+              alt={`${username}'s profile`}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = defaultAvatar;
+              }}
+            />
+          </div>
           <p className="greeting">Hey, {username}</p>
         </div>
+
         <nav className="nav-menu">
           <ul>
-            {/* <li onClick={() => navigate("/home")}>Home</li> */}
             <li onClick={handleCalendarClick}>Calendar</li>
             <li onClick={() => navigate("/chores")}>Chores</li>
             <li onClick={() => navigate("/bills")}>Bills</li>
           </ul>
         </nav>
       </aside>
+
 
       <main className="main-content">
         <div className="chore-card">
@@ -183,7 +199,7 @@ const Dashboard = ({ username, room_num }) => {
         </div>
         <div className="divider">✧ ✦ ✧</div>
         <div className="bills-card">
-          <p>Overdue Charges</p>
+          <p><strong>Overdue Charges</strong></p>
           <p><span>Target: $125. 17</span></p>
           <p><span>Trader Joe's: $67.67</span></p>
         </div>

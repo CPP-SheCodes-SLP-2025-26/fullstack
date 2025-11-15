@@ -89,6 +89,7 @@ export default function App() {
               <Dashboard
                 username={username} // adjust field name
                 room_num={room_num}
+                userId={userId}
               />
             ) : (
               <Navigate to="/login" replace />

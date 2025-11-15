@@ -40,11 +40,24 @@ works for everyone else too */
 .profile-pic {
   width: 120px;
   height: 120px;
-  background-color: #ad1b51;
   border-radius: 50%;
+  background-color: #ad1b51;
   margin-bottom: 10px;
-  margin-top: 30px; 
+  margin-top: 30px;
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+/* make sure the img fills the circle nicely */
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
 .greeting {
   font-size: 25px;
@@ -284,7 +297,7 @@ works for everyone else too */
 
  .bills-card span {
   cursor: pointer;
-  text-decoration: underline;
+  /* text-decoration: underline; */
   color: #5b0d2a;
 }
 
