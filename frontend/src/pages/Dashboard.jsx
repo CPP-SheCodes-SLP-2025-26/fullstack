@@ -140,19 +140,38 @@ const Dashboard = ({ username, room_num }) => {
         </nav>
       </aside>
 
-      {/* Main content showing chore list */}
       <main className="main-content">
         <div className="chore-card">
           <h2>Your Chore List</h2>
-          <ul>
-            {chores.map((chore) => (
-              <li key={chore.id}>
-                {chore.chore_name} - Room {chore.room_num} - Due{" "}
-                {new Date(chore.due_date).toLocaleDateString()} -{" "}
-                {chore.is_finished ? "Finished" : "Pending"}
-              </li>
-            ))}
-          </ul>
+          <div className="chore-list">
+            {chores.length === 0 ? (
+              <p className="chore-empty">No chores yet</p>
+            ) : (
+              chores.map((chore) => {
+                const due = new Date(chore.due_date).toLocaleDateString();
+                const statusClass = chore.is_finished ? "done" : "pending";
+
+                return (
+                  <div className="chore-item" key={chore.id}>
+                    <div className="chore-main-row">
+                      <span className="chore-dot">•</span>
+                      <div className="chore-text">
+                        <span className="chore-name">{chore.chore_name}</span>
+                        {/* <span className="chore-room">Room {chore.room_num}</span> */}
+                      </div>
+                    </div>
+
+                    <div className="chore-meta-row">
+                      <span className="chore-due">Due {due}</span>
+                      <span className={`chore-status ${statusClass}`}>
+                        {chore.is_finished ? "Finished" : "Pending"}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
         </div>
       </main>
 
@@ -162,11 +181,7 @@ const Dashboard = ({ username, room_num }) => {
           <p>“On Wednesdays, We Wear Pink”</p>
           <p>“That's So Fetch!”</p>
         </div>
-        <div className="events-card">
-          <p>Upcoming Events</p>
-          <p><span>Nov 16: SLP Demo Day</span></p>
-          <p><span>Nov 27: Thanksgiving</span></p>
-        </div>
+        <div className="divider">✧ ✦ ✧</div>
         <div className="bills-card">
           <p>Overdue Charges</p>
           <p><span>Target: $125. 17</span></p>

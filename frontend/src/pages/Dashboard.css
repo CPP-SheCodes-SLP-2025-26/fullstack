@@ -15,11 +15,11 @@ works for everyone else too */
   grid-template-columns: 220px 1fr 280px;
   gap: 2rem;
   min-height: 100vh;
-  align-items: stretch; /* <-- makes all 3 columns same height */
+  align-items: flex-start; /* <-- makes all 3 columns same height */
   padding: 20px;
   background: #f8a7c1; /* same base background as home page */
   font-family: "Barbie", "Dollie Script", serif;
-  padding-top: 50px;  /* uniform top spacing */
+  padding-top: 30px;  /* uniform top spacing */
 }
 
 /* Sidebar (left) */
@@ -27,7 +27,7 @@ works for everyone else too */
   background-color: #e43173;
   color: #fff;
   width: 250px;
-  padding: 20px;
+  padding-bottom: 68px;
   border-radius: 18px;
   display: flex;
   flex-direction: column;
@@ -48,30 +48,61 @@ works for everyone else too */
 
 .greeting {
   font-size: 25px;
-  font-weight: 500;
-  margin-bottom: 30px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
   /* removed text-shadow- ugly */
 }
+
+/* NAV MENU WRAPPER */
+.nav-menu {
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 
 .nav-menu ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px; 
 }
 
 .nav-menu li {
-  font-size: 25px; /* menu size */
-  padding: 12px 15px;
-  margin-bottom: 30px; /* space between items */
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s;
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  width: 85%;
   text-align: center;
+  padding: 14px 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: 
+    transform 0.18s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
+
 .nav-menu li:hover {
-  background-color: #f9a5be;
-  color: #000;
+  background-color: #f8b5cc;
+  color: #5b0d2a;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.nav-menu li:active {
+  transform: translateY(1px);
+  box-shadow: none;
 }
 
 /* Middle section */
@@ -96,7 +127,7 @@ works for everyone else too */
   justify-content: flex-start;
   color: #000;
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
-  min-height: 700px; /* restored original height for chore list */
+  min-height: 589px;  /* restored original height for chore list */
 }
 
 .chore-card h2 {
@@ -106,6 +137,103 @@ works for everyone else too */
   margin-bottom: 12px;
   color: #5b0d2a;
 }
+
+/* ====== Chore list styling ====== */
+
+.chore-list {
+  margin-top: 10px;
+  padding: 0 10px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.chore-empty {
+  margin-top: 40px;
+  font-size: 18px;
+  color: #b23a63;
+}
+
+/* individual chore “card” */
+.chore-item {
+  background: #ffeaf3;
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  border: 1px solid rgba(255,255,255,0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.chore-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+}
+
+.chore-main-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chore-dot {
+  font-size: 20px;
+  color: #e43173; /* pink bullet */
+  margin-top: -1px;
+}
+
+.chore-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.chore-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #5b0d2a;
+}
+
+.chore-room {
+  font-size: 14px;
+  color: #a24a6c;
+}
+
+.chore-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.chore-due {
+  color: #7b2345;
+}
+
+.chore-status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.chore-status.pending {
+  background: #ffd0e1;
+  color: #b01854;
+}
+
+.chore-status.done {
+  background: #d8ffe4;
+  color: #1b7b3a;
+}
+
 
 .underline2 {
   width: 61px;
@@ -120,14 +248,24 @@ works for everyone else too */
 .right-notes {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 86px;      
   justify-content: flex-start;
-  margin-top: 50px; /* restored spacing */
-  margin-left: -40px; /* moves sticky notes closer to chores */
+  margin-top: 50px;
+  margin-left: -40px;
   margin-right: 50px;
 }
 
-.quote-card, .events-card, .bills-card {
+/* divider between sticky notes */
+.divider {
+  text-align: center;
+  font-size: 32px;     
+  color: #e43173;     
+  opacity: 0.8;
+  transform: rotate(-2deg);
+  font-family: "Barbie", "Dollie Script", serif;
+}
+
+.quote-card, .bills-card {
   background: #f6cad7;
   border: 1px solid #e43173;
   border-radius: 8px;
@@ -138,24 +276,23 @@ works for everyone else too */
       2px 2px 4px rgba(0,0,0,0.2),
       6px 6px 10px rgba(0,0,0,0.15);
   width: 100%;
-  min-height: 200px;
+  min-height: 00px;
   transform: rotate(-1deg);
   position: relative;
   text-align: center;
 }
 
-.events-card span, .bills-card span {
+ .bills-card span {
   cursor: pointer;
   text-decoration: underline;
   color: #5b0d2a;
 }
 
-.events-card span:hover, .bills-card span:hover {
+ .bills-card span:hover {
   color: #e43173;
 }
 
 .quote-card::before, .quote-card::after,
-.events-card::before, .events-card::after,
 .bills-card::before, .bills-card::after {
   content: "";
   position: absolute;
@@ -170,8 +307,6 @@ works for everyone else too */
 
 .quote-card::before { left: 15%; transform: rotate(-10deg); }
 .quote-card::after { right: 15%; transform: rotate(8deg); }
-.events-card::before { left: 15%; transform: rotate(-12deg); }
-.events-card::after { right: 15%; transform: rotate(10deg); }
 .bills-card::before { left: 15%; transform: rotate(-12deg); }
 .bills-card::after { right: 15%; transform: rotate(10deg); }
 

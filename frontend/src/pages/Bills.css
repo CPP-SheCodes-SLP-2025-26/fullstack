@@ -1,7 +1,4 @@
-@font-face {
-  font-family: "Dollie Script";
-  src: url("../assets/Dollie-Script.ttf") format("truetype");
-}
+
 @font-face {
   font-family: "Oregano";
   src: url("./assets/Oregano-Regular.ttf") format("truetype");
@@ -11,7 +8,7 @@
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
-  font-family: "Barbie", "Dollie Script";
+  font-family: "Barbie", "Dollie Script", serif;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -22,8 +19,9 @@
   color: #e43173;
   font-size: 3rem;
   text-align: center; 
+  font-weight: bold;
   margin-bottom: 3rem;
-  text-shadow: 1px 1px #ad1b51;
+  /* text-shadow: 1px 1px #ad1b51; */
   padding-left: 3rem; 
 }
 
@@ -164,7 +162,7 @@
   max-width: 400px;
   width: 90%;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-  font-family: "Barbie", "Dollie Script";
+  font-family: "Barbie", "Dollie Script", serif;
   position: relative;
   text-align: center;
 }
@@ -198,7 +196,8 @@
   color: #e43173;
   font-size: 2rem;
   margin-bottom: 1rem;
-  text-shadow: 1px 1px #ad1b51;
+  font-weight: bold;
+  /* text-shadow: 1px 1px #ad1b51; */
 }
 
 .split-bill-name {
@@ -275,5 +274,5 @@
   font-size: 1.3rem;
   font-weight: 700;
   color: #e43173;
-  text-shadow: 1px 1px #ad1b51;
+  /* text-shadow: 1px 1px #ad1b51; */
 }
