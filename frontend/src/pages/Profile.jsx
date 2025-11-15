@@ -7,6 +7,12 @@ export default function ProfilePage() {
   const [roomNumber, setRoomNumber] = useState(null);
   const [passwordMasked] = useState("********");
   
+  const [error, setError] = useState("");
+  const clearErrorAndEdit = (field) => {
+    setError(""); // Clears the main page error
+    setEditing(field);
+  };
+
   const storedUserId = localStorage.getItem('userId');
   // forces user id to be a number
   const USER_ID = storedUserId ? Number(storedUserId) : null;
@@ -45,7 +51,7 @@ export default function ProfilePage() {
 		setEmail(data.email || "");
 		setRoomNumber(data.room_num || "");
 
-		const fullAvatarPath = data.avatar_url ? `http://localhost:3000${data.avatar_url}` : null;
+		const fullAvatarPath = data.profile_picture ? `http://localhost:3000${data.profile_picture}` : null;
 
 		setAvatarUrl(data.avatar_url || null); 
         setAvatarSrc(fullAvatarPath);
@@ -62,7 +68,7 @@ export default function ProfilePage() {
     const confmUsername = newUsername;
 
     try {
-        const response = await fetch("http://localhost:3000/change/username", {
+        const response = await fetch("http://localhost:9999/change/username", {
             method: "POST",
             headers: {
           'Content-Type': 'application/json',
@@ -78,15 +84,17 @@ export default function ProfilePage() {
     const result = await response.json();
     if (!response.ok) {
         const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-        throw new Error(errorMsg); 
+        setError(`Username change failed: ${errorMsg}`); 
+        return;
     } 
 
+	setError("");
     setUsername(newUsername);
     setEditing(null);
     
     } catch (error) { 
-      console.error("Error saving username:", error);
-    }
+	setError(`Network error: Could not save username. ${error.message}`);    
+	}
   }; 
 
 // Email is edited and have to update DB
@@ -110,14 +118,16 @@ const changeEmail = async (newEmail) => {
         const result = await response.json();
         if (!response.ok) {
             const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-            throw new Error(errorMsg);
+			setError(`Email change failed: ${errorMsg}`); 
+            return;
         }
 
+		setError("");
 		setEmail(newEmail);
         setEditing(null);
 
     } catch (error) {
-        console.error("Error saving email:", error);
+		setError(`Network error: Could not save email. ${error.message}`);
     }
 };
 
@@ -143,12 +153,14 @@ const changePassword = async (oldPassword, newPassword) => {
         const result = await response.json();
         if (!response.ok) {
             const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-            throw new Error(errorMsg);
+			setError(`Password change failed: ${errorMsg}`); 
+            return;
         }
+		setError("");
         setEditing(null);
 
     } catch (error) {
-        console.error("Error saving password:", error);
+		setError(`Network error: Could not save password. ${error.message}`);
     }
 };
 
@@ -173,14 +185,16 @@ const changePassword = async (oldPassword, newPassword) => {
     const result = await response.json();
     if (!response.ok) {
         const errorMsg = result.errors ? result.errors.join(', ') : `HTTP error! status: ${response.status}`;
-        throw new Error(errorMsg); 
+		setError(`Room Number change failed: ${errorMsg}`); 
+        return;
     } 
 
+	setError("");
     setRoomNumber(newRoomNum);
     setEditing(null);
     
     } catch (error) { 
-      console.error("Error saving room number:", error);
+		setError(`Network error: Could not save room number. ${error.message}`);
     }
   }; 
 
@@ -224,7 +238,8 @@ const changeProfilePic = async (dataUrl, fileName) => {
 
     if (!res.ok) {
       const errorMsg = body?.error || body?.message || `HTTP ${res.status}`;
-      throw new Error(errorMsg);
+	  setError(`Profile pic change failed: ${errorMsg}`); 
+      return; 
     }
 
     // Server returns "profile_picture" field with the path
@@ -241,15 +256,15 @@ const changeProfilePic = async (dataUrl, fileName) => {
       ? avatarPath 
       : `http://localhost:3000${avatarPath}`;
 
-    setAvatarUrl(avatarPath); // Store relative path
+	setError("");
+	setAvatarUrl(avatarPath); // Store relative path
     setAvatarSrc(fullAvatarUrl); // Use full URL for display
     setEditing(null);
     
     console.log("Profile picture updated successfully:", avatarPath);
     
   } catch (err) {
-    console.error("Error saving profile picture:", err);
-    
+	setError(`Network error: Could not save profile pic. ${error.message}`);    
     // Revert to previous avatar on error
     if (avatarUrl) {
       setAvatarSrc(`http://localhost:3000${avatarUrl}`);
@@ -261,10 +276,18 @@ const changeProfilePic = async (dataUrl, fileName) => {
   }
 };
 
-const onChangePic = () => setEditing("pic"); 
+const onChangePic = () => clearErrorAndEdit("pic");
 
   return (
     <div className="profile-page">
+		{error && (
+          <p className="profile-error-message">
+              ⚠️ {error}
+              <button onClick={() => setError("")} className="close-error-btn">
+                  &times;
+              </button>
+          </p>
+      )}
       <div className="profile-card">
         <h1 className="profile-title">She Doesn’t Even Go Here!</h1>
 
@@ -293,11 +316,12 @@ const onChangePic = () => setEditing("pic");
         </div>
 
         <div className="profile-right">
-          <InfoRow label="Username" value={username} onEdit={() => setEditing("username")} />
-          <InfoRow label="Email" value={email} onEdit={() => setEditing("email")} />
+          <InfoRow label="Username" value={username} onEdit={() => clearErrorAndEdit("username")} />
+          <InfoRow label="Email" value={email} 
+		  onEdit={() => clearErrorAndEdit("email")} />
           {/* New InfoRow for Room Number */}
-          <InfoRow label="Room Number" value={roomNumber} onEdit={() => setEditing("roomNumber")} />
-          <InfoRow label="Password" value={passwordMasked} onEdit={() => setEditing("password")} />
+          <InfoRow label="Room Number" value={roomNumber} onEdit={() => clearErrorAndEdit("roomNumber")} />
+          <InfoRow label="Password" value={passwordMasked} onEdit={() => clearErrorAndEdit("password")} />
         </div>
 
         <div className="lips lips--br" aria-hidden="true">💋</div>
@@ -305,49 +329,49 @@ const onChangePic = () => setEditing("pic");
 
       {/* Overlays */}
       {editing === "username" && (
-        <Modal title="Change your name." onClose={() => setEditing(null)}>
+        <Modal title="Change your name." onClose={() => clearErrorAndEdit(null)}> 
           <UsernameForm
             current={username}
-            onCancel={() => setEditing(null)}
+            onCancel={() => clearErrorAndEdit(null)}
             onSave={changeUsername}
           />
         </Modal>
       )}
 
       {editing === "email" && (
-        <Modal title="Change your email." onClose={() => setEditing(null)}>
+        <Modal title="Change your email." onClose={() => clearErrorAndEdit(null)}> 
           <EmailForm
             current={email}
-            onCancel={() => setEditing(null)}
+            onCancel={() => clearErrorAndEdit(null)} 
             onSave={changeEmail}
           />
         </Modal>
       )}
 
       {editing === "roomNumber" && (
-        <Modal title="Change your room number." onClose={() => setEditing(null)}>
+        <Modal title="Change your room number." onClose={() => clearErrorAndEdit(null)}> 
           <RoomNumberForm
             current={roomNumber}
-            onCancel={() => setEditing(null)}
+            onCancel={() => clearErrorAndEdit(null)} 
             onSave={changeRoomNum}
           />
         </Modal>
       )}
 
       {editing === "password" && (
-        <Modal title="Change your password." onClose={() => setEditing(null)}>
+        <Modal title="Change your password." onClose={() => clearErrorAndEdit(null)}> 
           <PasswordForm
-            onCancel={() => setEditing(null)}
+            onCancel={() => clearErrorAndEdit(null)} 
             onSave={changePassword}
           />
         </Modal>
       )}
 
       {editing === "pic" && (
-  		<Modal title="Change your head shot." onClose={() => setEditing(null)}>
-    	<ProfilePicForm
-      	onCancel={() => setEditing(null)}
-      	onSave={async (dataUrl, fileName) => { 
+        <Modal title="Change your head shot." onClose={() => clearErrorAndEdit(null)}> 
+        <ProfilePicForm
+        onCancel={() => clearErrorAndEdit(null)} 
+        onSave={async (dataUrl, fileName) => { 
         // Keep local preview immediately for better UX
         setAvatarSrc(dataUrl); 
         // Call the async function and await it
