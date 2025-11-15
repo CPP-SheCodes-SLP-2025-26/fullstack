@@ -392,7 +392,7 @@ function InfoRow({ label, value, onEdit }) {
         <span className="info-label">{label}:</span>{" "}
         <span className="info-value">{value}</span>
       </div>
-      <button className="edit-btn" onClick={onEdit} aria-label={`Edit ${label}`}>
+      <button className="profile-edit-btn" onClick={onEdit} aria-label={`Edit ${label}`}>
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
           <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1.25 1.25 0 0 0 0-1.77l-2.98-2.98a1.25 1.25 0 0 0-1.77 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
         </svg>
