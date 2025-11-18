@@ -2,19 +2,22 @@
 
 This repository contains our project for the **sheCodes Semester Long Project (SLP) 2025-26, Full Stack Track**.  
 
-Our goal is to design and implement a **Student Housing Companion Web Application** that helps roommates coordinate daily responsibilities and manage shared living more effectively.  
+### **Project Overview** 
+**House of Plastics** is a Student Housing Companion Web Application to improve the living experience with roommates, by preventing conflict and making everything more organized and stress-free.  
+
+---
 
 ### Core Features  
-- 🧹 **Chore Tracker** — assign, rotate, and complete household tasks  
-- 💸 **Bill Splitter** — track shared expenses and balances  
-- 📅 **Shared Calendar** — manage events and reminders  
-- 🌟 *Stretch Features:* shared grocery list, guest tracker, and notifications  
+- **Chore Tracker** — assign and complete household tasks  
+- **Bill Splitter** — Upload an image of a receipt to get the total and divide it between roommates for tracking shared expenses 
+- **Calendar** — manage events and reminders  
+-  *Stretch Features:* shared grocery list, guest tracker, and notifications  
 
 📍 **Demo Day:** Sunday, November 16th, 2025 @ BSC Ursa Minor (10:00 AM – 2:00 PM)  
 
 ---
 
-## 👩‍💻 Team  
+## Team  
 
 - **Lead:** Areesha Imtiaz  
 - **Members:**  
@@ -27,32 +30,17 @@ Our goal is to design and implement a **Student Housing Companion Web Applicatio
 
 ---
 
-## 🚀 Tech Stack (to be finalized in Week 1)  
+## Technologies Used 
 
-- **Frontend:** React + Tailwind CSS (Next.js under consideration)  
-- **Backend:** Node.js + Express (Django also under consideration)  
-- **Database:** PostgreSQL or MySQL (hosted via Supabase/Railway)  
-- **Authentication:** Clerk or Supabase Auth  
-- **Deployment:** Vercel (frontend), Render/Railway (backend)  
-
----
-
-## 📆 Project Timeline  
-
-- **Sept 26:** Check-in #1 — Project selected, roles assigned  
-- **Oct 10:** Check-in #2 — Midpoint; project should be ~50% complete  
-- **Oct 16:** Midpoint milestone (Chores feature working end-to-end)  
-- **Oct 24:** Progress milestone (Chores + Bills functional)  
-- **Oct 30:** Check-in #3 — Evaluate scope; scale down if needed  
-- **Nov 6:** Demo guidelines released  
-- **Nov 7:** Check-in #4 — Wrap-up; prepare for presentations  
-- **Nov 10:** Final wrap-up checkpoint; demo prep begins  
-- **Nov 13:** Final project submission  
-- **Nov 16:** Demo Day 🎉  
+- **Frontend:** React, CSS, Vite    
+- **Backend:** Node.js + Express 
+- **Database:** MySQL  
+- **Authentication:** Google OAuth
+- **API's:** Google API, Veryfi API 
 
 ---
 
-## 🛠️ Getting Started  
+## Getting Started  
 
 ### Prerequisites  
 - Node.js 20+  
@@ -76,29 +64,12 @@ npm run dev
 ```   
 
 ---
-## 📂 Project Structure  
-```bash
-/.github        → workflows, issue/pr templates  
-/docs           → schedule, check-ins, demo prep  
-/src            → app code (frontend + backend)  
-.env.example    → sample environment variables
-```
 
----   
-
-## 🤝 Team Workflow
-
-- **Weekly Standup:** Every Sunday at 8:00 PM (on Zoom).    
-- **Agenda:** quick wins, blockers, priorities for the week, assignments.  
-- **Slides:** upload weekly deck to /docs/meetings
+### Figma Design
+[Link Here](https://www.figma.com/design/BCoKbG9Ufkkairu1vrSdL1/sheCodes-fullStack-Figma?node-id=0-1&p=f&t=VWx5kgCiAMxyJaZj-0)
+### Video Demo
+[Link Here](https://youtu.be/cL8MffrC0oE)  
 
 ---
 
-## 🎤 Demo Deliverables
-
-- Functional prototype deployed online
-- 5–7 minute live or pre-recorded demo with slides
-- Screenshots and/or demo video backup
-- README with setup instructions
-- Presentation slides with rehearsed flow
 
